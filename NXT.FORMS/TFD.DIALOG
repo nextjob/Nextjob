@@ -1,0 +1,43 @@
+TEMPLATEı42053.84079ıTOOLıNXT.BPüTFD.DIALOGü3ü0
+0ı1.4ı4
+2ıTOOLıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııTool Fixture Document Selection
+2ıTOOL*TOOLıı7ıautoıautoı50.25ı10.75ı1
+4ıı22ıııTool Fixture Document Selection
+4ıı48ııı0
+4ıı9ııı1
+2ıTOOL*TOOL*List1ıı24ı7ı.5ı15ı1.25ı32
+4ıı27ııı1
+4ıı32ıııType
+4ıı38ııı0
+4ıı37ııı15
+4ıı26ıııToolıFixtureıDocument
+4ıı33ııı1
+4ıı39ııı1
+4ıı53ııı8
+2ıTOOL*TOOL*lblTypeıı15ı2ı.5ı4.5ı1.25ı0
+4ıı67ııı0
+4ıı0ıııType
+2ıTOOL*TOOL*btnOkıı18ı21ı9ı7.5ı1.25ı32
+4ıı22ıııOK
+2ıTOOL*TOOL*frmDATAıı26ı0ı2ı50ı6.75ı0
+4ıı67ııı0
+4ıı8ııı0
+2ıTOOL*TOOL*lblDocLocVıfrmDATAı15ı8ı4.5ı32.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıTOOL*TOOL*btn1ıfrmDATAı18ı41ı4.5ı7.5ı1.25ı32
+4ıı22ıııBrowse
+2ıTOOL*TOOL*label1ıfrmDATAı15ı1ı4.5ı7ı1.25ı0
+4ıı67ııı0
+2ıTOOL*TOOL*txtDescıfrmDATAı16ı11ı1.5ı32.5ı1.5ı256
+2ıTOOL*TOOL*Label2ıfrmDATAı15ı1ı1.5ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+0ı-1

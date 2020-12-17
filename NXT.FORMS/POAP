@@ -1,0 +1,165 @@
+TEMPLATEı41822.85961ıPOAPıNXT.BPüPOAP.DIALOGü3ü0
+0ı1.4ı4
+2ıPOAPıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPOAP
+4ıı59ııı0
+4ıı41ıııAP Entry for PO
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıPOAP*POAPıı7ıautoıautoı96.25ı37.5ı1
+4ıı22ıııAP Entry (PO)
+4ıı48ııı0
+4ıı9ııı0
+2ıPOAP*POAP*lblOrderıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııPO Number
+4ıı67ııı0
+2ıPOAP*POAP*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıPOAP*POAP*txt1OrdValıı16ı10ı1ı16.5ı1.25ı256
+4ıı49ıııEnter order number to ship
+2ıPOAP*POAP*txtInvıı16ı10ı3ı16.5ı1.25ı256
+2ıPOAP*POAP*txtDateıı16ı34ı3ı8ı1.25ı256
+4ıı29ııı6
+2ıPOAP*POAP*txtInvAmtıı16ı50ı3ı11.5ı1.25ı256
+4ıı29ııı5
+2ıPOAP*POAP*lstItemıı21ı0ı5.5ı94.5ı4.75ı32
+4ıı27ııı6
+4ıı32ıııItemıPart NumberıDescriptionıWork Orderı DueıStatus
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı8.75ı16.5ı36ı9ı8ı6
+4ıı33ııı3
+4ıı49ıııScrowl to desired item and Click to make active
+4ıı26ıııüüüüüıüüüüüıüüüüüıüüüüüıüüüüü
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı68ııı0
+4ıı8ııı0
+2ıPOAP*POAP*lblVendıı15ı29ı1ı6.5ı1.25ı0
+4ıı0ıııVendor
+4ıı67ııı0
+2ıPOAP*POAP*lblVendorValıı15ı34ı1ı18ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıPOAP*POAP*btnCancelıı18ı1ı33.5ı9.5ı2.5ı32
+4ıı22ıııCancel
+2ıPOAP*POAP*lblInvıı15ı1ı3ı8.5ı1.25ı0
+4ıı0ıııInvoice Nbr
+4ıı67ııı0
+2ıPOAP*POAP*lblDateıı15ı29ı3ı5ı1.25ı0
+4ıı0ıııDate
+4ıı67ııı0
+2ıPOAP*POAP*frmPoItemıı26ı0ı10.5ı94.5ı13ı0
+4ıı0ıııItem Data
+4ıı67ııı0
+4ıı8ııı0
+2ıPOAP*POAP*grdLinesıfrmPoItemı28ı1ı7ı78ı5.5ı32
+4ıı27ııı7
+4ıı32ıııSelectıPack List  IdıDate RecvdıQty RecvdıLot IdıInv DateıInv Nbr
+4ıı38ııı2ı0ı0ı0ı0ı0ı0
+4ıı37ııı6.38ı15ı8ı8ı15ı8ı13.62
+4ıı34ııı2ı1ı1ı0ı0ı0ı0
+4ıı35ııı0ı0ı0ı0ı0ı6ı0
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ııı0üüüüüüıüüüüüüıüüüüüü
+2ıPOAP*POAP*lblPnValıfrmPoItemı15ı10ı2ı35ı1.25ı0
+4ıı11ııı2
+2ıPOAP*POAP*lblDescValıfrmPoItemı15ı10ı3.5ı35ı1.25ı0
+4ıı11ııı2
+2ıPOAP*POAP*lblPnıfrmPoItemı15ı1ı2ı9ı1.25ı0
+4ıı0ıııPart Number
+2ıPOAP*POAP*lblDescıfrmPoItemı15ı1ı3.5ı9ı1.25ı0
+4ıı0ıııDescription
+2ıPOAP*POAP*lblClosedıfrmPoItemı15ı10ı5ı21.5ı1.25ı0
+4ıı0ııı* Item Manually Closed *
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı1
+4ıı19ııı0
+4ıı11ııı1
+4ıı9ııı0
+2ıPOAP*POAP*lblWOıfrmPoItemı15ı49ı2ı12ı1.25ı0
+4ıı0ıııWork Order / Seq
+4ıı67ııı0
+2ıPOAP*POAP*lblWoValıfrmPoItemı15ı64ı2ı24ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*LBLORDQTYıfrmPoItemı15ı34ı5ı5.5ı1.25ı0
+4ıı0ıııPO Qty
+4ıı67ııı0
+2ıPOAP*POAP*lblOrdQtyVıfrmPoItemı15ı39ı5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*lblRvdQtyıfrmPoItemı15ı49ı5ı9.5ı1.25ı0
+4ıı0ıııReceived Qty
+4ıı67ııı0
+2ıPOAP*POAP*LBLPREVRCVDQTYıfrmPoItemı15ı58ı5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*lblPriceıfrmPoItemı15ı67ı5ı8ı1.25ı0
+4ıı0ıııPrice / Ea
+4ıı67ııı0
+2ıPOAP*POAP*lblPriceVıfrmPoItemı15ı74ı5ı10.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*lblLotıfrmPoItemı15ı85ı5ı6ı1.25ı0
+4ıı0ıııLot Chg
+4ıı67ııı0
+4ıı9ııı0
+2ıPOAP*POAP*frmInvDataıı26ı1ı23.5ı94ı9.5ı0
+4ıı0ıııInvoice Items
+4ıı67ııı0
+2ıPOAP*POAP*grdInvItemsıfrmInvDataı28ı1ı1.5ı75ı5.5ı0
+4ıı27ııı6
+4ıı32ıııPack List IdıDate RecvdıQty RecvdıPrice EaıLine Totalı Gl Trans Code
+4ıı38ııı0ı0ı0ı1ı1ı0
+4ıı37ııı15ı8ı8ı13.62ı15ı10
+4ıı34ııı1ı1ı0ı0ı1ı3
+4ıı35ııı0ı0ı0ı5ı5ı0
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ıııüüüüüıüüüüüıüüüüü
+2ıPOAP*POAP*lblTotalıfrmInvDataı15ı37ı7.5ı8ı1.25ı0
+4ıı0ıııTotal
+4ıı67ııı0
+2ıPOAP*POAP*lblTotalVıfrmInvDataı15ı46ı7.5ı15.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıPOAP*POAP*lblUnAppliedıfrmInvDataı15ı1ı7.5ı8ı1.25ı0
+4ıı0ıııUnapplied
+4ıı67ııı0
+2ıPOAP*POAP*lblUnappliedvıfrmInvDataı15ı8ı7.5ı17.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıPOAP*POAP*BtnFileıfrmInvDataı18ı82ı3ı9ı3.5ı32
+4ıı22ıııFile
+2ıPOAP*POAP*lblInvAmtıı15ı44ı3ı5.5ı1.25ı0
+4ıı0ıııAmount
+4ıı67ııı0
+2ıPOAP*POAP*lblDueıı15ı63ı3ı4.5ı1.25ı0
+4ıı0ıııDue
+4ıı67ııı0
+2ıPOAP*POAP*lblDueVıı15ı67ı3ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*lblUserIdıı15ı76ı1ı5ı1.25ı0
+4ıı0ıııUser Id
+4ıı67ııı0
+2ıPOAP*POAP*lblUserIdVıı15ı82ı1ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOAP*POAP*chkHoldıı20ı77ı3ı12ı1.25ı32
+4ıı22ıııHold Payment
+4ıı67ııı0
+0ı-1

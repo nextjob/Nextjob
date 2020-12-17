@@ -1,0 +1,192 @@
+SUBROUTINE WO.RELEASE(REL_WO_ID,REL_PN,REL_PN_REC,REL_ENG_ID,REL_QTY,REL_DATE,REL_SCH_TYPE,REL_OC_ID,GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: WO.RELEASE
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 10/15/2013
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* ROUTINE IS CALLED TO RELEASE WORK ORDER (CREATES WO & WR RECORDS)
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES NXT.WO.STATUS.DEF
+$INCLUDE NXT.INCLUDES PARTS.H
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES WC.H
+$INCLUDE NXT.INCLUDES WO.H
+$INCLUDE NXT.INCLUDES WRT.H
+$INCLUDE NXT.INCLUDES RTREV.H
+*
+$INCLUDE GUIBP ATGUIEQUATES
+*
+ERROR_STATUS = ''
+MSG_LIST =''
+*
+*
+*********
+CALL GET.RECORD("WO",C.WO,REL_WO_ID,TEST_REC,@TRUE,ERROR.STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+IF TEST_REC # ''  THEN ;* TEST FOR WORK ORDER ON FILE
+   PRMPT = "Provided Work Order Id is Already on File, Cannot Use This Id, Please Correct"
+   CAPTION = "WO.RELEASE"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   WO.ID = ''
+END ELSE
+   **
+   ** CREATE WO RECORD, COPY RT TO WR
+   ** CALL THE SCHEDULE ROUTINE
+   **
+   WO_REC = ''
+   WO_REC<WO_PARTNBR>    = REL_PN
+   WO_REC<WO_QTY_TO_MFG> = REL_QTY
+   WO_REC<WO_START_DATE> = REL_DATE
+   WO_REC<WO_DUE_DATE>   = REL_DATE
+   WO_REC<WO_REL_DATE>   = DATE()
+   WO_REC<WO_SCHD_TYPE>  = REL_SCH_TYPE
+   WO_REC<WO_OC_REF>     = REL_OC_ID
+   WO_REC<WO_STATUS>     = WORK.ORDER.STATUS.LIST<1,WO.RELEASED.IDX,1>  ;* RELEASED
+   WO_REC<WO_STAT_DATE>  = DATE()
+   WO_REC<WO_ASSOC>      = ''
+   WO_REC<WO_ACT_START>  = ''
+   WO_REC<WO_ACT_END>    = ''
+   WO_REC<WO_ENG_ID>     = REL_ENG_ID
+   *
+   RTREV_ID = REL_PN:'*':REL_ENG_ID
+   CALL GET.RECORD("RTREV",C.RTREV,RTREV_ID,RTREV_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+   WO_REC<WO_ENG_ID_REV> = RTREV_REC<RTR_REVNBR>
+   *
+   WO_REC<WO_FREEZE_SCHD> = ''
+   WO_REC<WO_PT_DESC>     = REL_PN_REC<PT_DESC>
+   WO_REC<WO_PT_DRAWING>  = REL_PN_REC<PT_DRAWING>
+   WO_REC<WO_PN_REV>  =     REL_PN_REC<PT_REV>
+   **
+   **  CREATE AND
+   **  WRITE OUT WR RECORDS
+   **
+   GOSUB CREATE.WR
+   **
+   ** WRITE OUT WORK ORDER RECORD (AND UNLOCK)
+   **
+   CALL WRITE.RECORD(REL_WO_ID,WO_REC,C.WO,@FALSE,ERROR_STATUS)
+END
+RETURN
+************************************************************
+CREATE.WR:
+*
+* CREATE WORK ORDER ROUTING RECORDS
+*   START BY GETTING RT RECORD FOR PART / ENG_ID
+*
+SLIST = 'SSELECT RT BY PARTNBR BY ENGID BY SEQNBR WITH PARTNBR = "':REL_PN:'" AND WITH ENGID = "':REL_ENG_ID:'" TO 2'
+EXECUTE SLIST CAPTURING DMMY.OUT
+*
+IF @SELECTED GE 1 THEN
+   READLIST IDLIST FROM 2 THEN
+      LIST.CT = DCOUNT(IDLIST,@AM)
+      FIRST.SEQ = @TRUE  ;* FIRST SEQ PROCESSED
+      FOR I = 1 TO LIST.CT
+         FROM_RT_ID = IDLIST<I,1>
+         SEQ_ID = FIELD(FROM_RT_ID,"*",3)   ;* SEQ NUMBER
+         CALL GET.RECORD("RT",C.RT,FROM_RT_ID,RT_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+         *
+         IF ERROR_STATUS = '' THEN
+            *
+            *
+            * N o t e: to be coded:
+            * need to add logic for "create su/ip/run seq"
+            * suggest using decimal for seq id
+            * ie if flag set for work center of rt seq 100,
+            *   create 100.1 as setup seq  (all setup time on this seq / no run time)
+            *   create 100.2 as setup inspection seq (ip)  (need to define what we use for setup time here)
+            *   create 100.3 as run seq (all run time / no setup)
+            *
+            **      CONVERT RT RECORD TO WORK ORDER SEQ RECORD
+            *
+            *       FIRST THE ID
+            *
+            WR_ID = REL_WO_ID:'*':SEQ_ID
+            WR_REC = RT_REC
+
+
+            WR_REC<WR_SCHD_START> = REL_DATE
+            WR_REC<WR_SCHD_END>   = REL_DATE
+            WR_REC<WR_ACT_START>  = ""
+            WR_REC<WR_ACT_END>    = ""
+            IF FIRST.SEQ THEN    ;* IF THIS IS THE FIRST SEQ, SET IT TO Q   
+               WR_REC<WR_STATUS>  = WORK.ORDER.SEQ.STATUS.LIST<1,WO.Q.IDX,1>
+               FIRST.SEQ = @FALSE
+            END ELSE
+               WR_REC<WR_STATUS>  = WORK.ORDER.SEQ.STATUS.LIST<1,WO.NS.IDX,1>
+            END
+            WR_REC<WR_STAT_DATE>  = DATE()
+            *
+            * CALCULATE SEQ QTY USING WORK ORDER QTY * SEQ MULTIPLIER.
+            * IF WE END UP WITH A FRACTIONAL VALUE, INCREMENT BY 1 BECAUSE WE ALWAYS NEED WHOLE PIECES
+            *
+            SEQ.QTY = OCONV(REL_QTY * WR_REC<WRT_QTY_MULT>,WRT_QTY_MULT.CNV)
+            IF SEQ.QTY > INT(SEQ.QTY) THEN SEQ.QTY +=1
+            *
+            WR_REC<WR_QTY_TO_MFG> = INT(SEQ.QTY)
+            WR_REC<WR_QTY_COMP>   = 0
+            WR_REC<WR_SCRAP>      = 0
+            WR_REC<WR_FREEZE_SCHD>= ""
+
+            CALL WRITE.RECORD(WR_ID,WR_REC,C.WR,@FALSE,ERROR_STATUS)
+
+         END ELSE
+            LOG.OPTS = "DISPLAY"
+            ERROR_NBR = ERR_NOF
+            ERROR_MSG = 'During WO Release of:':REL_WO_ID:' RT Copy: ':FROM_RT_ID:' ':ERR_MESSAGE(ERR_NOF)
+            CALL LOG.ERROR(LOG.OPTS,"WO.RELEASE", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         END
+      NEXT I
+   END
+END
+*
+RETURN
+END

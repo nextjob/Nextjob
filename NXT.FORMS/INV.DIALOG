@@ -1,0 +1,119 @@
+TEMPLATEı42046.88352ıINVıNXT.BPüINV.DIALOGü3ü0
+0ı1.4ı4
+2ıINVıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııInvoicing
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııNexjob Invocing Module
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıINV*INVıı7ıautoıautoı83ı25.25ı1
+4ıı22ıııInvoicing
+4ıı48ııı0
+4ıı9ııı0
+2ıINV*INV*lstSelectıı24ı4.5ı2.5ı20ı1.25ı0
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı17
+4ıı49ıııChoose order selection criteria
+4ıı26ıııSelect Only items completeıSelect All shipped items
+4ıı0ııı1
+4ıı39ııı1
+2ıINV*INV*BtnCreateıı18ı26ı1ı8ı4ı32
+4ıı22ıııCreate Invoicing List
+4ıı49ıııClick to create list of order to invoice
+2ıINV*INV*lstInvıı21ı1ı7ı44ı4.75ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı9.12ı15ı9.12ı6.62
+4ıı49ıııSelect order to invoice
+4ıı32ıııOrder NumberıCustomer NameıCustomer POıPackslip
+4ıı33ııı3
+4ıı26ıııüüüıüüüıüüüıüüüıüüü
+4ıı8ııı0
+2ıINV*INV*lblStep1ıı15ı4.5ı1ı19ı1.25ı0
+4ıı0ıııStep 1, Create List
+4ıı25ııı2
+4ıı16ıııMS Sans Serif
+4ıı17ııı12
+4ıı18ııı1
+4ıı19ııı0
+2ıINV*INV*lblStep2ıı15ı4ı5.5ı32.5ı1.25ı0
+4ıı0ıııStep 2, Select Order to Invocie
+4ıı16ıııMS Sans Serif
+4ıı17ııı12
+4ıı18ııı1
+4ıı19ııı0
+2ıINV*INV*grdLinesıı28ı1ı14ı81ı6.75ı1056
+4ıı27ııı7
+4ıı32ıııSelectıPackSlipı Part NumberıDate ShippedıQty Shippedı Price Ea.ıLine Total
+4ıı38ııı0ı0ı0ı2ı1ı1ı1
+4ıı37ııı4.75ı6ı24.62ı9ı8.38ı7.75ı12.25
+4ıı34ııı2ı0ı0ı0ı1ı4ı0
+4ıı35ııı0ı0ı0ı6ı8ı2ı5
+4ıı33ııı3
+4ıı0ııı-1üüüüüüıüüüüüüıüüüüüüıüüüüüüıüüüüüü
+4ıı12ııı0ı1ı1ı0ı0ı0ı0
+4ıı39ııı0ı0ı0ı0ı0ı2ı0
+4ıı36ıııııııı|ı
+4ıı8ııı0
+2ıINV*INV*lblTotıı15ı58ı21.5ı9ı1.25ı0
+4ıı0ıııInvoice Total
+2ıINV*INV*lblTotAmtıı15ı67ı21.5ı12.5ı1.25ı0
+4ıı11ııı2
+4ıı25ııı1
+2ıINV*INV*lblStep3ıı15ı4ı12.5ı35ı1.25ı0
+4ıı0ıııStep 3, Select Items to Invoice
+4ıı16ıııMS Sans Serif
+4ıı17ııı12
+4ıı18ııı1
+4ıı19ııı0
+2ıINV*INV*lblOrderıı15ı54ı1.5ı8.5ı1.25ı0
+4ıı0ıııOrder Number
+2ıINV*INV*lblOrderValıı15ı64ı1.5ı17.5ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*frmBillToıı26ı46ı3ı36ı10.5ı0
+4ıı0ıııBill To
+2ıINV*INV*lbl1BillToıfrmBillToı15ı1ı1ı11.5ı1.25ı0
+4ıı0ıııCustomer Number
+2ıINV*INV*lbl1BillNameıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıINV*INV*lbl1BillNameValıfrmBillToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lbl1BilllAddr1ıfrmBillToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıINV*INV*lbl1BillAddr1ValıfrmBillToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lbl1BillAddr2ıfrmBillToı15ı1ı5.5ı4.5ı1.25ı0
+4ıı0ıııAddr2
+2ıINV*INV*lbl1BillAddr2ValıfrmBillToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lbl1BillCSıfrmBillToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St. 
+2ıINV*INV*lbl1BillCityValıfrmBillToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lbl1BillStValıfrmBillToı15ı28.75ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lbl1BillZipıfrmBillToı15ı1ı8.5ı4ı1.25ı0
+4ıı0ıııZip
+4ıı25ııı1
+2ıINV*INV*lbl1BillZipValıfrmBillToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*lblBillCustıfrmBillToı15ı13ı1ı16ı1.25ı0
+4ıı11ııı2
+2ıINV*INV*btnCancelıı18ı12ı22ı9ı2ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+2ıINV*INV*btnInvoiceıı18ı37ı22ı8.5ı2ı32
+4ıı22ıııInvoice
+4ıı49ıııClick to invoice this item
+4ıı8ııı0
+2ıINV*INV*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+0ı-1

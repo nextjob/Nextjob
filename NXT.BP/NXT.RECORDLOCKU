@@ -1,0 +1,101 @@
+SUBROUTINE NXT.RECORDLOCKU(FILE_NAME,FILE_VAR_IDX,ID_TO_LOCK,MSG_LIST,FILE_LOCKED,GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: NXT.RECORDLOCKu
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+* 3/8/15 ADD NXT.CANCEL.ON.LOCKED
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+*  FILE_NAME  TEXT NAME OF FILE TO LOCK
+*  FILE_VAR_IDX - INDEX INTO C.FILE.VAR (COMMON OPENNED FILE VARS) OF FILE TO OPEN
+*  ID_TO_LOCK RECORD KEY OF FILE_VAR TO LOCK
+*  MSG_LIST<1> - LOCK BUSY, CANCEL SELECTED MESSAGE
+*  MSG_LIST<2> - USER OK'D CANCEL SELECTION MESSAGE
+*  FILE_LOCKED - RECORD LOCK SUCCESSFUL FOR  TRUE / FALSE (WQAS NOT LOCKED BY ANOTHER PROCESS)
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* PERFORM UDATE LOCK ON THE RECORD / FILE PASSED
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE GUIBP ATGUIEQUATES
+*
+URL.010: *
+FILE_LOCKED = @TRUE
+*
+RECORDLOCKU C.FILE.VAR(FILE_VAR_IDX), ID_TO_LOCK LOCKED
+   FILE_LOCKED = @FALSE ;* REQUEST TO LOCK FILE WAS UNSUCCESSFUL, IN USE BY ANOTHER PROCESS!
+   CALL !USERNAME(UNAME,STATUS())
+   PRMPT = FILE_NAME:", ":ID_TO_LOCK:" Locked by User: ":UNAME:@SVM:"Click Retry to Reattempt Lock,":@SVM:"Cancel to Skip Lock"
+   CAPTION = "NextJob"
+   STYLE   = 3  ;* ?
+   BUTTONS = 105  ;* RETRY / CANCEL
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   IF RESPONSE = "4" THEN  ;* RETRY
+      GOTO URL.010
+   END ELSE
+      IF MSG_LIST<1> = NXT.CANCEL.ON.LOCKED THEN
+         NULL
+      END ELSE
+         PRMPT = MSG_LIST<1>
+         CAPTION = "NextJob"
+         STYLE   = 2  ;* ?
+         BUTTONS = 1  ;* ok / cancel
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         IF RESPONSE = 2 THEN  ;* CANCEL THE ORIGINAL CANCEL
+            GOTO URL.010
+         END ELSE
+            PRMPT = MSG_LIST<2>
+            CAPTION = "NextJob"
+            STYLE   = 2  ;* ?
+            BUTTONS = 0  ;* ok
+            HELPID = ""
+            CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         END
+      END
+   END
+END
+RETURN
+END

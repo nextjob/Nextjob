@@ -1,0 +1,104 @@
+SUBROUTINE SHIP.CALC.BAL.DUE(BAL.DUE,NEXT.DEL.IDX,PRESHIP.ACTIVE,PRESHIP.IDX,SCHD.NOTES,OC_REC)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: SHIP.CALC.BAL.DUE
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* ON ENTRY
+* OC_REC - ORDER CHILD RECORD TO CALCULATED BAL DUE FOR
+* ON EXIT
+* BAL.DUE - BALANCE REMAINING TO SHIP ON THIS ORDER
+* NEXT.DEL.IDX - NEXT NON SHIPPED DELIVERY
+* PRESHIP.ACTIVE = TRUE IF A PACKSLIP CUT FOR DELIVER THAT HAS NOT
+*                  ACTUALLY BEEN SHIPPED (PRESHIP)
+* PRESHIP.IDX IF PRESHIP.ACTIVE THEN INDEX TO FIRST SCHD ITEM ON PRESHIP
+* SCHD.NOTES - SCHEDULE LINE ITEM NOTES
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CALCULATE BALANCE DUE ON THIS ITEM AND SET NEXT.DEL.IDX
+* ALSO PULL OFF SCHEDULE NOTES FOR ADDITION TO PACKSLIP NOTES
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES ORDER_CHILD.H
+*
+* INIT RETURN VALUES AND INTERNAL VARIABLES
+*
+BAL.DUE = 0
+ORD.QTY = 0
+SHPPD.QTY = 0
+NEXT.DEL.IDX = ''
+SCHD.NOTES = ''
+PRESHIP.ACTIVE = @FALSE
+PRESHIP.IDX = ''
+*
+SCHD.COUNT = DCOUNT(OC_REC<OC_SCHD_ID>,@VM)
+FOR I = 1 TO SCHD.COUNT
+   ORD.QTY = ORD.QTY + (OC_REC<OC_ORD_QTY,I>+0)
+   TST.QTY = OC_REC<OC_DEL_QTY,I> + 0
+   PCKID   = OC_REC<OC_PACK_ID,I>
+*
+   IF TST.QTY = 0 AND PCKID = '' AND NEXT.DEL.IDX = '' THEN   ;* SET INDEX TO NEXT DEL TO APPLY
+      NEXT.DEL.IDX = I
+   END
+*
+* IF WE HAVE A PACKSLIP NBR BUT QTY SHIPPED IS 0, PRESHIP ACTIVE
+* FIND INDEX TO FIRST SCHD ITEM OF PRESHIP
+   IF TST.QTY = 0 AND PCKID # '' THEN
+      PRESHIP.ACTIVE = @TRUE
+      IF PRESHIP.IDX = '' THEN
+         PRESHIP.IDX = I
+      END
+   END
+*
+   SHPPD.QTY = SHPPD.QTY + (TST.QTY + 0)
+*
+* PULL OF SCHEDULE NOTES FOR ADDITION TO PACKSLIP NOTES
+*
+   IF OC_REC<OC_SCHD_NOTES,I> # '' THEN
+      SCHD.NOTES<1,-1> = OC_REC<OC_SCHD_NOTES,I>
+   END
+NEXT I
+BAL.DUE = ORD.QTY - SHPPD.QTY  ;* TEST FOR OVER SHIPMENT
+IF BAL.DUE < 0 THEN BAL.DUE = 0
+RETURN
+END

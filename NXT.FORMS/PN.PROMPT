@@ -1,0 +1,23 @@
+TEMPLATEı41570.8287ıPN.PROMPTıNXT.BPüPN.PROMPTü3ü0
+0ı1.4ı4
+2ıPN.PROMPTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPN.PROMPT
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııProvides simple dialog to prompt for part number
+4ıı42ıııMAB
+2ıPN.PROMPT*PN.PROMPTıı7ıautoıautoı49ı5.25ı1
+4ıı22ıııPart Number Prompt
+4ıı48ııı0
+4ıı9ııı0
+2ıPN.PROMPT*PN.PROMPT*lblPartıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıPN.PROMPT*PN.PROMPT*txtPNıı16ı10ı1ı33ı1.25ı256
+2ıPN.PROMPT*PN.PROMPT*btnDummyıı18ı46ı1ı2ı1ı32
+0ı-1

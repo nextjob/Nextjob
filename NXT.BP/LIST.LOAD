@@ -1,0 +1,143 @@
+SUBROUTINE LIST.LOAD(C.FILE.IDX,ITEM.ID,FLD.NBRS,FLD.FMTS,LST.LNS,LST.IDX,LIST.CT,EMSG)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: LIST.LOAD
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED: 
+*
+* MAINTENANCE RECORD:
+*
+* VARIABLES:
+*
+* C.FILE.IDX - INDEX INTO C.FILE.VAR (COMMON OPENNED FILE VARIABLES) FOR FILE TO CREATE LIST FOR
+* ITEM.ID    - ITEM NAME (RECORD ID) TO CREATE LIST FOR
+* FLD.NBRS  - OPTIONAL FIELD NUMBERS TO INCLUDE IN LST.LNS, SEPARATED BY COMMAS 
+*             OR NULL TO DISPLAY ID ONLY
+* FLD.FMTS   - OPTIONAL FIELD NUMBER FORMAT FOR USE BY OCONV (SUGGESTED IF MULT FLD.NBRS USED)
+* LST.LNS   - VM LIST OF TEXT TO DISPLAY IN LIST <SV1> = ID, <SV2> = DESCRIPTION REQUESTED BY DESC.ATB
+*               FOR USE BY ATGUI CALLS TO LOAD LISTS
+* LST.IDX   - AM LIST OF ITEM IDS (USE FOR LOCATE STATEMENTS)
+* LIST.CT   - NUMBER OF ITEMS IN LST.LNS 
+* EMSG<1>   - RETURNED ERROR MESSAGE OR NULL
+* EMSG<2>   -  ERROR CODE FOR EMSG
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+**
+********** PROGRAM EQUATES
+**
+**
+*********** START OF PROGRAM
+**
+*
+EMSG = ""
+LST.LNS = ""
+LST.IDX = ""
+LIST.CT = 0
+*
+READ ITEM.REC FROM C.FILE.VAR(C.FILE.IDX), ITEM.ID ELSE
+   EMSG = ITEM.ID: ' - Is An Invalid Item Name Passed to: LIST.LOAD'
+   EMSG<2> = ERR_SYS
+   GOTO 9999
+END
+*
+LIST.CT = DCOUNT(ITEM.REC<1>,@VM)
+*
+BEGIN CASE
+*
+   CASE LIST.CT LT 1
+      EMSG = 'No Items Found'
+      EMSG<2> = ERR_WARN
+      LIST.CT = 0
+*
+   CASE 1
+      FLD.COUNT = 0
+      IF FLD.NBRS # '' THEN
+         CONVERT "," TO @AM IN FLD.NBRS
+         CONVERT "," TO @AM IN FLD.FMTS
+         FLD.COUNT = DCOUNT(FLD.NBRS,@AM)
+      END
+*
+*     CREATE THE LIST 
+*
+      GOSUB LST.LN.GET      
+*
+END CASE
+*
+9999 
+*
+RETURN
+!
+* LST.LN.GET
+* ROUTINE TAKES ITEM IDS IN IMLIST AND CRTEATES LST.LNS
+!
+LST.LN.GET: 
+*
+FOR ID.PTR = 1 TO LIST.CT   ;* FOR EACH VALUE IN THE VALIDATION FILE RECORD (FIELD 1)
+*   
+* GET FIELD 
+*
+   FLD.ID = ITEM.REC<1,ID.PTR>
+   DESC.TXT = ''
+*
+* IF THERE WAS OTHER INFO TO DISPLAY, GET IT FROM THE ITEM RECORD
+*
+   
+   FOR I = 1 TO FLD.COUNT
+      IF FLD.FMTS<I> = '' THEN
+         A.TXT = ITEM.REC<FLD.NBRS<I>,ID.PTR> 
+      END ELSE
+         A.TXT = OCONV(ITEM.REC<FLD.NBRS<I>,ID.PTR>,FLD.FMTS<I>)
+      END
+      DESC.TXT = DESC.TXT:A.TXT:' '
+   NEXT I
+   
+   
+*
+   LST.IDX<ID.PTR> = FLD.ID
+   LST.LNS<1,ID.PTR,1> = FLD.ID
+   LST.LNS<1,ID.PTR,2> = DESC.TXT
+NEXT ID.PTR
+*
+LST.999: *
+*
+RETURN
+END

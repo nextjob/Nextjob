@@ -1,0 +1,1245 @@
+      !
+      **************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+      **************************************************************************
+      *
+      * MODULE: NEXTJOB.MENU
+      * AUTHOR: MAB
+      * VERSION: 1.0.0
+      * CREATED: 11/10/2014
+      * UPDATED:
+      *
+      * MAINTENANCE RECORD:
+      *
+      * 12/2/2015 ADD: NXT_ENABLE_PURCHASING NXT_ENABLE_AP NXT_ENABLE_GL NXT_ENABLE_WCANDRT NXT_ENABLE_LABOR  ENABLE SUBSYTEM FLAGS
+      * 01/12/2016 ADD DISPATCH.DIALOG TO MENU
+      *
+      * EQUATE:
+      *
+      *
+      * VARIABLES:
+      *
+      *
+      * FILES:
+      *
+      *
+      * DESIGN DESCRIPTION:
+      * MAIN MENU BAR FOR NEXTJOB SYSTEM
+      *
+      ***********************************************************
+      *S
+      $INCLUDE NXT.INCLUDES NXT.COMMON
+      $INCLUDE NXT.INCLUDES NXT.OPEN.FILES
+      $INCLUDE NXT.INCLUDES NXT.EQUATES
+      $INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+      $INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+      $INCLUDE GUIBP ATGUIEQUATES
+      *
+      $INCLUDE SYSCOM KEYS.H
+      *
+      PROG_ID   = "NEXTJOB.MENU"
+      GET_REC_MSG_LIST  = ''  ;* SET DEFAULT ERROR RESPONSE MESSAGES USED BY GET RECORD ROUTINE
+      *
+      * Add your equates and code to open files here...
+      OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+         CALL !ERRTEXT(TEXT, STATUS())
+         DISPLAY 'Error ' : STATUS() : ' ' : TEXT
+         DISPLAY "'NXT.FORMS' is not a file name."
+         STOP
+      END
+      * Read the GUI template into TEMPLATE
+      READ TEMPLATE FROM GUI.PROJECT.FILE,'MENU' ELSE PRINT "'MENU' is not on file."; STOP
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN GUI HEADER<--*
+      CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+      CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+      *-->END GUI HEADER<--*
+      *
+      *
+      * HIDE THE ACCUTERM MAIN WINDOW
+      *You can minimize the main AccuTerm window using s small script:
+      IF NXT.MIN.ACCUTERM THEN
+         CRT ESC : STX : 'P AccuTerm.WindowState = 1' : CR :
+      END
+      * Then you will need to restore it when the GUI app closes:
+      *PRINT ESC : STX : 'P AccuTerm.WindowState = 0' : CR :
+      * or by a script to totally hide it:
+      *SCR='On Error Resume Next'
+      *SCR=SCR:EM:'Dim obj As Object'
+      *SCR=SCR:EM:'Set obj = GetObject(, "ATWin32.AccuTerm")'
+      *SCR=SCR:EM:'obj.Visible = 0'
+      *CRT ESC:STX:'P':SCR:CR:
+      *
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN GUI STARTUP<--*
+      CALL ATGUISHOW('MENU.BAR','MENU.BAR','','',GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      *-->END GUI STARTUP<--*
+      *
+      *
+      * GET THE USER RECORD THEN TURN ON MENU ITEMS FOR ALLOWED ACCESS
+      * ALSO SET REPORT PRINTER FOR USER
+      *
+      CALL SET.USER(USER_NAME,USER_FOUND,USER_RECORD,GUIERRORS,GUISTATE)
+      IF USER_FOUND THEN
+         *
+         * ENABLE ORDER PROCESSING?
+         IF   USER_RECORD<USER_ORDER_PROCESSING> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "OE", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "OE", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         *  ORDER PROCESSING REPORTS
+         IF  USER_RECORD<USER_ORDER_PROCESSING> +  USER_RECORD<USER_REPORTS> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "ORPTS", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "ORPTS", GUIERRORS, GUISTATE)
+         END
+         *
+         * DETERMINE TYPE OF SYSTEM SHIPPING AND SET DISPLAY OF SHIPPPING MENU ITEM ACCORDINGLY
+         *
+         IF NX_SHIP_METHOD = PRESHIP THEN
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "SHIP", GUIERRORS, GUISTATE)
+         END ELSE
+            *
+            * ENABLE SHIPPING?
+            IF   USER_RECORD<USER_SHIPPING> + 0 THEN
+               CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "SHIP", GUIERRORS, GUISTATE)
+            END ELSE
+               CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "SHIP", GUIERRORS, GUISTATE)
+            END
+         END
+         *
+         * ONLY SET INVOICE BUTTON IF WE ARE RUNNING AR SUB SYSTEM
+         *
+         IF NX_AR_ACTIVE THEN
+            IF   USER_RECORD<USER_INVOICING> + 0 THEN
+               CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "INV", GUIERRORS, GUISTATE)
+            END ELSE
+               CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "INV", GUIERRORS, GUISTATE)
+            END
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "INV", GUIERRORS, GUISTATE)
+         END
+
+         *
+         * ENABLE PURCHASING?
+         IF   (USER_RECORD<USER_PURCHASE_ORDER> + 0) AND NXT_ENABLE_PURCHASING  THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "POE", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "POE", GUIERRORS, GUISTATE)
+         END
+         *
+         * ENABLE RECEIVING?
+         IF   (USER_RECORD<USER_PURCHASE_RECEIPT> + 0) AND NXT_ENABLE_PURCHASING  THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "POR", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "POR", GUIERRORS, GUISTATE)
+         END
+         *
+         * ENABLE PO REPORT?
+         IF  USER_RECORD<USER_PURCHASE_ORDER> + USER_RECORD<USER_PURCHASE_RECEIPT> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "POL", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "POL", GUIERRORS, GUISTATE)
+         END
+
+         *
+         *
+         * AR
+         IF   (USER_RECORD<USER_AR> + 0) AND NX_AR_ACTIVE THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "ARM", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "ARM", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * AP
+         IF   (USER_RECORD<USER_AP> + 0) AND NXT_ENABLE_AP THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "APM", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "APM", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * GLT REPORTS
+         IF  (USER_RECORD<USER_AR> + USER_RECORD<USER_AP> + 0) AND (USER_RECORD<USER_REPORTS> + 0) AND NXT_ENABLE_GL  THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "GLT", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "GLT", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * CUSTOMER MAINT
+         IF   USER_RECORD<USER_CUSTOMER_MAINT> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "CM", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "CM", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * PART MAINT
+         IF   USER_RECORD<USER_PART_MAINT> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "PARTS", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "PARTS", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * SYSTEM MAINT MENU
+         IF   USER_RECORD<USER_SYSTEM_MAINT> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "SYS", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "SYS", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * WORK CENTERS
+         IF   (USER_RECORD<USER_WORKCENTERS>) + 0 AND NXT_ENABLE_WCANDRT THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "WC", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "WC", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * WORK ORDERS
+         IF   (USER_RECORD<USER_WORKORDERS> + 0) AND NXT_ENABLE_WCANDRT THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "WO", GUIERRORS, GUISTATE)
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "DSP", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "WO", GUIERRORS, GUISTATE)
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "DSP", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * WORK ORDER ISSUE
+         IF   (USER_RECORD<USER_WORK_ORDER_ISSUE> + 0) AND NXT_ENABLE_WCANDRT THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "WOI", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "WOI", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * WORK ORDER RECEIPT
+         IF   (USER_RECORD<USER_WORK_ORDER_RECEIPT> + 0) AND NXT_ENABLE_WCANDRT THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "WOR", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "WOR", GUIERRORS, GUISTATE)
+         END
+         *
+         *
+         * LABOR
+         IF  (USER_RECORD<USER_LABOR> + 0) AND NXT_ENABLE_LABOR THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "LAB", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "LAB", GUIERRORS, GUISTATE)
+         END
+         *
+         * SHOP SCHEDULER USER_REC<USER_SHOP_SCHD>
+         *
+         IF  (USER_RECORD<USER_SHOP_SCHD> + 0) THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "SS", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "SS", GUIERRORS, GUISTATE)
+         END
+         *
+         * VENDOR MAINT
+         IF  USER_RECORD<USER_VENDOR_MAINT> + 0 THEN
+            CALL ATGUIENABLE ('MENU.BAR','MENU.BAR', "MENU", "VEN", GUIERRORS, GUISTATE)
+         END ELSE
+            CALL ATGUIDISABLE ('MENU.BAR','MENU.BAR', "MENU", "VEN", GUIERRORS, GUISTATE)
+         END
+         *
+         * SET USERS REPORT PRINTER
+         IF USER_RECORD<USER_REPORTS_PRINTER> = '' THEN
+            REPORT.PRINTER = 0  ;* SET TO DEFAULT PRINTER
+            LOG.OPTS  = "DISPLAY"
+            ERROR_NBR = ERR_SYS
+            ERROR_MSG =  "Missing REPORTS_PRINTER from USER record in, SYSTEM_FILE"
+            CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         END ELSE
+            REPORT.PRINTER = USER_RECORD<USER_REPORTS_PRINTER>
+         END
+
+
+      END ELSE
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  'User: ':USER_NAME:', Not Found in System File'
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOTO SHUTDOWN
+      END
+      *
+      * LOOK FOR TEMP DIRECTORY (USED FOR REPORT CSV / PDF GENERATION AND TRANSFER TO USER PC)
+      *
+      CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"NETWORK_PATH",NETWORK_PATH_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      REPORT.SRVR.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH >,"MCU")
+      REPORT.SHARE.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SHARE_REPORT_PATH >,"MCU")
+      REPORT.SHARE.TEMP.DIR = "\\": SYSTEM(1015):REPORT.SHARE.TEMP.DIR
+      IF ERROR_STATUS = ERR_NOF THEN
+         LOG.OPTS  = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Missing Record NETWORK_PATH From SYSTEM_FILE"
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END ELSE
+         IF REPORT.SRVR.TEMP.DIR # '' THEN
+            IF OSPATH(REPORT.SRVR.TEMP.DIR,OS$IS.DIR) THEN
+               *
+               * test if share path points to same directory, WRITE OUT A TEST FILE USING THE LOCAL SERVER PATH
+               TEMP.FILE.NAME =  "_":SYSTEM(19)
+               TEMP.REC = 'TEST TEMP DIR WRITE'
+               TEMP.ERROR = ''
+               OSWRITE TEMP.REC TO REPORT.SRVR.TEMP.DIR:@DS:TEMP.FILE.NAME ON ERROR CALL !ERRTEXT(TEMP.ERROR, STATUS())
+               IF TEMP.ERROR # '' THEN
+                  LOG.OPTS  = "DISPLAY"
+                  ERROR_NBR = ERR_SYS
+                  ERROR_MSG =  "Test Write to Temp Directory Failed, ":REPORT.SRVR.TEMP.DIR:@DS:TEMP.FILE.NAME:' ':TEMP.ERROR
+                  CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+               END ELSE
+                  *
+                  * NOW TRY TO READ IT BACK FROM THE SHARE PATH
+                  *
+                  OSREAD TEMP.REC FROM REPORT.SHARE.TEMP.DIR:@DS:TEMP.FILE.NAME THEN
+                     *
+                     * READ WAS A SUCCESS, NOW DELETE THE TEMP FILE
+                     OSDELETE REPORT.SRVR.TEMP.DIR:@DS:TEMP.FILE.NAME
+                  END ELSE
+                     LOG.OPTS  = "DISPLAY"
+                     ERROR_NBR = ERR_SYS
+                     ERROR_MSG =  "Server Temp Directory Path: ":REPORT.SRVR.TEMP.DIR:" and Share Temp Directory Path: ":REPORT.SHARE.TEMP.DIR:" Do Not Appear To Be The Same Directory"
+                     CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+                  END
+
+               END
+            END ELSE
+               LOG.OPTS  = "DISPLAY"
+               ERROR_NBR = ERR_SYS
+               ERROR_MSG =  "Secified Temp Directory Path in SYSTEM_FILE, Record NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH > ":NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH>: " Does Not Exist Or Is Not A Directory!"
+               CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+            END
+         END ELSE
+            LOG.OPTS  = "DISPLAY"
+            ERROR_NBR = ERR_SYS
+            ERROR_MSG =  "Missing Temp Directory Path in SYSTEM_FILE, Record NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH >"
+            CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         END
+      END
+      *
+      * SET REPORT OPTIONS FOR PRINTER UNIT AND REPORT PATH
+      *
+      OPTIONS = REPORT.PRINTER
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT LOOP<--*
+      LOOP
+         CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+         IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      UNTIL GUIEVT = GEQUIT DO
+         GUIAPP=OCONV(GUIAPP,'MCU')
+         GUIFRM=OCONV(GUIFRM,'MCU')
+         GUICTL=OCONV(GUICTL,'MCU')
+         GOSUB GUI.DECODE.EVENT
+      REPEAT
+      *-->END EVENT LOOP<--*
+      *
+      *
+      ************************************************************
+      *
+SHUTDOWN:
+      *
+      *-->BEGIN GUI TRAILER<--*
+      CALL ATGUISHUTDOWN
+      *
+      * SHOW ACCUTERM MAIN WINDOW, THEN LOG OFF
+      *
+      IF NXT.MIN.ACCUTERM THEN
+         CRT ESC : STX : 'P AccuTerm.WindowState = 0' : CR :
+      END
+      IF NXT.PAUSE.ACCUTERM THEN
+         CRT @(-1)
+         CRT @(5,10):'Pause for GUI Shutdown ......':
+         RQM
+         RQM
+      END
+      IF USER_RECORD<USER_LOGOUT> THEN
+         CHAIN "OFF"
+      END
+      *
+      STOP
+      *-->END GUI TRAILER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+      IF NUM(GUIEVT) THEN
+         BEGIN CASE
+            CASE GUIAPP='MENU.BAR'
+               BEGIN CASE
+                  CASE GUIFRM='MENU.BAR'
+                     BEGIN CASE
+                        CASE GUICTL=''
+                           BEGIN CASE
+                              CASE GUIEVT=GECLOSE
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.CLOSE;GUIEVT=0
+                           END CASE
+                        CASE GUICTL='MENU'
+                           GUIMNU=OCONV(GUIARGS<1,1>,'MCU')
+                           BEGIN CASE
+                              CASE GUIMNU='AP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.AP;GUIEVT=0
+                              CASE GUIMNU='APC'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.APC;GUIEVT=0
+                              CASE GUIMNU='APCS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.APCS;GUIEVT=0
+                              CASE GUIMNU='APD'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.APD;GUIEVT=0
+                              CASE GUIMNU='APO'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.APO;GUIEVT=0
+                              CASE GUIMNU='APS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.APS;GUIEVT=0
+                              CASE GUIMNU='AR'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.AR;GUIEVT=0
+                              CASE GUIMNU='ARC'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.ARC;GUIEVT=0
+                              CASE GUIMNU='ARO'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.ARO;GUIEVT=0
+                              CASE GUIMNU='ARRP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.ARRP;GUIEVT=0
+                              CASE GUIMNU='BREAKS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.BREAKS;GUIEVT=0
+                              CASE GUIMNU='CM'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.CM;GUIEVT=0
+                              CASE GUIMNU='CME'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.CME;GUIEVT=0
+                              CASE GUIMNU='DSP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.DSP;GUIEVT=0
+                              CASE GUIMNU='EMP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.EMP;GUIEVT=0
+                              CASE GUIMNU='GLT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.GLT;GUIEVT=0
+                              CASE GUIMNU='INV'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.INV;GUIEVT=0
+                              CASE GUIMNU='LAB.PRO'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.LAB.PRO;GUIEVT=0
+                              CASE GUIMNU='LBT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.LBT;GUIEVT=0
+                              CASE GUIMNU='LBTRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.LBTRPT;GUIEVT=0
+                              CASE GUIMNU='LBTTCKS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.LBTTCKS;GUIEVT=0
+                              CASE GUIMNU='OCRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.OCRPT;GUIEVT=0
+                              CASE GUIMNU='OE'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.OE;GUIEVT=0
+                              CASE GUIMNU='OHRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.OHRPT;GUIEVT=0
+                              CASE GUIMNU='OORPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.OORPT;GUIEVT=0
+                              CASE GUIMNU='OSRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.OSRPT;GUIEVT=0
+                              CASE GUIMNU='PARTS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.PARTS;GUIEVT=0
+                              CASE GUIMNU='PGRPTS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.PGRPTS;GUIEVT=0
+                              CASE GUIMNU='POE'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.POE;GUIEVT=0
+                              CASE GUIMNU='POH'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.POH;GUIEVT=0
+                              CASE GUIMNU='POL'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.POL;GUIEVT=0
+                              CASE GUIMNU='POR'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.POR;GUIEVT=0
+                              CASE GUIMNU='PSRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.PSRPT;GUIEVT=0
+                              CASE GUIMNU='QADA'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.QADA;GUIEVT=0
+                              CASE GUIMNU='QADMP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.QADMP;GUIEVT=0
+                              CASE GUIMNU='RR'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.RR;GUIEVT=0
+                              CASE GUIMNU='SHIFTS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.SHIFTS;GUIEVT=0
+                              CASE GUIMNU='SHIP'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.SHIP;GUIEVT=0
+                              CASE GUIMNU='SS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.SS;GUIEVT=0
+                              CASE GUIMNU='SYS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.SYS;GUIEVT=0
+                              CASE GUIMNU='VEN'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.VEN;GUIEVT=0
+                              CASE GUIMNU='WC'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WC;GUIEVT=0
+                              CASE GUIMNU='WCLRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WCLRPT;GUIEVT=0
+                              CASE GUIMNU='WCLRPTS'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WCLRPTS;GUIEVT=0
+                              CASE GUIMNU='WCRPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WCRPT;GUIEVT=0
+                              CASE GUIMNU='WO'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WO;GUIEVT=0
+                              CASE GUIMNU='WOI'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WOI;GUIEVT=0
+                              CASE GUIMNU='WOR'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WOR;GUIEVT=0
+                              CASE GUIMNU='WORPT'
+                                 GOSUB GUI.MENU.BAR.MENU.BAR.MENU.WORPT;GUIEVT=0
+                           END CASE
+                     END CASE
+               END CASE
+         END CASE
+         IF GUIEVT THEN
+            * Unhandled event - may be dynamic
+            GOSUB GUI.DYNAMIC.EVENTS
+         END
+      END ELSE
+         GOSUB GUI.CUSTOM.EVENTS
+      END
+      RETURN
+      *-->END EVENT DECODER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.CLOSE: *
+      * Default form close event handler
+      CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      IF NUM.FORMS = 0 THEN
+         CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+         IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+      END
+      RETURN
+      *-->END CLOSE EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.AP: *
+      CALL POAP.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.APC: *
+      CALL AP.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.APCS: *
+      CALL APCHK.STAT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.APD: *
+      CALL APDEBIT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.APO: *
+      *
+      SELECT.STR =  'SORT AP_INVOICE BY AP_DUE_DATE WITH AP_BAL_DUE GT 0 INVOICE AP_DUE_DATE AP_INV_DATE AP_VENDOR_NAME AP_HOLD AP_INV_AMT  TOTAL AP_BAL_DUE'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"AP_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      *
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.APS: *
+      CALL APINV.STAT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.AR: *
+      CALL AR.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.ARC: *
+      CALL CREDIT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.ARO: *
+      SELECT.STR =  'SORT AR BY AR_DUE_DATE WITH AR_BAL_DUE GT 0 AR_INVOICE AR_DUE_DATE AR_INV_DATE AR_CUST_NAME AR_AMOUNT TOTAL AR_BAL_DUE'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"AR_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.ARRP: *
+      CALL AR.REPRINT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.BREAKS: *
+      CALL VF.DIALOG("BREAKS",GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.CM: *
+      CALL CM.SELECT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.CME: *
+      CALL CREDIT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.DSP: *
+      CALL DISPATCH.DIALOG(GUIERRORS,GUISTATE) ;* GENERATE DISPATCH REPORT
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.EMP: *
+      CALL EMP.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.GLT: *
+      *
+      SELECT.STR =  'SORT GLT BY GL_ACCT BY GL_DATE GL_DATE GL_ACCT GL_DB_AMT GL_CR_AMT GL_SUB_SYS GL_REF'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"GLT_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      *
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.INV: *
+      CALL INV.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.LAB.PRO: *
+      CALL LABOR.PRO.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.LBT: * LABOR TICKET ENTRY
+      LBT_ID = ''  ;* ENTER AS DATA ENTRY
+      OPTIONS = LBR_COLLECTION_MODE
+      *OPTIONS = LBR_ENTRY_MODE
+      CALL LABOR.DIALOG(LBT_ID,OPTIONS,GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.LBTRPT: *
+      REPORT.NAME = 'Labor Transaction Report'
+      SORT.CLAUSE = 'SORT LABOR_TRANS BY LBT_DATE'
+      SELECT.CLAUSE = ''
+      DISPLAY.CLAUSE = 'LBT_DATE LBT_EMP LBT_WO_ID LBT_SEQ_ID LBT_CLK_IN LBT_CLK_OUT LBT_ELAPSED LBT_BREAK LBT_LAB_HRS LBT_QTY_CMP LBT_QTY_SCRP LBT_SEQ_STAT '
+      HEADING.STR = "'C'Labor Transaction Report 'LCD'"
+      DATE.CLAUSE = "LBT_DATE"
+      FROM.FLAG = @TRUE
+      TO.FLAG = @TRUE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+
+      *SELECT.STR =  'SORT LABOR_TRANS BY LBT_DATE LBT_DATE LBT_EMP LBT_WO_ID LBT_SEQ_ID LBT_CLK_IN LBT_CLK_OUT LBT_ELAPSED LBT_BREAK LBT_LAB_HRS LBT_QTY_CMP LBT_QTY_SCRP LBT_SEQ_STAT '
+      *OPTIONS = ''
+      *CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"LABOR_TRANSACTION_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      **
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.LBTTCKS: *
+      *REPORT.NAME = 'Labor Ticket Report'
+      *SORT.CLAUSE = 'SORT LABOR_TICKETS BY LBT_DATE'
+      *SELECT.CLAUSE = ''
+      *DISPLAY.CLAUSE = 'LBT_DATE LBT_EMP LBT_WO_ID LBT_SEQ_ID LBT_CLK_IN LBT_CLK_OUT LBT_ELAPSED LBT_BREAK LBT_LAB_HRS LBT_QTY_CMP LBT_QTY_SCRP LBT_SEQ_STAT '
+      *HEADING.STR = "'C'Labor Ticket Report 'LCD'"
+      *DATE.CLAUSE = ""
+      *FROM.FLAG = @FALSE
+      *TO.FLAG = @FALSE
+      **
+      *CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+
+      SELECT.STR =  'SORT LABOR_TICKETS BY LBT_DATE BY LBT_EMP BY LBT_CLK_IN LBT_DATE LBT_EMP LBT_WO_ID LBT_SEQ_ID LBT_CLK_IN LBT_CLK_OUT LBT_ELAPSED LBT_BREAK LBT_LAB_HRS LBT_QTY_CMP LBT_QTY_SCRP LBT_SEQ_STAT '
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"LABOR_TICKET_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+
+
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.OCRPT: * - OPEN ORDERS BY CUSTOMER REPORT
+      REPORT.NAME = 'Open Orders By Customer Report'
+      SORT.CLAUSE = 'SORT ORDER_CHILD BY CUST_NAME BY ORDER WITH OC_CLOSE # "C" AND WITH OC_ITEM_STAT # "C"'
+      SELECT.CLAUSE = ''
+      DISPLAY.CLAUSE = 'ORDER CUST_NAME ORDER_PO OC_PART_NBR OC_PART_DESC BY.EXP OC_DUE_DATE OC_DUE_DATE OC_ORD_QTY OC_DEL_DATE OC_DEL_QTY '
+      HEADING.STR = "'C'Open Orders Report'LCD'"
+      DATE.CLAUSE = ''
+      FROM.FLAG = @FALSE
+      TO.FLAG = @FALSE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.OE: *
+      CALL OE.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.OHRPT: * - ORDER HISTORY REPORT
+      REPORT.NAME = 'Orders History Report'
+      SORT.CLAUSE = 'SORT ORDER_CHILD BY ORDER_DATE'
+      SELECT.CLAUSE = ''
+      DISPLAY.CLAUSE = 'ORDER CUST_NAME ORDER_PO OC_PART_NBR OC_PART_DESC ORDER_DATE OC_SPC ORDER_TYPE ORDER_CLASS BY.EXP OC_DUE_DATE OC_DUE_DATE OC_ORD_QTY OC_DEL_DATE OC_DEL_QTY '
+      HEADING.STR = "'C'Customer Property Incoming Log     CF 705-3  REV N/C'LCD'"
+      DATE.CLAUSE = "ORDER_DATE"
+      FROM.FLAG = @TRUE
+      TO.FLAG = @TRUE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+      *
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.OORPT: * - OPEN ORDERS BY DUE DATE REPORT
+      REPORT.NAME = 'Open Orders Report'
+      SORT.CLAUSE = 'SORT ORDER_CHILD BY.EXP OC_OPEN_ORD_LN WHEN OC_OPEN_ORD_LN = "" WITH OC_CLOSE # "C" BY.EXP OC_DUE_DATE '
+      SELECT.CLAUSE = ''
+      DISPLAY.CLAUSE = 'ORDER CUST_NAME ORDER_PO OC_PART_NBR OC_PART_DESC  OC_DUE_DATE OC_ORD_QTY '
+      HEADING.STR = "'C'Open Orders Report'LCD'"
+      DATE.CLAUSE = ''
+      FROM.FLAG = @FALSE
+      TO.FLAG = @FALSE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+      *
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.OSRPT: * ORDERS SHIPPED REPORT
+      REPORT.NAME = 'Orders Shipped Report'
+      SORT.CLAUSE = 'SORT SALES BY SA_DUE_DATE WITH SA_DUE_DATE # "" '
+      SELECT.CLAUSE = ''
+      DISPLAY.CLAUSE = 'ORDER_NBR @ID SA_NAME SA_PO_NBR SA_PART_NBR SA_PART_DESC SA_SPC SA_ORDER_TYPE SA_ORDER_CLASS SA_DUE_DATE SA_DUE_QTY SA_DEL_DATE SA_DEL_QTY DELTA_DAYS '
+      HEADING.STR = "'C'Customer Property Outgoing Log     CF 705-4  REV N/C'LCD'"
+      DATE.CLAUSE = "SA_DEL_DATE"''
+      FROM.FLAG = @TRUE
+      TO.FLAG = @TRUE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.PARTS: *
+      PN_ID = ''
+      PARTS_REC = ''
+      CALL PN.DIALOG(PN_ID,PARTS_REC,@FALSE,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.PGRPTS: * - PROCESS GROUPS REPORT
+      SELECT.STR =  'SORT PROCESS_GROUPS @ID PG_GROUP_NAME PG_GROUP_DESC PG_PROCESS_STEPS '
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"PROCESS_GROUP_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      *
+      *REPORT.NAME = 'Process Groups Report'
+      *SORT.CLAUSE = 'SORT PROCESS_GROUPS BY @ID'
+      *SELECT.CLAUSE = ''
+      *DISPLAY.CLAUSE = '@ID PG_GROUP_NAME PG_GROUP_DESC PG_PROCESS_STEPS '
+      *HEADING.STR = "'C'Process Groups Report'LCD'"
+      *DATE.CLAUSE = ""
+      *FROM.FLAG = @FALSE
+      *TO.FLAG = @FALSE
+      **
+      *CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+      *
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.POE: * PURCHASE ORDER ENTRY
+      CALL POE.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.POH: *
+      SELECT.STR =  'SORT PO_CHILD BY PC_DUE_DATE  ORDER VEND_ID VEN_NAME  PC_PART_NBR PC_PART_DESC PC_DUE_DATE PC_ORD_QTY PC_BAL_DUE PC_PRICE_EA'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"PO_HIST_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.POL: * OPEN PO REPORT
+      SELECT.STR =  'SORT PO_CHILD BY PC_DUE_DATE WITH PC_ITEM_STAT # "C"  ORDER VEND_ID VEN_NAME  PC_PART_NBR PC_PART_DESC PC_DUE_DATE PC_ORD_QTY PC_BAL_DUE PC_PRICE_EA'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"PO_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.POR: * PURCHASE ORDER RECEIPT
+      CALL POR.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.PSRPT: *  - PROCESS STEPS REPORT
+      SELECT.STR =  'SORT PROCESS_STEPS @ID PS_PROCESS_DESC PS_CERT_DESC  '
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"PROCESS_STEP_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      *
+      *REPORT.NAME = 'Process Steps Report'
+      *SORT.CLAUSE = 'SORT PROCESS_STEPS BY @ID'
+      *SELECT.CLAUSE = ''
+      *DISPLAY.CLAUSE = '@ID PS_PROCESS_DESC PS_CERT_DESC'
+      *HEADING.STR = "'C'Process Steps Report'LCD'"
+      *DATE.CLAUSE = ""
+      *FROM.FLAG = @FALSE
+      *TO.FLAG = @FALSE
+      **
+      *CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+      *
+      ** old way of calling printed report KEEP FOR REF
+      **STMT = 'SORT PROCESS_STEPS BY @ID  @ID PS_PROCESS_DESC PS_CERT_DESC HEADING "':"'C'Process Steps Report'LCD'":'" ID-SUP HDR.SUP LPTR'
+      **EXECUTE STMT CAPTURING DMMY
+      **PRMPT = "Process Steps report sent to printer":@SVM:DMMY
+      **CAPTION = "Reports"
+      **STYLE   = 0  ;* no icon
+      **BUTTONS = 0  ;* ok
+      **HELPID = ""
+      **CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.QADA: *
+      CALL QADA.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.QADMP: *
+      REPORT.NAME = 'QA DATA DUMP'
+      SORT.CLAUSE = 'SORT QAD_CHILD BY QAC_WONBR BY QAC_SEQNBR BY QAC_CHAR_ID BY QAC_SAMPLE_NBR'
+      SELECT.CLAUSE = 'WITH QAC_WONBR = '
+      DISPLAY.CLAUSE = 'QAC_WONBR QAC_SEQNBR QAC_PARTNBR QAC_CHAR_ID QAC_SAMPLE_NBR QAC_DATE QAC_TIME QAC_EMP QAC_VALUE'
+      HEADING.STR = "'C'Qa Data Dump'LCD'"
+      DATE.CLAUSE = "QAC_DATE"''
+      FROM.FLAG = @TRUE
+      TO.FLAG = @TRUE
+      *
+      CALL REPORT.DRIVER(REPORT.NAME,SORT.CLAUSE,SELECT.CLAUSE,DISPLAY.CLAUSE,HEADING.STR,DATE.CLAUSE,FROM.FLAG,TO.FLAG,OPTIONS,RD.RESPONSE,GUIERRORS,GUISTATE)
+
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.RR: *
+      CALL SF.ROUTING.REPRINT(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.SHIFTS: *
+      CALL VF.DIALOG("SHIFTS",GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.SHIP: *
+      CALL SHIP.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.SS: *
+      CALL SHOP.SCHEDULE.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.SYS: *
+      CALL MAINT.MENU.DIALOG(GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.VEN: *
+      CALL VEN.SELECT.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WC: *
+      CALL WC.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WCLRPT: *
+      * SORT WC_LOAD BY WCL_WC_ID BY WCL_DATE WCL_DATE WCL_WO_ID WCL_SEQ BREAK-ON WCL_WC_ID TOTAL WCL_LOAD_HRS ID-SUPP
+      * SORT WC_LOAD BY WCL_WC_ID BY WCL_DATE  BREAK-ON WCL_WC_ID  WCL_DATE WCL_WO_ID WCL_SEQ  WCL_PART_NBR TOTAL WCL_LOAD_HRS ID-SUPP
+      * TRANS(WO,WCL_WO_ID,WO_PARTNBR,"X")
+      SELECT.STR =  'SORT WC_LOAD BY WCL_WC_ID BY WCL_DATE  BREAK-ON WCL_WC_ID  WCL_DATE WCL_WO_ID WCL_SEQ  WCL_PART_NBR TOTAL WCL_LOAD_HRS'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"WCL_DETAIL_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WCLRPTS: *
+      SELECT.STR =  'SORT WC_LOAD BY WCL_WC_ID BY WCL_DATE  BREAK-ON  WCL_WC_ID  BREAK-ON WCL_DATEW  TOTAL WCL_LOAD_HRS DET-SUPP'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"WCL_SUMMARY_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WCRPT: *
+      SELECT.STR =  'SORT WC @ID WC_NAME WC_DESC WC_DEPT WC_MON WC_TUE WC_WED WC_THUR WC_FRI WC_SAT WC_SUN'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"WC_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WO: *
+      PN_ID= ''
+      OC_ID= ''
+      WO_ID= ''
+      PN_REC= ''
+      CALLER_ACTION = WO_PROMPT
+      CALL WO.TREE.DIALOG(PN_ID,PN_REC,OC_ID,WO_ID,CALLER_ACTION,GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WOI: *
+      CALL WOI.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WOR: *
+      CALL WOR.DIALOG(GUIERRORS,GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN EVENT HANDLER<--*
+GUI.MENU.BAR.MENU.BAR.MENU.WORPT: *
+      SELECT.STR =  'SORT WO BY WO_DUE_DATE WITH WO_STATUS = "R" @ID WO_PARTNBR WO_QTY_TO_MFG WO_START_DATE WO_DUE_DATE WO_REL_DATE WO_STATUS WO_STAT_DATE'
+      OPTIONS = ''
+      CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"WC_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+      RETURN
+      *-->END EVENT HANDLER<--*
+      *
+      *
+      ************************************************************
+      *
+      *
+      *-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+      * Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+      * GUICTL and GUIARGS variables are valid and availble for your use.
+      RETURN
+      *-->END DYNAMIC EVENTS<--*
+      *
+      *
+      ************************************************************
+      *
+      **-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+      * Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+      * GUICTL and GUIARGS variables are valid and availble for your use.
+      RETURN
+      *-->END CUSTOM EVENTS<--*
+      *
+      *
+      ************************************************************
+      *
+      **-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+      CALL ATGUISHUTDOWN
+      PRINT 'The following errors have been reported by the GUI system:'
+      NUMERRS=DCOUNT(GUIERRORS,CHAR(254))
+      FOR EACHERR=2 TO NUMERRS
+         PRINT GUIERRORS<EACHERR,6>
+         *
+         LOG.OPTS = ""
+         ERROR_NBR = ERR_GUI
+         ERROR_MSG =  GUIERRORS<EACHERR,6>
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         *
+      NEXT EACHERR
+      STOP
+      *-->END ERROR HANDLER<--*
+      *
+      ************************************************************
+      *
+      END

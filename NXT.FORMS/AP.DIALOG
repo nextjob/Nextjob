@@ -1,0 +1,100 @@
+TEMPLATEı41835.61552ıAPıNXT.BPüAP.DIALOGü3ü0
+0ı1.4ı4
+2ıAPıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııAccounts Payable
+4ıı59ııı0
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııPay AP Invoices
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıAP*APıı7ıautoıautoı69.25ı26.5ı1
+4ıı22ıııAccounts Payable
+4ıı48ııı0
+4ıı9ııı0
+2ıAP*AP*lblVendorıı15ı5ı1ı12ı1.25ı0
+4ıı0ıııVendor Number
+4ıı67ııı0
+2ıAP*AP*lst1VenNameıı24ı16ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı15ı15ı10
+4ıı39ııı1
+4ıı49ıııSelect vendor name
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııCM NbrıNameıAddressıCity
+4ıı33ııı3
+4ıı68ııı0
+2ıAP*AP*LBLVENDNAMEıı15ı29ı1ı31ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıAP*AP*FrmSelectıı26ı1ı3.5ı65.5ı3.75ı0
+4ıı0ıııSelect Invoices
+4ıı67ııı0
+2ıAP*AP*BtnSelDueıFrmSelectı18ı2ı1.5ı11ı1.25ı32
+4ıı22ıııSelect Due By
+2ıAP*AP*txtDueıFrmSelectı16ı16ı1.5ı8ı1.25ı256
+4ıı29ııı6
+2ıAP*AP*BtnSelAllıFrmSelectı18ı34ı1.5ı7.5ı1.25ı32
+4ıı22ıııSelect All
+2ıAP*AP*Grid1ıı28ı1ı8.5ı66ı9.5ı32
+4ıı27ııı6
+4ıı32ıııPayıInvoice NumberıDue DateıInvoice AmountıBalance DueıAmt to Pay
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı5.38ı11ı8.25ı11ı11ı9.38
+4ıı34ııı2ı1ı0ı0ı0ı1
+4ıı35ııı0ı2ı0ı0ı0ı5
+4ıı33ııı3
+4ıı10ııı1
+4ıı12ııı0ı0ı1ı1ı0ı1
+2ıAP*AP*lblCheckıı15ı1ı20.5ı7ı1.25ı0
+4ıı0ıııCheck Nbr
+2ıAP*AP*txtCheckıı16ı8ı20.5ı14ı1.25ı256
+4ıı49ıııEnter customer check number
+4ıı29ııı8
+2ıAP*AP*lblDateıı15ı24ı20.5ı4ı1.25ı0
+4ıı0ıııDate
+4ıı67ııı0
+2ıAP*AP*txtDateıı16ı29ı20.5ı9.5ı1.25ı256
+4ıı29ııı6
+2ıAP*AP*lblAmountıı15ı41ı20.5ı9.5ı1.25ı0
+4ıı0ıııCheck Amount
+2ıAP*AP*txtamountıı16ı53ı20.5ı14ı1.25ı256
+4ıı49ıııEnter check amount
+4ıı29ııı5
+2ıAP*AP*btnProcessıı18ı1ı22.5ı8ı2ı32
+4ıı22ıııProcess
+4ıı49ıııClick to process check
+2ıAP*AP*btnCancelıı18ı30ı22.5ı8ı2ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel AR entry
+2ıAP*AP*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıAP*AP*LSTBANKıı24ı8ı18.5ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8.25ı15
+4ıı53ııı8
+4ıı32ıııBank IdıName
+4ıı39ııı1
+2ıAP*AP*LBLBANKıı15ı1ı18.5ı6ı1.25ı0
+4ıı0ıııBank
+4ıı67ııı0
+2ıAP*AP*BTNPRINTıı18ı59ı22.5ı7.5ı2ı32
+4ıı22ıııPrint Check
+2ıAP*AP*LBLCHKAMTVıı15ı49ı18ı18ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıAP*AP*LBLAMTıı15ı36ı18ı13ı1.25ı0
+4ıı0ıııAmount Selected
+4ıı67ııı0
+0ı-1

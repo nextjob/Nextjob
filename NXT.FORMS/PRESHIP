@@ -1,0 +1,48 @@
+TEMPLATEı39551.78267ıPRESHIPıNXT.BPüPRESHIP.DIALOGü3ü0
+0ı1.3ı4
+2ıPRESHIPıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııSHIP
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı43ıııqty shipped dialog for preshipping
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıPRESHIP*PRESHIPıı7ıautoıautoı36ı15.12ı1
+4ıı22ıııShipping
+4ıı48ııı0
+4ıı9ııı0
+2ıPRESHIP*PRESHIP*txtShpQtyıı16ı23ı3.5ı8ı2.75ı256
+4ıı49ıııEnter shipping quantity
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı13.5
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+2ıPRESHIP*PRESHIP*lblShpQtyıı15ı23ı2ı10ı1.25ı0
+4ıı0ıııQty To Ship
+2ıPRESHIP*PRESHIP*lblDueValıı15ı3ı3.5ı8ı3ı0
+4ıı11ııı2
+4ıı16ıııMS Sans Serif
+4ıı17ııı13.5
+4ıı18ııı1
+4ıı19ııı0
+2ıPRESHIP*PRESHIP*lblDueıı15ı3ı2ı8ı1.25ı0
+4ıı0ıııBalance Due
+2ıPRESHIP*PRESHIP*btnShipıı18ı3ı10ı9ı2.5ı32
+4ıı22ıııShip Item
+4ıı49ıııClick to create pack list and certs
+4ıı8ııı0
+2ıPRESHIP*PRESHIP*btnCancelıı18ı23ı10ı9.5ı2.5ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel current shipment
+2ıPRESHIP*PRESHIP*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+0ı-1

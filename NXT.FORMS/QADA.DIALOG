@@ -1,0 +1,86 @@
+TEMPLATEı42068.9165ıQaDataAckıNXT.BPüQADA.DIALOGü3ü0
+0ı1.4ı4
+2ıQaDataAckıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııQA Data Acquisition
+4ıı59ııı0
+4ıı41ıııData Acquisition Module
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıQaDataAck*QaDaıı7ıautoıautoı77ı25.5ı1
+4ıı22ıııQA Data Acquisition
+4ıı48ııı0
+4ıı9ııı0
+2ıQaDataAck*QaDa*frmWoıı26ı0ı0ı76.5ı9ı0
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblWOıfrmWoı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıQaDataAck*QaDa*txtWoIDıfrmWoı16ı9ı1ı15.5ı1.25ı256
+2ıQaDataAck*QaDa*lblSeqıfrmWoı15ı28ı1ı6ı1.25ı0
+4ıı0ıııSeq Nbr
+4ıı67ııı0
+2ıQaDataAck*QaDa*txtSeqıfrmWoı16ı34ı1ı8ı1.25ı256
+2ıQaDataAck*QaDa*lblEmpıfrmWoı15ı44ı1ı5.5ı1.25ı0
+4ıı0ıııEmp Id
+4ıı67ııı0
+2ıQaDataAck*QaDa*txtEmpIdıfrmWoı16ı50ı1ı6ı1.25ı256
+2ıQaDataAck*QaDa*lblEmpNameıfrmWoı15ı57ı1ı17ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*lblPNıfrmWoı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblPnVıfrmWoı15ı9ı2.5ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*lblDescıfrmWoı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblDescVıfrmWoı15ı9ı4ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*lblDrawıfrmWoı15ı38ı4ı7ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblDrawVıfrmWoı15ı45ı4ı29ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*lblWoQtyıfrmWoı15ı1ı5.5ı10.5ı1.25ı0
+4ıı0ıııWork Order Qty
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblWoQtyValıfrmWoı15ı12ı5.5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*btnStartıfrmWoı18ı30ı6.5ı18ı1.75ı32
+4ıı22ıııStart Data Entry
+2ıQaDataAck*QaDa*frmDataıı26ı0ı9ı76.5ı14ı0
+4ıı8ııı0
+4ıı67ııı0
+2ıQaDataAck*QaDa*QAGRIDıfrmDataı28ı2ı2.5ı73.5ı9ı32
+4ıı27ııı7
+4ıı32ıııIdıInspection Characteristicını FreqıLocıInsp MethodıValue 
+4ıı38ııı0ı0ı2ı2ı0ı0ı2
+4ıı37ııı3.75ı28.25ı5.38ı6.5ı4.5ı13.62ı8.25
+4ıı34ııı0ı0ı0ı0ı0ı0ı0
+4ıı33ııı3
+4ıı0ıııüüüüüüıüüüüüü
+4ıı35ııı0ı0ı0ı0ı0ı0ı2
+2ıQaDataAck*QaDa*btnFileıfrmDataı18ı61ı12ı7.5ı1.25ı32
+4ıı22ıııFile Data
+2ıQaDataAck*QaDa*btnResetıfrmDataı18ı4ı12ı7.5ı1.25ı32
+4ıı22ıııReset
+2ıQaDataAck*QaDa*lblSampleıfrmDataı15ı3ı1ı6.5ı1.25ı0
+4ıı0ıııSample #
+4ıı67ııı0
+2ıQaDataAck*QaDa*lblSampleValıfrmDataı15ı9ı1ı5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQaDataAck*QaDa*btnNewWoıı18ı4ı23.5ı7.5ı1.25ı32
+4ıı22ıııNew Wo
+0ı-1

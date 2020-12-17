@@ -1,0 +1,45 @@
+TEMPLATEı41822.73942ıPOAP.UAıNXT.BPüPOAP.UNAPPLIED.DIALOGü3ü0
+0ı1.4ı4
+2ıPOAP.UAıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPOAP UNAPPLY
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııResolves Unapplied Invoice Amount
+2ıPOAP.UA*POAP.UAıı7ıautoıautoı55ı13.75ı1
+4ıı22ıııUnapplied Invoice Amount
+4ıı48ııı0
+4ıı9ııı0
+2ıPOAP.UA*POAP.UA*FrmPropıı26ı0ı3.5ı53.5ı4.75ı0
+4ıı0ıııApply Proportional
+4ıı67ııı0
+2ıPOAP.UA*POAP.UA*btnPropıFrmPropı18ı11ı1.5ı30.5ı2.5ı32
+4ıı22ıııApply Unapplied Amount Proportional to Item Totals
+2ıPOAP.UA*POAP.UA*frmGlıı26ı1ı8.5ı52.5ı5ı0
+4ıı0ıııApply To GL Account
+4ıı67ııı0
+2ıPOAP.UA*POAP.UA*lstGlTransıfrmGlı24ı11ı2ı20ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.12ı15
+4ıı53ııı8
+4ıı39ııı1
+4ıı32ıııGl CodeıDescription
+2ıPOAP.UA*POAP.UA*blbGlCdıfrmGlı15ı1ı2ı9.5ı1.25ı0
+4ıı0ıııGL Trans Code
+4ıı67ııı0
+2ıPOAP.UA*POAP.UA*btnApplyGlıfrmGlı18ı36ı1.5ı7.5ı2.75ı32
+4ıı22ıııApply To GL Account
+2ıPOAP.UA*POAP.UA*lblUappliedıı15ı1ı1ı12ı1.25ı0
+4ıı0ıııUnapplied Amount:
+4ıı67ııı0
+2ıPOAP.UA*POAP.UA*LBLUNAPPLIEDVıı15ı14ı1ı13.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+0ı-1

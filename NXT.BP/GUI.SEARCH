@@ -1,0 +1,271 @@
+SUBROUTINE GUI.SEARCH (F.NAME,USEARCH.FLD,USEARCH.STR,USORT,DESC.ATB,MAX.LIST,START.LIST,LST.LNS,LST.IDS,LIST.CT,EMSG)
+!
+* SUBROUTINE NAME: GUI_SEARCH
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+*
+* F.NAME - FILE NAME TO SEACH ON
+* USEARCH.FLD- NAMED ATTRIBUTE (ACCESS) TO SEARCH
+* USEARCH.STR- STRING TO SEARCH FOR 
+*            "*" FOR SELECT ALL RECORDS
+*            "!string" FOR EXACT STRING MATCH
+*            OTHERWISE USE "[string]" SEARCH FORMAT
+* USORT      - ATTRIBUTE TO SORT ON
+*
+* DESC.ATB  - OPTIONAL ATRIBUTE NAME(S) TO DISPLAY 
+*             OR "0" TO DISPLAY ID
+* MAX.LIST  - MAX ENTRYS TO RETURN IN LIST
+* START.LIST- ENTRY TO START LIST GENERATION AT
+*             USE THIS VALUE TO "PAGE" THRU MORE THEN MAX.LIST ITEMS
+*             ON EXIT NEXT VALUE TO DISPLAY
+* LST.LNS   - LST.LNS<1,X,1> = REC.ID
+*             LST.LNS<1,X,2> = DATA TEXT AS SPECIFIED BY DESC.ATB 
+* LST.IDS   - VM LIST OF F.NAME RECORD IDS 
+* LIST.CT   - NUMBER OF ITEMS IN LST.LNS AND LST.IDS
+* EMSG<1>   - RETURNED ERROR MESSAGE OR NULL
+* EMSG<2>   -  ERROR CODE FOR EMSG
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+**
+********** PROGRAM EQUATES
+**
+**
+*********** START OF PROGRAM
+**
+*
+EMSG = ""
+LST.LNS = ""
+LST.IDS = ""
+LIST.CT = 0
+*
+OPEN F.NAME TO F.BUFF ELSE
+   EMSG = F.NAME :' - Is An Invalid File Name'
+   EMSG<2> = ERR_SYS
+   GOTO 9999
+END
+*
+OPEN "DICT", F.NAME TO F.DICT ELSE
+   EMSG = F.NAME:' - No Dictionary Found'
+   EMSG<2> = ERR_SYS
+   GOTO 9999
+END
+*
+IF NOT(NUM(MAX.LIST)) THEN
+   EMSG = "Invalid Max.List Value"
+   EMSG<2> = ERR_SYS
+   GOTO 9999
+END
+*
+IF NOT(NUM(START.LIST)) THEN
+   EMSG = "Invalid Start.List Value"
+   EMSG<2> = ERR_SYS
+   GOTO 9999
+END
+*
+SEARCH.FLD = USEARCH.FLD
+*
+IF SEARCH.FLD # '' THEN
+*
+* LOOK FOR BY-EXP -- TURN OFF FOR NOW
+*
+   
+*IF SEARCH.FLD[1,6] = "BY-EXP" THEN
+*   BY.EXP = @TRUE
+*   SEARCH.FLD = SEARCH.FLD[8,99]
+*END ELSE
+*   BY.EXP = @FALSE
+*END
+*
+   READ SEARCH.ATB.REC FROM F.DICT, SEARCH.FLD  ELSE
+      EMSG = 'Field ':SEARCH.FLD:' Not Found In File ':F.NAME
+      EMSG<2> = ERR_WARN
+      GOTO 9999
+   END
+END
+*
+*
+BEGIN CASE 
+   CASE USEARCH.STR = "*" AND USORT = ''
+      SLIST = "SSELECT ":F.NAME 
+   CASE USEARCH.STR = "*" AND USORT # ''
+      SLIST = "SSELECT ":F.NAME:" BY ":USORT    
+   CASE USEARCH.STR[1,1] = "!" AND USORT = ''
+      SEARCH.STR = USEARCH.STR[2,99]
+      SLIST = "SSELECT ":F.NAME:" WITH ":SEARCH.FLD:' LIKE "':SEARCH.STR:'"'
+   CASE USEARCH.STR[1,1] = "!" AND USORT # ''
+      SEARCH.STR = USEARCH.STR[2,99]
+      SLIST = "SSELECT ":F.NAME:" BY ":USORT:" WITH ":SEARCH.FLD:' LIKE "':SEARCH.STR:'"'   
+   CASE 1
+      IF USORT = '' THEN
+         SEARCH.STR = "0X'":USEARCH.STR:"'0X"
+         SLIST = "SSELECT ":F.NAME:" WITH ":SEARCH.FLD:' LIKE "':SEARCH.STR:'"'
+      END ELSE
+         SEARCH.STR = "0X'":USEARCH.STR:"'0X"
+         SLIST = "SSELECT ":F.NAME:" BY ":USORT:" WITH ":SEARCH.FLD:' LIKE "':SEARCH.STR:'"'
+      END
+END CASE 
+*
+SLIST := ' TO 2'
+*
+ EXECUTE SLIST CAPTURING DMMY.OUT 
+*
+BEGIN CASE
+*
+   CASE @SELECTED LT 1
+      EMSG = 'No Items Found'
+      EMSG<2> = ERR_WARN
+      LIST.CT = 0
+*
+   CASE 1
+      ATB.COUNT = 0
+      IF DESC.ATB # '' THEN
+         IF DESC.ATB # 0 THEN 
+*
+* GET ATB DICT NAMES, CREATE ATB DATA ARRAYS
+*
+            ATB.CONV = ''    ;* OCONV CONVERSION PARAMETER
+            ATB.NAME = ''    ;* ATB DICT NAME
+            ATB.DESC = ''    ;* DESCRIPTION OF ATB
+            ATB.NBR =  ''    ;* ACTUAL ATB # IN ITEM
+            ATB.FMT = ''     ;* FORMAT SPEC
+            ATB.LEN = ''     ;* VALUE OUTPUT LENGTH
+*
+            ATB.LIST = DESC.ATB
+            CONVERT "," TO @AM IN ATB.LIST
+            ATB.COUNT = DCOUNT(ATB.LIST,@AM)
+            FOR I = 1 TO ATB.COUNT
+*
+               ANAME = ATB.LIST<I>
+               READ A.REC FROM F.DICT, ANAME THEN
+                  ATB.NAME<I> = ANAME
+                  IF A.REC<4,1> # '' THEN
+                     ATB.DESC<I> = A.REC<4,1>
+                  END ELSE
+                     ATB.DESC<I> = ANAME
+                  END
+*
+                  FMTV.VAL = A.REC<5>
+                  FMTV.LEN = LEN(FMTV.VAL)
+                  FMT.LEN = FMTV.VAL[1,FMTV.LEN-1]
+                  FMT.JUST = FMTV.VAL[FMTV.LEN,1]
+*
+                  BEGIN CASE
+                     CASE FMT.JUST = 'L' 
+                        NULL
+                     CASE FMT.JUST = 'R'
+                        NULL
+                     CASE 1
+                        FMT.JUST = 'L'
+                        FMT.LEN  = 15
+                  END CASE
+*
+                  ATB.NBR<I>  = A.REC<2>
+                  ATB.FMT<I>  = FMT.JUST:'#':FMT.LEN
+                  ATB.LEN<I>  = FMT.LEN
+                  ATB.CONV<I> = A.REC<3>
+               END
+            NEXT I
+*
+         END
+      END
+*
+*     CREATE THE LIST OF ITEM IDS
+*
+      READLIST IDLIST FROM 2 THEN
+         LIST.CT = DCOUNT(IDLIST,@AM)
+         GOSUB LST.LN.GET
+      END      
+*
+END CASE
+*
+9999 
+*
+RETURN
+!
+* LST.LN.GET
+* ROUTINE TAKES ITEM IDS IN IMLIST AND CRTEATES LST.LNS
+!
+LST.LN.GET: 
+*
+LST.LNS = ''
+LST.IDS = ''
+ID.PTR  = 0
+*
+FOR DSP.PTR = START.LIST TO LIST.CT
+   ID.PTR += 1
+*
+   IF ID.PTR > MAX.LIST THEN
+      LIST.CT = MAX.LIST + 1
+      LST.LNS<1,ID.PTR,1> = "$MORE$"
+      LST.LNS<1,ID.PTR,2> = "Click For More"
+      START.LIST = DSP.PTR   ;* THIS IS THE ONE WE WANT TO SHOW NEXT
+      GOTO LST.999
+*
+   END ELSE
+*
+* GET THE RECORD
+* 
+      REC.ID = IDLIST<DSP.PTR,1>
+*
+      READ F.REC FROM F.BUFF, REC.ID THEN
+* 
+* FOR GUI COMBO OR LIST BOX, FIRST FILE IS ALWAYS ID
+*
+         DESC.TXT = ''
+*
+* IF THERE WAS OTHER INFO TO DISPLAY, GET IT FROM THE ITEM RECORD
+*
+         IF DESC.ATB = 0 THEN
+            DESC.TXT = REC.ID
+         END ELSE
+            FOR I = 1 TO ATB.COUNT
+               IF ATB.NBR<I> = 0 THEN
+*
+* ITS THE RECORD KEY, DO WE WANT TO DO A CONVERSION ?
+*
+                  IF ATB.CONV<I> = '' THEN     ;* NO OCONV REQD
+                     A.TXT = REC.ID ATB.FMT<I>
+                  END ELSE
+                     A.TXT = OCONV(REC.ID,ATB.CONV<I,1>) ATB.FMT<I>
+                  END
+*
+* NOT A RECORD KEY, GET VALUES FOR ACTUAL RECORD
+*
+               END ELSE
+                  IF ATB.CONV<I> = '' THEN     ;* NO OCONV REQD
+                     A.TXT = F.REC<ATB.NBR<I>,1> ATB.FMT<I>
+                  END ELSE
+                     A.TXT = OCONV(F.REC<ATB.NBR<I>,1>,ATB.CONV<I,1>) ATB.FMT<I>
+                  END
+               END
+               DESC.TXT = DESC.TXT:A.TXT:' '
+            NEXT I
+         END
+*
+      END ELSE
+         DESC.TXT =  "Record ":REC.ID:" not Found"
+      END
+      LST.LNS<1,ID.PTR,1> = REC.ID
+      LST.LNS<1,ID.PTR,2> = DESC.TXT
+      LST.IDS<1,-1> = REC.ID
+   END
+NEXT DSP.PTR
+LIST.CT = ID.PTR
+LST.999: *
+*
+RETURN
+END

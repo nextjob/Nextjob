@@ -1,0 +1,178 @@
+SUBROUTINE CERT.FORM(CT_REC,CT_ID,FD)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: CERT.FORM
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* CERT_REC - CERT RECORD
+* CT_ID    - CERT RECORD ID
+* FD - FORM TEMPLATE FOR CERTIFICATION
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CREATE PCL CERT
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES CERTS.H
+!
+*
+* INIT SOME STUFF
+*
+YMAX = 2800  ;* MAX DOT POSITION FOR BOTTOM OF PACK SLIP
+*
+* SET UP THE CUSTOMER INFO
+*
+BILL.NAME = CT_REC<CT_NAME>
+BILL.ADD1 = CT_REC<CT_ADDR>
+BILL.ADD2 = CT_REC<CT_ADDR2>
+BILL.CSZ = CT_REC<CT_CITY>:', ':CT_REC<CT_STATE>:' ':CT_REC<CT_ZIP>
+BILL.COUNTRY  = CT_REC<CT_CO>
+*
+*
+* NOW SQUEEZE THEM DOWN
+*
+BILL.ADDRESS = ''
+AA = 1
+*
+IF BILL.ADD1 # '' THEN
+  BILL.ADDRESS<AA> = BILL.ADD1
+  AA +=1
+END
+*
+IF BILL.ADD2 # '' THEN
+  BILL.ADDRESS<AA> = BILL.ADD2
+  AA +=1
+END
+*
+IF BILL.CSZ # '' THEN
+  BILL.ADDRESS<AA> = BILL.CSZ
+  AA +=1
+END
+*
+IF BILL.COUNTRY # '' THEN
+  BILL.ADDRESS<AA> = BILL.COUNTRY
+  AA +=1
+END
+*
+PRT.HDR: *
+**
+* PRINT HEADER
+**
+FD = FD:CG12:ESC:'*p1815x485Y':CT_ID
+FD = FD:CG10:ESC:'*p1815x535Y':FIELD(CT_REC<CT_ORDER_ID>,'*',1)
+FD = FD:ESC:'*p1815x585Y':OCONV(DATE(),'D2-')
+*
+FD = FD:CPI.10
+FD = FD:ESC:'*p80x495Y':BILL.NAME "L#26"
+FD = FD:ESC:'*p80x545Y':BILL.ADDRESS<1> "L#26"
+FD = FD:ESC:'*p80x595Y':BILL.ADDRESS<2> "L#26"
+FD = FD:ESC:'*p80x645Y':BILL.ADDRESS<3> "L#26"
+FD = FD:ESC:'*p80x695Y':BILL.ADDRESS<4> "L#26"
+FD = FD:ESC:'*p80x745Y':BILL.ADDRESS<5> "L#26"
+*
+* CUSTOMER PO
+FD = FD:CPI.10:ESC:'*p410x1150Y':CT_REC<CT_PO_NBR>
+*
+* PART AND REV
+FD = FD:CPI.10:ESC:'*p410x1210Y':CT_REC<CT_PART_NBR>
+FD = FD:ESC:'*p1280x1210Y':CT_REC<CT_REV>
+*
+* QTY SHIPPED (DO NOT PRINT ON PRESHIP (QTY = 0))
+IF CT_REC<CT_DEL_QTY> > 0 THEN
+  FD = FD:CPI.10:ESC:'*p410x1270Y':CT_REC<CT_DEL_QTY>
+END
+*
+* CUSTOMER REFERENCE
+* (this may be multi line, WE ASSUME SEPARATED BY ",")
+*
+YPOS = 1330
+YINC = 50
+DATA.LN = TRIM(CT_REC<CT_CM_REF>)
+*
+LN.AGAIN:   *
+*
+LN.LEN = LEN(DATA.LN)
+LN = ""
+WORDS  = DCOUNT(DATA.LN,',')  ;* NUMBER OF REFERENCED IN THE LINE
+WD.CNT = 0 ;* COUNTER OF WORDS ADDED TO OUTPUT LINE (LN)
+IF LN.LEN > 55 THEN
+  FOR WC = 1 TO WORDS
+    WD = FIELD(DATA.LN,",",WC)
+    LN := WD:', '
+    WD.CNT += 1
+  UNTIL LEN(LN) > 50   ;* USE 50 AS THE LINE LENGTH TEST, IN CASE "NEXT" WORD IS REALLY LONG (KLUG)
+  NEXT WC
+  DATA.LN = DATA.LN[COL2(),LN.LEN]
+*
+  FD = FD:CPI.10:ESC:'*p410x':YPOS:'Y':LN
+  YPOS += YINC
+*
+  IF WD.CNT < WORDS THEN  ;* HAVE ALL WORDS IN PASSED SENTENCE BEEN PROCESSED ?
+    IF LEN(TRIM(DATA.LN)) > 0 THEN GOTO LN.AGAIN   ;* THIS SHOULD ALWAYS BE THE CASE
+  END
+END ELSE
+  IF DATA.LN[1,1] = ',' THEN DATA.LN = DATA.LN[2,LN.LEN]
+  FD = FD:CPI.10:ESC:'*p410x':YPOS:'Y':DATA.LN
+  YPOS += YINC
+  
+END
+*
+* PROCESS STEP
+*
+YPOS += YINC
+STEP.CNT = DCOUNT(CT_REC<CT_PROCESS_DESC>,@VM)
+FOR I = 1 TO STEP.CNT
+*
+* REQD ON CERT ?
+  IF CT_REC<CT_PROCESS_CERT,I> THEN
+    FD = FD:CPI.10:ESC:'*p70x':YPOS:'Y':CT_REC<CT_PROCESS_DESC,I>"L#72"
+    YPOS += YINC
+    IF YPOS GE 2965 THEN GOTO OUT.OF.ROOM
+  END
+NEXT I
+OUT.OF.ROOM: *
+*
+FD = FD:ESC:'*p0x0Y'                             ;* BACK TO TOP
+RETURN
+END

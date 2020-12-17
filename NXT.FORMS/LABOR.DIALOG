@@ -1,0 +1,154 @@
+TEMPLATEı42150.84159ıLABORıNXT.BPüLABOR.DIALOGü3ü0
+0ı1.4ı4
+2ıLABORıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııLabor Ticket Entry
+4ıı59ııı0
+4ıı41ıııLabor Ticket Entry Module
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıLABOR*LABORıı7ıautoıautoı72.5ı30.5ı1
+4ıı22ıııLabor Ticket Entry
+4ıı48ııı0
+4ıı9ııı0
+2ıLABOR*LABOR*frmWoıı26ı0ı0ı72ı27ı0
+4ıı67ııı0
+2ıLABOR*LABOR*lblEmpıfrmWoı15ı1ı4ı5.5ı1.25ı0
+4ıı0ıııEmp Id
+4ıı67ııı0
+2ıLABOR*LABOR*lblEmpNameıfrmWoı15ı20ı4ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblSeqıfrmWoı15ı8ı8ı5.5ı1.25ı0
+4ıı0ıııSeq Nbr
+4ıı67ııı0
+2ıLABOR*LABOR*lblShiftıfrmWoı15ı52ı4ı3.5ı1.25ı0
+4ıı0ıııShift
+4ıı67ııı0
+2ıLABOR*LABOR*lblWOıfrmWoı15ı8ı6.5ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıLABOR*LABOR*lblPNıfrmWoı15ı32ı8ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıLABOR*LABOR*lblPnVıfrmWoı15ı41ı8ı29ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblDescıfrmWoı15ı32ı9.5ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıLABOR*LABOR*lblDescVıfrmWoı15ı41ı9.5ı29ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblDrawıfrmWoı15ı32ı11ı7ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıLABOR*LABOR*lblDrawVıfrmWoı15ı41ı11ı29ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblWoQtyıfrmWoı15ı5ı17.5ı13.5ı1.25ı0
+4ıı0ıııWork Order Seq Qty
+4ıı67ııı0
+2ıLABOR*LABOR*lblWoQtyValıfrmWoı15ı19ı17.5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblDateıfrmWoı15ı8ı1.5ı8ı1.25ı0
+4ıı0ıııLabor Date
+4ıı67ııı0
+2ıLABOR*LABOR*lblClockInıfrmWoı15ı8ı10ı6.5ı1.25ı0
+4ıı0ıııClock In
+4ıı67ııı0
+2ıLABOR*LABOR*lblClockOutıfrmWoı15ı8ı11.5ı8ı1.25ı0
+4ıı0ıııClock Out
+4ıı67ııı0
+2ıLABOR*LABOR*txtDateıfrmWoı16ı19ı1.5ı8ı1.25ı256
+4ıı29ııı6
+2ıLABOR*LABOR*lstEmpıfrmWoı24ı7ı4ı11.5ı1.25ı32
+4ıı27ııı4
+4ıı32ıııEmp Idı Last NameıFrist NameıMiddle Name
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı5ı10.62ı15ı15
+4ıı33ııı3
+4ıı39ııı1
+4ıı53ııı8
+2ıLABOR*LABOR*lstShiftıfrmWoı24ı56ı4ı7.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı11.25
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/ End Time
+4ıı33ııı3
+2ıLABOR*LABOR*txtWoIDıfrmWoı16ı18ı6.5ı15.5ı1.25ı256
+2ıLABOR*LABOR*txtSeqıfrmWoı16ı19ı8ı8ı1.25ı256
+2ıLABOR*LABOR*txtClockInıfrmWoı16ı19ı10ı8ı1.25ı256
+4ıı29ııı13
+2ıLABOR*LABOR*txtClockOutıfrmWoı16ı19ı11.5ı8ı1.25ı256
+4ıı29ııı13
+2ıLABOR*LABOR*lblElapsedıfrmWoı15ı8ı13ı8ı1.25ı0
+4ıı0ıııElapsed Hrs
+4ıı67ııı0
+2ıLABOR*LABOR*txtElapsedıfrmWoı16ı19ı13ı8ı1.25ı256
+4ıı29ııı7
+2ıLABOR*LABOR*lblBreakıfrmWoı15ı8ı14.5ı8ı1.25ı0
+4ıı0ıııBreak Hrs
+4ıı67ııı0
+2ıLABOR*LABOR*txtBreakıfrmWoı16ı19ı14.5ı8ı1.25ı256
+4ıı29ııı7
+2ıLABOR*LABOR*lblQtyRmıfrmWoı15ı5ı19ı12ı1.25ı0
+4ıı0ıııSeq Qty Remaining
+4ıı67ııı0
+2ıLABOR*LABOR*lblQtyRmValıfrmWoı15ı19ı19ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*lblQtyCmpıfrmWoı15ı8ı20.5ı10ı1.25ı0
+4ıı0ıııQty Completed
+4ıı67ııı0
+2ıLABOR*LABOR*txtQtyCmpıfrmWoı16ı19ı20.5ı8ı1.25ı256
+4ıı29ııı8
+2ıLABOR*LABOR*lblQtyScrpıfrmWoı15ı8ı22ı8ı1.25ı0
+4ıı0ıııQty Scrap
+4ıı67ııı0
+2ıLABOR*LABOR*txtQtyScrpıfrmWoı16ı19ı22ı8ı1.25ı256
+4ıı29ııı8
+2ıLABOR*LABOR*lblStatıfrmWoı15ı8ı23.5ı8ı1.25ı0
+4ıı0ıııSeq Status
+4ıı67ııı0
+2ıLABOR*LABOR*lstSeqStatıfrmWoı24ı19ı23.5ı12.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8ı15
+4ıı53ııı8
+4ıı32ıııStatus CodeıStatus Description
+4ıı39ııı1
+2ıLABOR*LABOR*lblCmmtsıfrmWoı15ı10ı25ı8ı1.25ı0
+4ıı0ıııComments
+4ıı67ııı0
+2ıLABOR*LABOR*txtCmmtsıfrmWoı16ı19ı25ı36.5ı1.25ı256
+2ıLABOR*LABOR*btnFileıfrmWoı18ı41ı22ı9ı1.5ı32
+4ıı22ıııFile
+2ıLABOR*LABOR*btnCancelıfrmWoı18ı59ı22ı7.5ı1.5ı32
+4ıı22ıııCancel
+2ıLABOR*LABOR*btnDeleteıfrmWoı18ı59ı25ı7.5ı1.5ı32
+4ıı22ıııDelete
+4ıı8ııı0
+2ıLABOR*LABOR*lbllabtmıfrmWoı15ı8ı16ı8ı1.25ı0
+4ıı0ıııTotal Labor
+4ıı67ııı0
+2ıLABOR*LABOR*lbllabtmvıfrmWoı15ı19ı16ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıLABOR*LABOR*frmOptsıı26ı0ı27.5ı72ı3ı0
+4ıı67ııı0
+2ıLABOR*LABOR*chkClrEmpıfrmOptsı20ı1ı1ı14ı1.25ı32
+4ıı22ıııClear Emp on File
+4ıı67ııı0
+2ıLABOR*LABOR*chkClrDateıfrmOptsı20ı15ı1ı14ı1.25ı32
+4ıı22ıııClear Date on File
+4ıı67ııı0
+0ı-1

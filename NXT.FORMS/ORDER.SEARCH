@@ -1,0 +1,154 @@
+TEMPLATEı40588.75461ıORDER.SEARCHıNXT.BPüORDER.SEARCHü3ü0
+0ı1.3ı4
+2ıORDER.SEARCHıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııOR.SEARCH
+4ıı59ııı0
+4ıı43ıııSearch for Orders By Part, Desc, Customer
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıORDER.SEARCH*ORSıı7ıautoıautoı68.75ı26.5ı1
+4ıı22ıııOrder Search
+4ıı48ııı0
+4ıı9ııı0
+2ıORDER.SEARCH*ORS*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıORDER.SEARCH*ORS*frmOrdersıı26ı1ı.5ı66ı6.5ı0
+4ıı0ıııSales Order Searches
+2ıORDER.SEARCH*ORS*lblSaleOrderıfrmOrdersı15ı2ı2ı9.5ı1.25ı0
+4ıı0ıııCustomer Name
+2ıORDER.SEARCH*ORS*cbSaleOrderıfrmOrdersı23ı14ı2ı43ı1.25ı288
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı9
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııOrderı Customerı PoıOrd Date
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*lblPOıfrmOrdersı15ı2ı4ı11.5ı1.25ı0
+4ıı0ıııPurchase Order
+2ıORDER.SEARCH*ORS*btnSearchOrderıfrmOrdersı18ı58ı2ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*cbPoNumberıfrmOrdersı23ı14ı4ı43ı1.25ı288
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı9
+4ıı39ııı1
+4ıı32ıııOrderıCustomerıPoıOrd Date
+4ıı53ııı8
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*btnSearchPOıfrmOrdersı18ı58ı4ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*frmItemıı26ı1ı7.5ı66ı11ı0
+4ıı0ıııSales Item Detail Searches
+2ıORDER.SEARCH*ORS*lblCustıfrmItemı15ı1ı2ı9.5ı1.25ı0
+4ıı0ıııCustomer Name
+2ıORDER.SEARCH*ORS*cbCustıfrmItemı23ı14ı2ı43ı1.25ı288
+4ıı27ııı6
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı15ı9ı3.62
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııOrderı Customerı PoıPart NumberıOrd Dateı Stat
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*btnSearchCustıfrmItemı18ı58ı2ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*lblPartıfrmItemı15ı1ı4ı8ı1.25ı0
+4ıı0ıııPart Number
+2ıORDER.SEARCH*ORS*cbPnıfrmItemı23ı14ı4ı43ı1.25ı288
+4ıı27ııı6
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı15ı9ı3.62
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııOrderı Customerı PoıPart NumberıOrd Dateı Stat
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*btnSearchPnıfrmItemı18ı58ı4ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*lblDescıfrmItemı15ı1ı6ı10ı1.25ı0
+4ıı0ıııPart Description
+2ıORDER.SEARCH*ORS*cbDescıfrmItemı23ı14ı6ı43ı1.25ı288
+4ıı27ııı6
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı15ı9ı3.62
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııOrderı Customerı PoıPart NumberıOrd Dateı Stat
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*btnSearchDescıfrmItemı18ı58ı6ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*lblDrawıfrmItemı15ı1ı8ı8ı1.25ı0
+4ıı0ıııDrawing
+2ıORDER.SEARCH*ORS*cbDrawıfrmItemı23ı14ı8ı43ı1.25ı288
+4ıı27ııı6
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı6.25ı12.12ı10ı15ı9ı3.62
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııOrderı Customerı PoıPart NumberıOrd Dateı Stat
+4ıı33ııı3
+2ıORDER.SEARCH*ORS*btnSearchDrawıfrmItemı18ı58ı8ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıORDER.SEARCH*ORS*frmFiltersıı26ı1ı19ı66ı3.25ı0
+4ıı0ıııFilters
+2ıORDER.SEARCH*ORS*lblStatusıfrmFiltersı15ı1ı1ı4.5ı1.25ı0
+4ıı0ıııStatus
+2ıORDER.SEARCH*ORS*lbFilterıfrmFiltersı24ı5ı1ı15ı1.5ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı26ıııNoneıOpen OrdersıComplete Orders
+4ıı33ııı1
+4ıı39ııı1
+4ıı0ııı1
+4ıı53ııı3
+2ıORDER.SEARCH*ORS*lbOrderTypeıfrmFiltersı24ı30ı1ı15ı1.5ı32
+4ıı27ııı2
+4ıı32ıııType CodeıOrder Type Description
+4ıı38ııı0ı0
+4ıı37ııı8.38ı15
+4ıı33ııı3
+4ıı39ııı1
+4ıı53ııı8
+2ıORDER.SEARCH*ORS*lblSortıfrmFiltersı15ı47ı1ı5ı1.25ı0
+4ıı0ıııSorting
+2ıORDER.SEARCH*ORS*lbOrderıfrmFiltersı24ı52ı1ı13ı1.5ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı26ıııNewest to OldestıOldest to Newest
+4ıı33ııı1
+4ıı39ııı1
+4ıı53ııı8
+2ıORDER.SEARCH*ORS*lblOrderTypeıfrmFiltersı15ı22ı1ı8ı1.25ı0
+4ıı0ıııOrder Type
+2ıORDER.SEARCH*ORS*btnCancelıı18ı3ı23ı10ı1.5ı32
+4ıı22ıııCancel
+2ıORDER.SEARCH*ORS*btnResetıı18ı54ı23ı10ı1.5ı32
+4ıı22ıııReset Filters
+0ı-1

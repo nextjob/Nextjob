@@ -1,0 +1,106 @@
+      SUBROUTINE LOAD.PROCESS.STEPS(PROCESS.KEYS,LST.IDS,LIST.CT,GUIAPP,GUIFRM,GUICTRLID,GUIERRORS,GUISTATE)
+      !
+      **************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+      **************************************************************************
+      *
+      * MODULE: LOAD.PROCESS.STEPS
+      * AUTHOR: MAB
+      * VERSION: 1.0.0
+      * CREATED: 00/00/2007
+      * UPDATED:
+      *
+      * MAINTENANCE RECORD:
+      *
+      * VARIABLES:
+      *
+      * PROCESS.KEYS - VM LIST OF PROCESS KEYS TO DISPLAY IN LIST <SV1> = ID, <SV2> = DESCRIPTION
+      * LST.IDS      - AM LIST OF CORRESPONDING RECORD IDS
+      * LIST.CT      - NUMBER OF ITEMS IN PROCESS.LIST & LST.IDS
+      * GUI***   - GUI VARIABLES, SEE ACCUTERM PROGRAMMING GUIDE
+      * FILES:
+      *
+      *
+      * DESIGN DESCRIPTION:
+      *
+      !
+      ** INCLUDE STANDARD VARIABLE, EQUATES
+      *
+      *
+      $INCLUDE NXT.INCLUDES NXT.COMMON
+      $INCLUDE NXT.INCLUDES NXT.EQUATES
+      $INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+      $INCLUDE NXT.INCLUDES PROCESS_STEPS.H
+      *
+      $INCLUDE GUIBP ATGUIEQUATES
+      **
+      ********** PROGRAM EQUATES
+      **
+      **
+      *********** START OF PROGRAM
+      **
+      *
+      MSG_LIST = ''
+      EMSG = ""
+      PROCESS.KEYS = ''   ;* LIST OF ACTUAL PROCESS_STEP KEYS
+      LST.IDS = ''
+      LIST.CT = 0
+      *
+      * CREATE THE LIST OF PROCESS STEPS
+      *
+      *
+      SLIST = 'SSELECT PROCESS_STEPS BY @ID TO 2'
+      EXECUTE SLIST CAPTURING DMMY.OUT
+      *
+      IF @SELECTED GE 1 THEN
+
+         READLIST IDLIST FROM 2 THEN
+            SEL.CT = DCOUNT(IDLIST,@AM)
+            FOR I = 1 TO SEL.CT
+               PROCESS_ID = IDLIST<I,1>
+               CALL GET.RECORD("PROCESS_STEPS",C.PROCESS_STEPS,PROCESS_ID,PROCESS_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+               IF ERROR_STATUS = '' THEN
+                  LIST.CT += 1
+                  PROCESS.KEYS<1,1,LIST.CT> = PROCESS_ID:'|':PROCESS_REC<PS_PROCESS_DESC,1>
+                  LST.IDS<LIST.CT> = PROCESS_ID
+               END
+            NEXT I
+         END
+      END
+      *
+      IF LIST.CT = 0 THEN ;* NO ITEMS FOUND
+         EMSG<1> = 'No Process Steps Found'
+         VALUE.KEYS = ''
+      END ELSE
+         VALUE.KEYS = PROCESS.KEYS
+      END
+      *
+      CALL ATGUISETPROP(GUIAPP,GUIFRM,GUICTRLID,GPCOLITEMS,1,0,VALUE.KEYS,GUIERRORS,GUISTATE)
+      *
+LST.999: *
+      *
+      RETURN
+      END

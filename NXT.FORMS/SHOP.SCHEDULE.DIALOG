@@ -1,0 +1,34 @@
+TEMPLATEı42485.75105ıSHOPSCHDıNXT.BPüSHOP.SCHEDULE.DIALOGü3ü0
+0ı1.4ı4
+2ıSHOPSCHDıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııSHOP SCHEDULE
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııPerform Reschedule of all released work orders
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıSHOPSCHD*SHOPSCHDıı7ıautoıautoı37.5ı14.25ı1
+4ıı22ıııSHOP SCHEDULE
+4ıı48ııı0
+4ıı9ııı0
+2ıSHOPSCHD*SHOPSCHD*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıSHOPSCHD*SHOPSCHD*btnCancelıı18ı1ı9ı9.5ı2.5ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+2ıSHOPSCHD*SHOPSCHD*btnSSıı18ı2ı3ı11ı1.5ı32
+4ıı22ıııShop Schedule
+2ıSHOPSCHD*SHOPSCHD*lblLastSSıı15ı2ı1ı19.5ı1.25ı0
+4ıı0ıııLast Shop Schedule: mm/dd/yy
+4ıı67ııı0
+4ıı11ııı2
+2ıSHOPSCHD*SHOPSCHD*Gauge1ıı32ı1ı6.5ı35ı1.25ı0
+4ıı0ııı0
+4ıı10ııı1
+0ı-1

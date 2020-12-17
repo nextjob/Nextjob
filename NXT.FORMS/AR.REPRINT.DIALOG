@@ -1,0 +1,74 @@
+TEMPLATEı42052.7226ıAR.REPRINTıNXT.BPüAR.REPRINT.DIALOGü0ü0
+0ı1.4ı4
+2ıAR.REPRINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııAR REPRINT
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııNexjob AR Reprint  Module
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıAR.REPRINT*AR.REPRINTıı7ıautoıautoı75ı21.25ı1
+4ıı22ıııAR REPRINT
+4ıı48ııı0
+4ıı9ııı0
+2ıAR.REPRINT*AR.REPRINT*lblOrderıı15ı1ı.5ı8.5ı1.25ı0
+4ıı0ıııAR Item
+4ıı67ııı0
+2ıAR.REPRINT*AR.REPRINT*frmBillToıı26ı1ı2ı72ı6ı0
+4ıı0ıııBill To
+2ıAR.REPRINT*AR.REPRINT*lbl1BillToıfrmBillToı15ı1ı1ı11.5ı1.25ı0
+4ıı0ıııCust Nbr / Name
+4ıı67ııı0
+2ıAR.REPRINT*AR.REPRINT*lbl1BillNameValıfrmBillToı15ı31ı1ı29ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BilllAddr1ıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııAddr
+4ıı67ııı0
+2ıAR.REPRINT*AR.REPRINT*lbl1BillAddr1ValıfrmBillToı15ı7ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BillAddr2ValıfrmBillToı15ı38ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BillCSıfrmBillToı15ı1ı4ı8ı1.25ı0
+4ıı0ıııCity, St. Zip
+4ıı67ııı0
+2ıAR.REPRINT*AR.REPRINT*lbl1BillCityValıfrmBillToı15ı9ı4ı22ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BillStValıfrmBillToı15ı32ı4ı5ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BillZipValıfrmBillToı15ı38ı4ı15ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lblBillCustıfrmBillToı15ı13ı1ı16ı1.25ı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*lbl1BillCoValıfrmBillToı15ı55ı4ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıAR.REPRINT*AR.REPRINT*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıAR.REPRINT*AR.REPRINT*TXTORDNBRıı16ı10ı.5ı16.5ı1.25ı256
+2ıAR.REPRINT*AR.REPRINT*grdLinesıı28ı0ı8.5ı73ı8ı0
+4ıı27ııı6
+4ıı32ııı Part NumberıDate ShippedıQty Shippedı Lot$ı Price Ea.ıLine Total
+4ıı38ııı0ı2ı1ı0ı1ı2
+4ıı37ııı23.62ı9ı8.38ı5.5ı7.75ı12.25
+4ıı34ııı0ı0ı0ı0ı0ı0
+4ıı35ııı0ı6ı8ı0ı5ı5
+4ıı33ııı3
+4ıı0ıııüüüüüıüüüüüıüüüüüıüüüüüıüüüüü
+4ıı12ııı1ı0ı0ı0ı0ı0
+4ıı39ııı0ı0ı0ı0ı2ı0
+4ıı36ııııııı|ı
+2ıAR.REPRINT*AR.REPRINT*chkPDFıı20ı53ı17.5ı10ı1.25ı0
+4ıı22ıııCreate PDF
+4ıı67ııı0
+2ıAR.REPRINT*AR.REPRINT*bntPrintıı18ı65ı17ı7.5ı2ı32
+4ıı22ıııPrint
+2ıAR.REPRINT*AR.REPRINT*btnCancelıı18ı1ı17ı9ı2ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+0ı-1

@@ -1,0 +1,183 @@
+SUBROUTINE SHIPPING.LABEL(TO_REC,OPTS,PRINTER_NBR,GUIERRORS,GUISTATE)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: SHIPPING.LABEL
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* RETURNS:
+* TO_REC - RECORD TO ACCESS TO ADDRESS INFO FROM
+* OPTS   - DEFINES TO_REC
+*          'CM' - CUSTOMER RECORD
+*          'ST' - SHIP TO RECORD
+*          'PS' - PURCHASE ORDER SHIP TO
+* PRINTER_NBR - PRINTER UNIT NUMBER TO PRINT TO
+* GUIERRORS, GUISTATE - ACCUTERM GUI VARIABLES, PASSED FOR ERROR REPORTING
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CREATE PCL COMPANY HEADER TEMPLATE
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES CUSTOMERS.H
+$INCLUDE NXT.INCLUDES SHIP_TO.H
+$INCLUDE NXT.INCLUDES VSHIP_TO.H
+*
+*
+ROW = 275     ;* OFFSET FROM HOME POSITION OF LABEL, WHICH IS LOWER LEFT CORNER
+*             ;* REM WE PRINT FROM TOP TO BOTTOM
+ROW_DEC = 15  ;* (little more than 1/8 inch)
+GET_REC_MSG_LIST = ''
+*
+BEGIN CASE
+   CASE OPTS<1> = 'CM'   ;* TO_REC IS CUSTOMER RECORD
+      TO_NAME = CM_NAME
+      TO_ADDR = CM_ADDR
+      TO_ADDR2 = CM_ADDR2
+      TO_CITY  = CM_CITY
+      TO_STATE = CM_STATE
+      TO_ZIP   = CM_ZIP
+*
+   CASE OPTS<1> = 'ST'   ;* TO_REC IS SHIP_TO
+      TO_NAME = CS_NAME
+      TO_ADDR = CS_ADDR
+      TO_ADDR2 = CS_ADDR2
+      TO_CITY  = CS_CITY
+      TO_STATE = CS_STATE
+      TO_ZIP   = CS_ZIP
+*
+   CASE OPTS<1> = 'PS'   ;* TO_REC IS  PO VENDOR_SHIP_TO
+      TO_NAME = VS_NAME
+      TO_ADDR = VS_ADDR
+      TO_ADDR2 = VS_ADDR2
+      TO_CITY  = VS_CITY
+      TO_STATE = VS_STATE
+      TO_ZIP   = VS_ZIP      
+*
+   CASE 1
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Invalid To Record Type Passed"
+      CALL LOG.ERROR(LOG.OPTS,"SHIPPING.LABEL", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOTO 9999
+END CASE
+*
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC # '' THEN
+*
+* SETUP FROM ADDRESS (FROM COMPANY RECORD)
+*
+   OUT.DATA = STX:"L":CR   ;* ENTER LABEL FORMAT MODE
+   OUT.DATA := "D11":CR     ;* 300 DPI
+   OUT.DATA := "1911003":ROW"R%4":"0025"
+   ;* 1 = ROTATION 0, 9 = SCALE FONT
+   ;* 11 HOZT & WDTH MULT
+   ;* 003 10 POINT FONT
+   ;* 00275 ROW (1/10 of an inch inc or 2.75 from home "bottom" of label)
+   ;* 0025 COLMN POSTION (.25 inch )
+   OUT.DATA := COMPANY_REC<COMP_NAME>"L#25":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+   OUT.DATA := "1911003":ROW"R%4":"0025"
+   OUT.DATA := COMPANY_REC<COMP_ADDR>"L#25":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+*
+   IF COMPANY_REC<COMP_ADDR2> # "" THEN
+      OUT.DATA := "1911003":ROW"R%4":"0025"
+      OUT.DATA := COMPANY_REC<COMP_ADDR2>"L#25":CR
+      ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+   END
+*
+   OUT.DATA := "1911003":ROW"R%4":"0025"
+   CSZ = COMPANY_REC<COMP_CITY>:', ':COMPANY_REC<COMP_STATE>:' ':COMPANY_REC<COMP_ZIP>
+   OUT.DATA := CSZ"L#45":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+*
+* SETUP TO ADDRESS (FROM TO_REC)
+*
+   ROW = 175     ;* OFFSET FROM HOME POSITION OF LABEL, WHICH IS LOWER LEFT CORNER
+   ROW_DEC = 20  ;*
+   OUT.DATA := "1911004":ROW"R%4":"0100"
+   ;* 1 = ROTATION 0, 9 = SCALE FONT
+   ;* 11 HOZT & WDTH MULT
+   ;* 004 12 POINT FONT
+   ;* 00200 ROW (1/10 of an inch inc or 2.00 from home "bottom" of label)
+   ;* 00100 COLMN POSTION (1.00 inch )
+   OUT.DATA := TO_REC<TO_NAME>"L#25":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+   OUT.DATA := "1911004":ROW"R%4":"0100"
+   OUT.DATA := TO_REC<TO_ADDR>"L#25":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+*
+   IF TO_REC<TO_ADDR2> # "" THEN
+      OUT.DATA := "1911004":ROW"R%4":"0100"
+      OUT.DATA := TO_REC<TO_ADDR2>"L#25":CR
+      ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+   END
+*
+   OUT.DATA := "1911004":ROW"R%4":"0100"
+   CSZ = TO_REC<TO_CITY>:', ':TO_REC<TO_STATE>:' ':TO_REC<TO_ZIP>
+   OUT.DATA := CSZ"L#45":CR
+   ROW -= ROW_DEC  ;* POSITION TO NEXT ROW
+*
+* LABEL DEF COMPLETE
+*
+   OUT.DATA := "E":CR
+
+*
+*
+   PRINT ON PRINTER_NBR OUT.DATA
+   PRINTER CLOSE ON PRINTER_NBR
+*
+END ELSE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing COMPANY_RECORD from SYSTEM_FILE"
+   CALL LOG.ERROR(LOG.OPTS,"SHIPPING.LABEL", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END
+*
+9999: *
+RETURN
+END
+

@@ -1,0 +1,437 @@
+TEMPLATEı42194.37299ıPARTSıNXT.BPüPN.DIALOGü3ü0
+0ı1.4ı4
+2ıPARTSıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPart Maintenance
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı43ıııParts entry dialog
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıPARTS*PARTıı7ıautoıautoı106.75ı45.5ı1
+4ıı22ıııPart Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıPARTS*PART*btnFileıı18ı1ı41.5ı8.5ı1.75ı32
+4ıı22ıııFile
+4ıı49ıııSelect File to Save Item
+4ıı8ııı0
+2ıPARTS*PART*btnCancelıı18ı11ı41.5ı8.5ı1.75ı32
+4ıı22ıııCancel
+4ıı49ıııCancel all Unsaved Changes to item
+2ıPARTS*PART*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıPARTS*PART*btnActıı18ı31ı41.5ı9ı1.75ı32
+4ıı22ıııActivity
+4ıı49ıııClick for item activity
+4ıı8ııı0
+2ıPARTS*PART*btnCopyıı18ı41ı41.5ı9ı1.75ı32
+4ıı22ıııMake Copy
+4ıı8ııı0
+2ıPARTS*PART*btndelıı18ı79ı41.5ı8.5ı1.75ı32
+4ıı22ıııDelete Item
+4ıı49ıııSelect Delete to delete active item
+4ıı8ııı0
+2ıPARTS*PART*TabMainıı30ı0ı0ı106.5ı34.5ı0
+4ıı10ııı0
+2ıPARTS*PART*TabPartıTabMainı31ı0ı0ı0ı0ı0
+4ıı22ıııPart
+2ıPARTS*PART*frmDetailıTabPartı26ı0ı0ı105ı17.25ı0
+4ıı0ıııPart Detail
+2ıPARTS*PART*lblPnıfrmDetailı15ı1ı1.5ı8ı1.25ı0
+4ıı0ıııPart Number
+2ıPARTS*PART*txtpnıfrmDetailı16ı9ı1.5ı30ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter part number 
+2ıPARTS*PART*lblRevıfrmDetailı15ı40ı1.5ı3.5ı1.25ı0
+4ıı0ıııRev
+2ıPARTS*PART*txtRevıfrmDetailı16ı43ı1.5ı5.5ı1.25ı256
+4ıı49ıııEnter Part Revision Level
+4ıı8ııı0
+2ıPARTS*PART*lblDescıfrmDetailı15ı1ı3ı7.5ı1.25ı0
+4ıı0ıııDescription
+2ıPARTS*PART*txtDescıfrmDetailı16ı9ı3ı39.5ı1.25ı256
+4ıı49ıııEnter Part Description
+4ıı8ııı0
+2ıPARTS*PART*lblDrawingıfrmDetailı15ı1ı4.5ı6ı1.25ı0
+4ıı0ıııDrawing
+2ıPARTS*PART*txtDrawingıfrmDetailı16ı9ı4.5ı39.5ı1.25ı256
+4ıı49ıııEnter Customer Drawing Number
+4ıı8ııı0
+2ıPARTS*PART*lblNotesıfrmDetailı15ı1ı6ı6.5ı1ı0
+4ıı0ıııItem Notes
+4ıı25ııı1
+2ıPARTS*PART*txtNotesıfrmDetailı17ı9ı6ı42.5ı3.5ı256
+4ıı49ıııEnter part notes here
+4ıı8ııı0
+2ıPARTS*PART*chkTestPcsıfrmDetailı20ı55ı1.5ı16.5ı1.25ı32
+4ıı22ıııTest Pieces Required
+4ıı8ııı0
+2ıPARTS*PART*chkFrozenıfrmDetailı20ı55ı3ı15.5ı1.25ı32
+4ıı22ıııFrozen Process
+4ıı8ııı0
+2ıPARTS*PART*lbSPCıfrmDetailı24ı58ı5ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.62ı15
+4ıı39ııı1
+4ıı33ııı1
+4ıı53ııı8
+4ıı8ııı0
+4ıı32ıııSPCıDescription
+2ıPARTS*PART*chkPurchaseıfrmDetailı20ı55ı6.5ı18ı1.25ı32
+4ıı22ıııPurchased Part
+4ıı67ııı0
+2ıPARTS*PART*cbMatlıfrmDetailı23ı58ı8.5ı18.5ı1.25ı288
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8.12ı15
+4ıı39ııı2
+4ıı53ııı8
+4ıı8ııı0
+2ıPARTS*PART*grdLinesıfrmDetailı28ı1ı10ı62ı6.5ı2112
+4ıı27ııı4
+4ıı32ıııQuote QtyıPrice Eaı Date QuotedıNotes(Click to Create Doc Link)
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı8ı9ı10.38ı20.12
+4ıı34ııı1ı4ı1ı1
+4ıı35ııı8ı2ı6ı0
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ıııüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüü
+2ıPARTS*PART*lblpicıfrmDetailı15ı65ı14.5ı14ı.75ı0
+4ıı0ıııShare Path to Image File
+4ıı10ııı1
+4ıı67ııı0
+2ıPARTS*PART*txtpiclinkıfrmDetailı16ı65ı15.5ı29.5ı1.25ı0
+4ıı49ıııEnter location of picture for part
+4ıı8ııı0
+2ıPARTS*PART*btnBrowseıfrmDetailı18ı96ı15.5ı7.5ı1.25ı32
+4ıı22ıııBrowse
+4ıı49ıııClick to browse for picture file
+4ıı8ııı0
+2ıPARTS*PART*Picture1ıfrmDetailı25ı77ı1.5ı27ı12.75ı0
+4ıı10ııı2
+2ıPARTS*PART*lblMtlıfrmDetailı15ı52.5ı8.5ı5.5ı1.25ı0
+4ıı0ıııMaterial
+4ıı67ııı0
+2ıPARTS*PART*lblSPCıfrmDetailı15ı53ı5ı5ı1.25ı0
+4ıı0ıııSPC
+4ıı25ııı2
+2ıPARTS*PART*Tabgroup1ıTabPartı30ı0ı17ı105ı16.5ı0
+4ıı10ııı0
+2ıPARTS*PART*ProcessTabıTabgroup1ı31ı0ı0ı0ı0ı0
+4ıı22ıııProcesses
+2ıPARTS*PART*frmProcessıProcessTabı26ı0ı0ı105ı15.5ı0
+4ıı0ıııCertification / Process
+4ıı8ııı0
+4ıı67ııı0
+2ıPARTS*PART*grdProıfrmProcessı28ı2ı1ı93ı14ı263200
+4ıı27ııı4
+4ıı32ıııCert / Process  Idı DescriptionıCertsı Cert Code
+4ıı38ııı0ı0ı2ı0
+4ıı37ııı15ı60ı5ı10
+4ıı34ııı3ı1ı2ı3
+4ıı0ıııüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüü
+4ıı33ııı3
+4ıı39ııı1ı0ı1ı1
+4ıı36ııı||ııyesünoı|ü|
+4ıı10ııı1
+4ıı64ıııııSupply Certs ?ı
+4ıı49ıııProcess Steps
+4ıı8ııı0
+2ıPARTS*PART*btnModıfrmProcessı18ı96ı1.5ı7.5ı1.75ı32
+4ıı22ıııModify
+4ıı49ıııClick to modify selected process step
+4ıı8ııı0
+2ıPARTS*PART*btnInsBeforeıfrmProcessı18ı96ı4ı7.5ı1.75ı32
+4ıı22ıııInsert Before
+4ıı49ıııClick to insert process step before selected step
+4ıı8ııı0
+2ıPARTS*PART*btnInsAfterıfrmProcessı18ı96ı6.5ı7.5ı1.75ı32
+4ıı22ıııInsert After
+4ıı49ıııClick to insert process step after selected step
+4ıı8ııı0
+2ıPARTS*PART*btnDelProıfrmProcessı18ı96ı9.5ı7.5ı1.75ı32
+4ıı22ıııDelete
+4ıı49ıııClick to delete selected process step
+4ıı8ııı0
+2ıPARTS*PART*btnPrintıfrmProcessı18ı96ı12ı7.5ı1.75ı32
+4ıı22ıııPrint
+4ıı21ıııClick to print part information
+4ıı8ııı0
+2ıPARTS*PART*RoutingsıTabgroup1ı31ı0ı0ı0ı0ı0
+4ıı22ıııRoutings
+2ıPARTS*PART*frmRTıRoutingsı26ı0ı0ı103ı16.75ı0
+4ıı0ıııRoutings
+4ıı67ııı0
+4ıı8ııı0
+2ıPARTS*PART*lstRTlistıfrmRTı24ı7ı1ı16ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.38ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı1
+4ıı32ıııEng IdıRev
+2ıPARTS*PART*btnRTnewıfrmRTı18ı49ı1.5ı8ı1.75ı32
+4ıı22ıııNew Routing
+2ıPARTS*PART*btnRTcopyıfrmRTı18ı58ı1.5ı8ı1.75ı32
+4ıı22ıııCopy Routing
+2ıPARTS*PART*btnRTrenbrıfrmRTı18ı67ı1.5ı7.5ı1.75ı32
+4ıı22ıııReNumber
+2ıPARTS*PART*btnRTprtıfrmRTı18ı83ı1.5ı8.5ı1.75ı32
+4ıı22ıııPrint Routing
+2ıPARTS*PART*btnRTmodıfrmRTı18ı93ı5.5ı8.5ı1.5ı32
+4ıı22ıııModify
+2ıPARTS*PART*btnRTinsBeforeıfrmRTı18ı93ı7ı8.5ı1.5ı32
+4ıı22ıııInsert Before
+2ıPARTS*PART*btnRTinsAfterıfrmRTı18ı93ı8.5ı8.5ı1.5ı32
+4ıı22ıııInsert After
+2ıPARTS*PART*btnRTDelSeqıfrmRTı18ı93ı10ı8.5ı1.5ı32
+4ıı22ıııDelete
+2ıPARTS*PART*txtSeqStrıfrmRTı16ı93ı4ı4ı1.25ı256
+4ıı0ııı100
+4ıı29ııı8
+2ıPARTS*PART*txtSeqIncıfrmRTı16ı97ı4ı4.5ı1.25ı256
+4ıı0ııı100
+4ıı29ııı8
+2ıPARTS*PART*lblSeqStrıfrmRTı15ı93ı2.5ı9.5ı1.25ı0
+4ıı0ıııSeq Start / Inc
+4ıı67ııı0
+2ıPARTS*PART*grdRTıfrmRTı28ı1ı4ı91ı11ı32
+4ıı27ııı4
+4ıı32ıııSeq NbrıWC IdıWC NameıSeq Description
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6.38ı7.5ı10ı55
+4ıı34ııı1ı1ı1ı1
+4ıı0ıııüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüüıüüü
+4ıı33ııı3
+4ıı10ııı1
+2ıPARTS*PART*lblRtIdıfrmRTı15ı1ı1ı5.5ı1ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıPARTS*PART*btnRtRevıfrmRTı18ı7ı2.5ı16ı1.25ı32
+4ıı22ıııRt Revison Cntl
+2ıPARTS*PART*lblDfltEngIdıfrmRTı15ı25ı1ı9.5ı1.25ı0
+4ıı0ıııDefault Eng Id
+4ıı67ııı0
+2ıPARTS*PART*txtDfltEngIdıfrmRTı16ı35ı1ı4ı1.25ı256
+4ıı29ııı8
+2ıPARTS*PART*EstimatingıTabgroup1ı31ı0ı0ı0ı0ı0
+4ıı22ıııEstimating
+2ıPARTS*PART*frmEstimateıEstimatingı26ı1ı.5ı103ı14.5ı0
+4ıı67ııı0
+4ıı8ııı0
+2ıPARTS*PART*lblEstIdıfrmEstimateı15ı2ı1ı8ı1.25ı0
+4ıı0ıııEstimate Id
+4ıı67ııı0
+2ıPARTS*PART*lblEstIdValıfrmEstimateı15ı10ı1ı19ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lstEstRtListıfrmEstimateı24ı56ı1ı16ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.38ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı1
+4ıı32ıııEng IdıRev
+2ıPARTS*PART*lblEstRtLstıfrmEstimateı15ı46ı1ı6ı1.25ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıPARTS*PART*grdEstQtysıfrmEstimateı27ı1ı2.5ı91ı11.5ı0
+4ıı27ııı11
+4ıı32ııııQty 1ıQty 2ıQty 3ıQty 4ıQty 5ıQty 6ıQty 7ıQty 8ıQty 9ıQty 10
+4ıı38ııı0ı0ı0ı0ı0ı0ı0ı0ı0ı0ı0
+4ıı37ııı10ı8ı8ı8ı8ı8ı8ı8ı8ı8ı8
+4ıı34ııı1ı1ı1ı1ı1ı1ı1ı1ı1ı1ı1
+4ıı33ııı3
+4ıı35ııı0ı8ı8ı8ı8ı8ı8ı8ı8ı8ı8
+4ıı0ıııQtyüüüüüüüüüüıMaterialüüüüüüüüüüıSet UpüüüüüüüüüüıLaborüüüüüüüüüüıOutplant 1üüüüüüüüüüıOutplant 2üüüüüüüüüüıOutplant 3üüüüüüüüüüıTotalüüüüüüüüüüıSG&AüüüüüüüüüüıPrice Eachüüüüüüüüüü
+4ıı55ııı1
+2ıPARTS*PART*btnEstFileıfrmEstimateı18ı93ı3ı7.5ı1.75ı32
+4ıı22ıııFile
+2ıPARTS*PART*btnEstNotesıfrmEstimateı18ı93ı5ı7.5ı1.75ı32
+4ıı22ıııNotes
+2ıPARTS*PART*btnEstPrintıfrmEstimateı18ı93ı7ı7.5ı1.75ı32
+4ıı22ıııPrint
+2ıPARTS*PART*TabItUserDefıTabgroup1ı31ı0ı0ı0ı0ı0
+4ıı22ıııCustom Fields
+2ıPARTS*PART*lblPtUser1ıTabItUserDefı15ı1ı1ı15ı1.25ı0
+4ıı0ıııUser 1
+4ıı67ııı0
+2ıPARTS*PART*lblPtUser2ıTabItUserDefı15ı1ı3.5ı15ı1.25ı0
+4ıı0ıııUser2
+4ıı67ııı0
+2ıPARTS*PART*lblPtUser3ıTabItUserDefı15ı1ı6ı15ı1.25ı0
+4ıı0ıııUser 3
+4ıı67ııı0
+2ıPARTS*PART*lblPtUser4ıTabItUserDefı15ı50ı1ı15ı1.25ı0
+4ıı0ıııUser 4
+4ıı67ııı0
+2ıPARTS*PART*lblPtUser5ıTabItUserDefı15ı50ı3.5ı15ı1.25ı0
+4ıı0ıııUser 5
+4ıı67ııı0
+2ıPARTS*PART*lblPtUser6ıTabItUserDefı15ı50ı6ı15ı1.25ı0
+4ıı0ıııUser 6
+4ıı67ııı0
+2ıPARTS*PART*txtPtUser1ıTabItUserDefı16ı16ı1ı29.5ı1.25ı256
+2ıPARTS*PART*txtPtUser2ıTabItUserDefı16ı16ı3.5ı29.5ı1.25ı256
+2ıPARTS*PART*txtPtUser3ıTabItUserDefı16ı16ı6ı29.5ı1.25ı256
+2ıPARTS*PART*txtPtUser4ıTabItUserDefı16ı68ı1ı29.5ı1.25ı256
+2ıPARTS*PART*txtPtUser5ıTabItUserDefı16ı68ı3.5ı29.5ı1.25ı256
+2ıPARTS*PART*txtPtUser6ıTabItUserDefı16ı68ı6ı29.5ı1.25ı256
+2ıPARTS*PART*TabInvıTabMainı31ı0ı0ı0ı0ı0
+4ıı22ıııInv
+2ıPARTS*PART*FrmPartHeadingıTabInvı26ı0ı0ı105.5ı5ı0
+4ıı0ıııPart
+4ıı67ııı0
+2ıPARTS*PART*lblPhNumberıFrmPartHeadingı15ı1ı1ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıPARTS*PART*lblPhPartNumberVıFrmPartHeadingı15ı9ı1ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lblPhDescıFrmPartHeadingı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııDesscription
+4ıı67ııı0
+2ıPARTS*PART*lblPhDescVıFrmPartHeadingı15ı9ı2.5ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*BTNPOACTıFrmPartHeadingı18ı46ı1.5ı7.5ı2ı32
+4ıı22ıııPurchase Activity
+2ıPARTS*PART*FrmStoresıTabInvı26ı0ı5ı105ı10.5ı0
+4ıı0ıııStores
+4ıı67ııı0
+2ıPARTS*PART*lblLoc1ıFrmStoresı15ı1ı1ı8ı1.25ı0
+4ıı0ıııLocation 1
+4ıı67ııı0
+2ıPARTS*PART*txtLoc1ıFrmStoresı16ı8ı1ı20ı1.25ı256
+2ıPARTS*PART*lblQoh1ıFrmStoresı15ı31ı1ı4.5ı1.25ı0
+4ıı0ıııQOH
+4ıı67ııı0
+2ıPARTS*PART*txtQoh1ıFrmStoresı16ı36ı1ı7ı1.25ı256
+4ıı29ııı8
+2ıPARTS*PART*lblLoc2ıFrmStoresı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııLocation 2
+4ıı67ııı0
+2ıPARTS*PART*txtLoc2ıFrmStoresı16ı8ı2.5ı20ı1.25ı256
+2ıPARTS*PART*lblQoh2ıFrmStoresı15ı31ı2.5ı4.5ı1.25ı0
+4ıı0ıııQOH
+4ıı67ııı0
+2ıPARTS*PART*txtQoh2ıFrmStoresı16ı36ı2.5ı7ı1.25ı256
+4ıı29ııı8
+2ıPARTS*PART*lblLoc3ıFrmStoresı15ı1ı4ı8ı1.25ı0
+4ıı0ıııLocation 3
+4ıı67ııı0
+2ıPARTS*PART*txtLoc3ıFrmStoresı16ı8ı4ı20ı1.25ı256
+2ıPARTS*PART*lblQoh3ıFrmStoresı15ı31ı4ı4.5ı1.25ı0
+4ıı0ıııQOH
+4ıı67ııı0
+2ıPARTS*PART*txtQoh3ıFrmStoresı16ı36ı4ı7ı1.25ı256
+4ıı29ııı8
+2ıPARTS*PART*lblQohU1ıFrmStoresı15ı45ı1ı6ı1.25ı0
+4ıı0ıııUpdated
+4ıı67ııı0
+2ıPARTS*PART*lblQohU1VıFrmStoresı15ı51ı1ı36ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lblQohU2ıFrmStoresı15ı45ı2.5ı6ı1.25ı0
+4ıı0ıııUpdated
+4ıı67ııı0
+2ıPARTS*PART*lblQohU2VıFrmStoresı15ı51ı2.5ı36ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lblQohU3ıFrmStoresı15ı45ı4ı6ı1.25ı0
+4ıı0ıııUpdated
+4ıı67ııı0
+2ıPARTS*PART*lblQohU3VıFrmStoresı15ı51ı4ı36ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lblTQOHıFrmStoresı15ı31ı5.5ı5ı1.25ı0
+4ıı67ııı0
+4ıı0ıııTotal
+2ıPARTS*PART*lblTQohVıFrmStoresı15ı36ı5.5ı7ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*FrmCostingıTabInvı26ı0ı15.5ı105.5ı10.75ı0
+4ıı0ıııCosting
+4ıı67ııı0
+2ıPARTS*PART*LBLMATıFrmCostingı15ı1ı1ı8ı1.25ı0
+4ıı0ıııMaterial Ea
+4ıı67ııı0
+2ıPARTS*PART*txtMatlıFrmCostingı16ı10ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıPARTS*PART*lblOPıFrmCostingı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııOutplant Ea
+4ıı67ııı0
+2ıPARTS*PART*txtOPıFrmCostingı16ı10ı2.5ı8ı1.25ı256
+4ıı29ııı5
+2ıPARTS*PART*lblLABıFrmCostingı15ı1ı4ı8ı1.25ı0
+4ıı0ıııLabor Ea
+4ıı67ııı0
+2ıPARTS*PART*txtLABıFrmCostingı16ı10ı4ı8ı1.25ı256
+4ıı29ııı5
+2ıPARTS*PART*lblStdıFrmCostingı15ı1ı5.5ı8ı1.25ı0
+4ıı0ıııStandard/Ea
+4ıı67ııı0
+2ıPARTS*PART*lblStdVıFrmCostingı15ı10ı5.5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*txtStdNotesıFrmCostingı17ı22ı2ı42ı4.5ı256
+4ıı10ııı1
+2ıPARTS*PART*lblStdNotesıFrmCostingı15ı22ı.75ı8ı1ı0
+4ıı0ıııNotes
+4ıı67ııı0
+2ıPARTS*PART*btnRollStdsıFrmCostingı18ı68ı2.5ı7.5ı1.75ı32
+4ıı22ıııRoll Standards
+2ıPARTS*PART*BOMıTabMainı31ı.12ı2.62ı106.25ı30.06ı0
+4ıı22ıııBOM
+2ıPARTS*PART*FrmBOMPartHeadingıBOMı26ı0ı0ı105.5ı5ı0
+4ıı0ıııPart
+4ıı67ııı0
+2ıPARTS*PART*lblBOMPhNumberıFrmBOMPartHeadingı15ı1ı1ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıPARTS*PART*lblBOMPhPartNumberVıFrmBOMPartHeadingı15ı9ı1ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*lblBOMPhDescıFrmBOMPartHeadingı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııDesscription
+4ıı67ııı0
+2ıPARTS*PART*lblBOMPhDescVıFrmBOMPartHeadingı15ı9ı2.5ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPARTS*PART*FrmBOMBOMıBOMı26ı1ı6ı104ı16.5ı0
+4ıı0ıııBill of Mtls
+4ıı67ııı0
+2ıPARTS*PART*grdBOMıFrmBOMBOMı28ı2ı1ı76ı14.75ı8192
+4ıı27ııı5
+4ıı32ıııPart NumberıDescriptionıQty/AssemblyıLead Time DaysıModify
+4ıı38ııı0ı0ı0ı0ı2
+4ıı37ııı19.62ı20.88ı11ı11.5ı6.38
+4ıı34ııı1ı1ı1ı1ı7
+4ıı33ııı3
+4ıı0ıııüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüüıüüüü
+2ıPARTS*PART*btnAddıFrmBOMBOMı18ı79ı2ı7.5ı2ı32
+4ıı22ıııAdd BOM Item
+2ıPARTS*PART*BtnPrintBOMıFrmBOMBOMı18ı79ı9.5ı7.5ı2ı32
+4ıı22ıııPrint BOM
+2ıPARTS*PART*grdRevCtlıı28ı0ı35ı106ı6.25ı2048
+4ıı27ııı4
+4ıı32ıııRevıRevision DescriptionıDateıInitials
+4ıı38ııı0ı0ı2ı2
+4ıı37ııı4.62ı75ı10ı4.62
+4ıı34ııı0ı1ı1ı1
+4ıı0ıııüüüıüüüıüüü
+4ıı33ııı3
+4ıı35ııı0ı0ı6ı1
+4ıı8ııı0
+4ıı10ııı1
+0ı-1

@@ -1,0 +1,27 @@
+SUBROUTINE EXCEL.FILE.PRINT(DOC.NAME)
+************************************************************
+* AccuTerm GUI Application Subroutine Skeleton
+*
+* Date selection subroutine, clicking on a date passes back
+* a valid Pick style internal date via the PASS.DATE variable
+* or else a Null is returned on a bail out.
+*
+* Alan Gruskoff - Performant Systems, september 2004
+************************************************************
+$INCLUDE NXT.INCLUDES NXT.COMMON
+EQU ESC TO CHAR(27), STX TO CHAR(2), CR TO CHAR(13), EM TO CHAR(25)
+*
+SCR='On Error Resume Next'
+SCR = SCR:EM:'Dim Filename As String'
+SCR = SCR:EM:'Dim AppExcel '
+SCR = SCR:EM:'Filename = "':DOC.NAME:'"'
+SCR = SCR:EM:'Set AppExcel = CreateObject("Excel.application") '
+SCR = SCR:EM:'AppExcel.Workbooks.Open Filename '
+SCR = SCR:EM:'AppExcel.Visible = False '
+*SCR = SCR:EM:'AppExcel.ActiveWindow.SelectedSheets.PrintOut '
+SCR = SCR:EM:'AppExcel.ActiveWorkbook.PrintOut '
+SCR = SCR:EM:'AppExcel.Quit '
+SCR = SCR:EM:'Set AppExcel = Nothing  '
+PRINT ESC:STX:'P':SCR:CR:
+RETURN
+END

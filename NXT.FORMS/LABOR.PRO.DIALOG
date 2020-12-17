@@ -1,0 +1,48 @@
+TEMPLATEı42367.7491ıLABOR.PROıNXT.BPüLABOR.PRO.DIALOGü3ü0
+0ı1.4ı4
+2ıLABOR.PROıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııLabor Process
+4ıı59ııı0
+4ıı41ıııLabor Process
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıLABOR.PRO*LABOR.PROıı7ıautoıautoı90.5ı23.5ı1
+4ıı22ıııLabor Process
+4ıı48ııı0
+4ıı9ııı0
+2ıLABOR.PRO*LABOR.PRO*lblDateıı15ı1ı1ı8ı1.25ı0
+4ıı0ıııLabor Date
+4ıı67ııı0
+2ıLABOR.PRO*LABOR.PRO*txtDateıı16ı10ı1ı13ı1.25ı0
+4ıı29ııı6
+2ıLABOR.PRO*LABOR.PRO*optSourceıı19ı28ı.5ı21.5ı3.25ı0
+4ıı27ııı0
+4ıı28ııı0
+4ıı26ıııLabor TicketsıLabor Transactions
+4ıı0ııı0
+4ıı67ııı0
+4ıı22ıııSource
+2ıLABOR.PRO*LABOR.PRO*btnSelectıı18ı54ı1ı11ı2ı32
+4ıı22ıııSelect
+2ıLABOR.PRO*LABOR.PRO*Grid1ıı27ı1ı6.5ı85ı12.75ı32
+4ıı27ııı8
+4ıı32ıııEmployeeıWork OrderıSeqıClock InıClock OutıStatusıQtyıPost
+4ıı38ııı0ı0ı0ı0ı0ı0ı0ı0
+4ıı37ııı15ı15ı5.12ı15ı15ı5.75ı8.25ı5.38
+4ıı34ııı0ı0ı0ı0ı0ı0ı0ı2
+4ıı0ıııüüüüüüüıüüüüüüüıüüüüüüü
+4ıı33ııı3
+2ıLABOR.PRO*LABOR.PRO*btnAddıı18ı3ı20ı10ı2.5ı32
+4ıı22ıııAdd Labor
+2ıLABOR.PRO*LABOR.PRO*btnSelPostıı18ı72ı20ı7.5ı2.75ı32
+4ıı22ıııSelect All For Posting
+4ıı8ııı0
+2ıLABOR.PRO*LABOR.PRO*btnPostıı18ı81ı20ı7.5ı2.75ı32
+4ıı22ıııPost Selected Items
+4ıı8ııı0
+0ı-1

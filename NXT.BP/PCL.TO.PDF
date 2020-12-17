@@ -1,0 +1,179 @@
+SUBROUTINE PCL.TO.PDF(PCL.STRING,PDF.NAME,DISPLAY.ON.CREATION,GUIERRORS,GUISTATE)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: PCL.TO.PDF
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* PCL.STRING - STRING OF HP PCL5 CODE TO CONVERT TO PDF
+* PDF.NAME   - FILE NAME TO USE TO SAVE THE PDF FILE AS
+* DISPLAY.ON.CREATION - T/F OPEN CREATED PDF FILE WITH DEFINED VIEWER ON FILE CREATION
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* COVERTS HP PCL TO PDF USING GHOSTPCL http://www.ghostscript.com/GhostPCL.html
+* USER MUST DOWNLOAD SOFTWARE AND POINT TO THE PCL6.EXE VIA THE SYSTEM_FILE UITILITY_APPS_PATH RECORD FIELD DEFINED BY  UTL_GHOSTPCL_EXE
+* PDF FILE IS SAVED IN USERS MY.DOCUMENTS FOLDER
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+*
+$INCLUDE SYSCOM KEYS.H
+*
+GET_REC_MSG_LIST = ''
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"NETWORK_PATH",NETWORK_PATH_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+REPORT.SRVR.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH >,"MCU")
+REPORT.SHARE.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SHARE_REPORT_PATH >,"MCU")
+*
+* FIND THE GHOSTPCL APP
+*
+READ UTILITY.REC FROM C.FILE.VAR(C.SYSTEM_FILE), "UTILITY_APPS_PATH" THEN
+   GHOSTPCL.FILE.PATH = UTILITY.REC<UTL_GHOSTPCL_EXE>
+   *
+   * DOES IT EXIST?
+   *
+   IF OSPATH(GHOSTPCL.FILE.PATH,OS$EXISTS) THEN
+   *
+         * create temp file to recieve report
+      *
+      * REPORT.SRVR.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SERVER_REPORT_PATH >,"MCU")
+      * REPORT.SHARE.TEMP.DIR = OCONV(NETWORK_PATH_REC<SYS_SHARE_REPORT_PATH >,"MCU")
+      CALL SHARE.FILE.PATH.CALC(REPORT.SHARE.TEMP.DIR,NETWORK_PATH_REC,SHARE.TEMP.DIR,'EXPAND')
+      TEMP.DIR = REPORT.SRVR.TEMP.DIR
+      TEMP.FILE= "_":SYSTEM(19)   ;* 
+      OPENPATH TEMP.DIR TO TEMP.DIR.FV THEN
+         WRITE PCL.STRING ON TEMP.DIR.FV, TEMP.FILE
+
+         *
+         * CONVERT TO PDF
+         *
+         GOSUB FILTER.FILE.NAME    ;* FILTER SPECIAL CHARACTES OUT OF FILE NAME
+         PDF_PATH = TEMP.DIR:@DS:PDF.NAME
+         SHARE.PDF_PATH = SHARE.TEMP.DIR:@DS:PDF.NAME
+         *
+         CMMD =  GHOSTPCL.FILE.PATH: " -sDEVICE=pdfwrite -dNOPAUSE -sOutputFile=":PDF_PATH:' ':TEMP.DIR:@DS:TEMP.FILE
+         *
+         *  DISPLAY CMMD
+         *
+         EXECUTE "!":CMMD
+         *
+         * TRANSFER TO USER MY DOCUMENTS
+         *
+         CALL ATGETDOCPATH(MYDOCUMENTS_PATH)
+         COPY_TO_FILE_LOC = MYDOCUMENTS_PATH:@DS:PDF.NAME
+         CALL GUI.FILE.COPY(SHARE.PDF_PATH,COPY_TO_FILE_LOC,STATUS)
+         IF STATUS = '' THEN
+            *
+            * CALL UP DEFINED PDF VIEWER
+            *
+            IF DISPLAY.ON.CREATION THEN
+               CRT ESC:STX:"<":COPY_TO_FILE_LOC
+            END
+         END ELSE
+            PRMPT = "Unable to copy PDF to MY DOCUMENTS, reason ":STATUS
+            CAPTION = "Reprint Forms"
+            STYLE   = 2  ;* !
+            BUTTONS = 0  ;* ok
+            HELPID = ""
+            CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         END
+         *
+         * GET RID OF THE FILES STORED IN THE TEMP DIR
+         *
+         DELETE TEMP.DIR.FV, TEMP.FILE
+         DELETE TEMP.DIR.FV, PDF.NAME
+         CLOSE TEMP.DIR.FV
+
+      END ELSE
+         *
+         * CANNOT OPEN TEMP DIRECTORY
+         *
+         LOG.OPTS  = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Unable to open QM Temp Directory"
+         CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END
+   END ELSE
+      *
+      * CANNOT FIND PCL6
+      *
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Unable to find pcl6.exe at: ":  GHOSTPCL.FILE.PATH
+      CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   END
+END ELSE
+   *
+   * CANNOT READ  UTILITY_APPS_PATH
+   *
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Unable to read UTILITY_APPS_PATH from SYSTEM_FILE "
+   CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END
+
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+*
+FILTER.FILE.NAME: *
+*
+* we need to filter the file name used to store the part upload information, special characters:
+* \/:*,"<>| are not allowed in the file name!
+*
+NEW.FN = PDF.NAME
+NEW.FN = TRIM(NEW.FN)
+CONVERT ' ' TO '_' IN NEW.FN
+CONVERT '/' TO '$' IN NEW.FN
+CONVERT '\' TO '$' IN NEW.FN
+CONVERT ':' TO '$' IN NEW.FN
+CONVERT '*' TO '$' IN NEW.FN
+CONVERT ',' TO '$' IN NEW.FN
+CONVERT '"' TO '$' IN NEW.FN
+CONVERT '<' TO '$' IN NEW.FN
+CONVERT '>' TO '$' IN NEW.FN
+CONVERT '|' TO '$' IN NEW.FN
+PDF.NAME = NEW.FN
+RETURN
+END

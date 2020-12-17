@@ -1,0 +1,385 @@
+TEMPLATEı42047.40531ıPOEıNXT.BPüPOE.DIALOGü3ü0
+0ı1.4ı4
+2ıPOEıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPurchase Order Entry
+4ıı59ııı0
+4ıı41ıııMain Purchae Order Entry Form
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıPOE*POEıı7ıautoıautoı106.5ı37.5ı1
+4ıı22ıııPurchase Order Entry
+4ıı48ııı0
+4ıı9ııı0
+2ıPOE*POE*tabMıı30ı0ı0ı104ı34.5ı0
+4ıı10ııı0
+2ıPOE*POE*tabOeıtabMı31ı0ı0ı0ı0ı0
+4ıı22ıııOrder
+4ıı49ıııEnter Customer Data in this tab
+2ıPOE*POE*lbl1OrdıtabOeı15ı0ı1ı5.5ı1.25ı0
+4ıı0ııı PO #
+4ıı25ııı1
+4ıı67ııı0
+2ıPOE*POE*txt1OrdValıtabOeı16ı6ı1ı15ı1.25ı256
+4ıı49ıııEnter Order Number to review, select NEW button to add new order
+2ıPOE*POE*btnNewOrderıtabOeı18ı22ı2ı7.5ı1.25ı32
+4ıı22ıııNew
+4ıı49ıııCreate New Order
+2ıPOE*POE*btn1FindıtabOeı18ı22ı.5ı7.5ı1.25ı32
+4ıı22ıııFind
+4ıı49ıııFind Order Number 
+2ıPOE*POE*lbl1OrdDTıtabOeı15ı32ı1ı7ı1.25ı0
+4ıı0ıııOrder Date
+2ıPOE*POE*txt1OrdDTıtabOeı16ı40ı1ı9.5ı1.25ı256
+4ıı49ıııEnter Date order placed by customer
+4ıı29ııı6
+4ıı8ııı0
+2ıPOE*POE*lbl1EntByıtabOeı15ı52ı1ı7ı1.25ı0
+4ıı0ıııEnter By
+2ıPOE*POE*txt1EntByıtabOeı16ı61ı1ı9.5ı1.25ı256
+4ıı8ııı0
+2ıPOE*POE*frmBillToıtabOeı26ı1ı4ı36ı12.5ı0
+4ıı0ıııOrder
+2ıPOE*POE*lst1VenNameıfrmBillToı24ı20ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı15ı15ı10
+4ıı39ııı1
+4ıı49ıııSelect vendor name
+4ıı8ııı0
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııCM NbrıNameıAddressıCity
+4ıı33ııı3
+4ıı68ııı0
+2ıPOE*POE*lbl1VenıfrmBillToı15ı5ı1ı11.5ı1.25ı0
+4ıı0ıııVendor Number
+4ıı67ııı0
+2ıPOE*POE*lbl1BillNameıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıPOE*POE*lbl1BilllAddr1ıfrmBillToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıPOE*POE*LBLVENNAMEıfrmBillToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıPOE*POE*lbl1BillAddr1ValıfrmBillToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1BillAddr2ıfrmBillToı15ı1ı5.5ı4.5ı1.25ı0
+4ıı0ıııAddr2
+2ıPOE*POE*lbl1BillAddr2ValıfrmBillToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1BillCSıfrmBillToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St. 
+2ıPOE*POE*lbl1BillCityValıfrmBillToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1BillStValıfrmBillToı15ı28.75ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1BillZipıfrmBillToı15ı2.88ı8.5ı3.5ı1.25ı0
+4ıı0ıııZip
+2ıPOE*POE*lbl1BillCoıfrmBillToı15ı3ı10ı2.5ı1.25ı0
+4ıı0ıııCo
+2ıPOE*POE*lbl1BillZipValıfrmBillToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1BillCoValıfrmBillToı15ı6ı10ı15ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*btn1EditBillıfrmBillToı18ı26ı9ı7.5ı1.25ı32
+4ıı22ıııEdit
+4ıı49ıııEdit Customer's Bill To Information
+4ıı8ııı0
+2ıPOE*POE*btn1NewBillıfrmBillToı18ı26ı11ı7.5ı1.25ı32
+4ıı22ıııNew
+4ıı49ıııCreate New Customer
+4ıı8ııı0
+2ıPOE*POE*frmShipToıtabOeı26ı40ı4ı36ı12.5ı0
+4ıı0ıııOrder
+2ıPOE*POE*lst1ShipToıfrmShipToı24ı20ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı5.88ı16.12ı12.62ı4.5
+4ıı39ııı1
+4ıı49ıııSelect ship to name
+4ıı53ııı3
+4ıı8ııı0
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııShipToıAdrressıCityıState
+4ıı26ıııüüüıüüüıüüü
+4ıı33ııı3
+2ıPOE*POE*lbl1ShipToıfrmShipToı15ı9ı1ı10.5ı1.25ı0
+4ıı0ıııShip To Number
+2ıPOE*POE*lbl1ShipNameıfrmShipToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıPOE*POE*lbl1ShipNameValıfrmShipToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipAddr1ıfrmShipToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıPOE*POE*lbl1ShipAddr1ValıfrmShipToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipAddr2ıfrmShipToı15ı1ı5.5ı4ı1.25ı0
+4ıı0ıııAddr2
+2ıPOE*POE*lbl1ShipAddr2valıfrmShipToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipCSıfrmShipToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St.
+2ıPOE*POE*lbl1ShipCityValıfrmShipToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipStValıfrmShipToı15ı28.5ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipZipıfrmShipToı15ı3ı8.5ı3ı1.25ı0
+4ıı0ıııZip
+2ıPOE*POE*lbl1ShipZipValıfrmShipToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*lbl1ShipCoıfrmShipToı15ı3ı10ı2.5ı1.25ı0
+4ıı0ıııCo
+2ıPOE*POE*lbl1ShipCoValıfrmShipToı15ı6ı10ı15ı1.25ı0
+4ıı11ııı2
+2ıPOE*POE*btn1NewShipıfrmShipToı18ı26ı11ı7.5ı1.25ı32
+4ıı22ıııNew
+4ıı49ıııCreate New Customer Ship To
+4ıı8ııı0
+2ıPOE*POE*btn1EditShipıfrmShipToı18ı26ı9ı7.5ı1.25ı32
+4ıı8ııı0
+4ıı22ıııEdit
+4ıı49ıııClick to edit ship to
+2ıPOE*POE*lbl1BuyerıtabOeı15ı1ı17ı8.5ı1.25ı0
+4ıı0ıııBuyer
+4ıı25ııı1
+2ıPOE*POE*cb1BuyerıtabOeı23ı10ı17ı25ı1.25ı288
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı49ıııEnter Buyer's name or select from list
+4ıı8ııı0
+4ıı53ııı8
+2ıPOE*POE*lbl1ShipViaıtabOeı15ı41ı17ı8.5ı1.25ı0
+4ıı0ıııShip Via
+4ıı25ııı1
+2ıPOE*POE*cb1ShipViaıtabOeı23ı51ı17ı25ı1.25ı288
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı49ıııEnter Shipping Method or select from drop down list
+4ıı8ııı0
+4ıı53ııı8
+2ıPOE*POE*lbl1TermsıtabOeı15ı1ı18.5ı8.5ı1.25ı0
+4ıı0ıııTerms
+4ıı25ııı1
+2ıPOE*POE*lst1TermsıtabOeı24ı10ı18.5ı25ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı4ı15
+4ıı39ııı2
+4ıı49ıııSelect Terms Code from drop down list
+4ıı53ııı8
+4ıı8ııı0
+2ıPOE*POE*lbl1OrdNotesıtabOeı15ı1ı22ı8ı1.25ı0
+4ıı0ıııOrder Notes
+2ıPOE*POE*txt1OrdNotesıtabOeı17ı10ı20.5ı64.5ı6ı256
+4ıı49ıııEnter private (not seen by Vendor) notes
+4ıı8ııı0
+4ıı10ııı1
+2ıPOE*POE*btnFileOrderıtabOeı18ı78ı6.5ı7.5ı1.25ı32
+4ıı22ıııFile
+4ıı49ıııFile Order 
+4ıı8ııı0
+2ıPOE*POE*btnCancelıtabOeı18ı78ı8.5ı7.5ı1.25ı32
+4ıı22ıııClose
+4ıı49ıııCancel unsaved changes to order
+4ıı8ııı0
+2ıPOE*POE*btnDeleteOrderıtabOeı18ı78ı10.5ı7.5ı1.25ı32
+4ıı22ıııDelete
+4ıı49ıııDelete this order
+4ıı8ııı0
+2ıPOE*POE*tabItıtabMı31ı0ı0ı0ı0ı32
+4ıı22ıııItem Detail
+4ıı49ıııEnter Order Detail Data in this tab
+2ıPOE*POE*fmLstItmıtabItı26ı0ı.25ı101.5ı5.25ı0
+4ıı0ıııItem Selection List
+4ıı49ıııSelect Active Item from this List
+4ıı67ııı0
+2ıPOE*POE*lstItemıfmLstItmı21ı1ı1ı90ı4ı32
+4ıı27ııı6
+4ıı32ıııItemıPart NumberıDescriptionıWork Orderı DueıStatus
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı7ı20.38ı36ı9ı8ı6
+4ıı33ııı3
+4ıı49ıııScrowl to desired item and Click to make active
+4ıı26ıııüüüüüıüüüüüıüüüüüıüüüüüıüüüüü
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı68ııı0
+2ıPOE*POE*btn2NewıfmLstItmı18ı93ı1ı7.5ı1.5ı32
+4ıı22ıııAdd Item
+4ıı49ıııSelect New to add Item to Order
+4ıı8ııı0
+2ıPOE*POE*BtnNSPıfmLstItmı18ı93ı3ı7.5ı2ı32
+4ıı22ıııAdd NonStdItem
+4ıı8ııı0
+2ıPOE*POE*frmDetailıtabItı26ı0ı5.5ı102ı19.25ı0
+4ıı0ıııItem Detail
+4ıı67ııı0
+2ıPOE*POE*lblClosedıfrmDetailı15ı0ı0ı21.5ı1.25ı0
+4ıı0ııı* Item Manually Closed *
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı1
+4ıı19ııı0
+4ıı11ııı1
+4ıı9ııı0
+2ıPOE*POE*lbl2PnıfrmDetailı15ı1ı1.5ı8ı1.25ı0
+4ıı0ıııPart Number
+2ıPOE*POE*txt2PnıfrmDetailı16ı9ı1.5ı30ı1.25ı256
+4ıı49ıııEnter Part Number
+4ıı8ııı0
+2ıPOE*POE*lbl2RevıfrmDetailı15ı40ı1.5ı3.5ı1.25ı0
+4ıı0ıııRev
+2ıPOE*POE*txt2RevıfrmDetailı16ı43ı1.5ı5.5ı1.25ı256
+4ıı49ıııEnter Part Revision Level
+2ıPOE*POE*lblWOıfrmDetailı15ı57ı1.5ı7.5ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıPOE*POE*txtWOıfrmDetailı16ı66ı1.5ı17ı1.25ı256
+4ıı8ııı0
+2ıPOE*POE*lblSeqıfrmDetailı15ı57ı3ı8ı1.25ı0
+4ıı0ıııSequence
+4ıı67ııı0
+2ıPOE*POE*txtSeqıfrmDetailı16ı66ı3ı7ı1.25ı256
+4ıı8ııı0
+2ıPOE*POE*lbl2DescıfrmDetailı15ı1ı3ı7.5ı1.25ı0
+4ıı0ıııDescription
+2ıPOE*POE*txt2DescıfrmDetailı16ı9ı3ı39.5ı1.25ı256
+4ıı49ıııEnter Part Description
+4ıı8ııı0
+2ıPOE*POE*lbl2NotesıfrmDetailı15ı73ı12ı6.5ı1ı0
+4ıı0ıııItem Notes
+4ıı25ııı1
+2ıPOE*POE*txt2NotesıfrmDetailı17ı73ı13.5ı26ı4.75ı256
+4ıı49ıııEnter Item Notes Here
+4ıı10ııı1
+2ıPOE*POE*grdLinesıfrmDetailı28ı1ı13ı70.5ı5.25ı2048
+4ıı27ııı6
+4ıı32ıııReceiver IdıDate RecvdıQty RecvdıLot IdıInv DateıInv Nbr
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı15ı8ı8ı15ı8ı13.62
+4ıı34ııı1ı1ı0ı0ı0ı0
+4ıı35ııı0ı0ı0ı0ı6ı0
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ıııüüüüüıüüüüüıüüüüü
+2ıPOE*POE*btnPartMasterıfrmDetailı18ı50ı1ı5.5ı2ı32
+4ıı22ıııPart Master
+4ıı8ııı0
+2ıPOE*POE*btnActıfrmDetailı18ı50ı3.5ı5.5ı2ı32
+4ıı22ıııPart Activity
+4ıı49ıııClick for item activity
+4ıı8ııı0
+2ıPOE*POE*btn2FileıfrmDetailı18ı92ı1ı9ı3.5ı32
+4ıı22ıııItem File
+4ıı49ıııSelect File to Save Item
+4ıı8ııı0
+2ıPOE*POE*btn2CancelıfrmDetailı18ı92ı5ı9ı1.5ı32
+4ıı22ıııItem Close
+4ıı49ıııCancel all Unsaved Changes to item
+4ıı8ııı0
+2ıPOE*POE*btnLabel2ıfrmDetailı18ı78ı7.5ı9.5ı2.75ı32
+4ıı22ıııShip To Label
+4ıı8ııı0
+2ıPOE*POE*btnPrintıfrmDetailı18ı92ı7.5ı9ı2.75ı32
+4ıı22ıııPrint PO
+4ıı8ııı0
+2ıPOE*POE*blbGlCdıfrmDetailı15ı1ı11ı9.5ı1.25ı0
+4ıı0ıııGL Trans Code
+4ıı67ııı0
+2ıPOE*POE*lstGlTransıfrmDetailı24ı11ı11ı20ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.12ı15
+4ıı53ııı8
+4ıı39ııı1
+4ıı32ıııGl CodeıDescription
+2ıPOE*POE*frmSchdıfrmDetailı26ı1ı5.5ı75ı5ı0
+4ıı0ıııSchedule
+4ıı67ııı0
+4ıı8ııı0
+2ıPOE*POE*lblOrderQtyıfrmSchdı15ı8ı1.5ı8ı1.25ı0
+4ıı0ıııOrder Qty
+4ıı67ııı0
+2ıPOE*POE*txtOrderQtyıfrmSchdı16ı8ı3ı8ı1.25ı256
+4ıı29ııı8
+2ıPOE*POE*lblDueıfrmSchdı15ı17ı1.5ı8ı1.25ı0
+4ıı0ıııDue Date
+4ıı67ııı0
+2ıPOE*POE*txtDueıfrmSchdı16ı17ı3ı8ı1.25ı256
+4ıı29ııı6
+4ıı54ııı1
+2ıPOE*POE*lblPriceıfrmSchdı15ı26ı1.5ı4ı1.25ı0
+4ıı0ıııPrice
+4ıı67ııı0
+2ıPOE*POE*cb2PriceıfrmSchdı23ı26ı3ı13ı1.25ı288
+4ıı27ııı3
+4ıı38ııı0ı0ı0
+4ıı37ııı5ı8ı25
+4ıı39ııı2
+4ıı53ııı8
+4ıı32ıııQtyıPriceıComment
+4ıı33ııı3
+2ıPOE*POE*lblLotıfrmSchdı15ı39ı1.5ı8ı1.25ı0
+4ıı0ıııLot Charge
+4ıı67ııı0
+2ıPOE*POE*chkLotıfrmSchdı20ı41ı3ı3ı1.25ı32
+4ıı67ııı0
+2ıPOE*POE*txtQuoteıfrmSchdı16ı45ı3ı29ı1.25ı256
+2ıPOE*POE*lblQuoteıfrmSchdı15ı48ı1.5ı8ı1.25ı0
+4ıı0ıııRef Doc
+4ıı67ııı0
+2ıPOE*POE*lblitemıfrmSchdı15ı1ı1.5ı6.5ı1.25ı0
+4ıı0ıııItem
+4ıı67ııı0
+2ıPOE*POE*lblItemVıfrmSchdı15ı1ı3ı6ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOE*POE*btnDisplayıfrmSchdı18ı62ı1ı11.5ı1.75ı32
+4ıı22ıııDisplay Linked Ref
+2ıPOE*POE*chkPDFıfrmDetailı20ı91ı10.5ı9.5ı1.25ı0
+4ıı22ıııCreate PDF
+4ıı67ııı0
+2ıPOE*POE*lblWoPnVıfrmDetailı15ı58ı4.5ı27ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOE*POE*lblItemTotıfrmDetailı15ı33ı11ı6.5ı1.25ı0
+4ıı0ıııItem Total
+4ıı67ııı0
+2ıPOE*POE*lblItemValıfrmDetailı15ı40ı11ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıPOE*POE*lblPoTotıfrmDetailı15ı54ı11ı5.5ı1.25ı0
+4ıı0ıııPo Total
+4ıı67ııı0
+2ıPOE*POE*lblPoValıfrmDetailı15ı60ı11ı11.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıPOE*POE*frmProcessıtabItı26ı0ı25ı102ı7.5ı0
+4ıı0ıııPO Item Description
+4ıı67ııı0
+2ıPOE*POE*txtItemDescıfrmProcessı17ı1ı1.5ı99.5ı4.5ı256
+4ıı10ııı1
+2ıPOE*POE*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ıııMaintü1üItem üü0ü1üü0üıCloseü2üToggle Manual Closedüü0ü1üü1üıPrintMü1üPrintüü1ü1üü0üı*Printü2üPrint Screenüü1ü1üü0ıPrintü2üPrint Itemüü0ü1üü1üı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+0ı-1

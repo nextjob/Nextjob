@@ -1,0 +1,53 @@
+TEMPLATEı42071.80073ıREPORT.DRIVERıNXT.BPüREPORT.DRIVERü3ü0
+0ı1.4ı4
+2ıREPORT.DRIVERıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııGeneric Report Driver
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıREPORT.DRIVER*Form1ıı7ıautoıautoı50ı15.25ı1
+4ıı22ıııGeneric Report Driver
+4ıı48ııı0
+4ıı9ııı0
+2ıREPORT.DRIVER*Form1*lblSelectıı15ı1ı.5ı15ı1.25ı0
+4ıı8ııı0
+4ıı0ıııSelect
+4ıı25ııı1
+2ıREPORT.DRIVER*Form1*txtSelectıı16ı17ı.5ı15ı1.25ı256
+4ıı8ııı0
+2ıREPORT.DRIVER*Form1*lblFromDateıı15ı1ı3ı15ı1.25ı0
+4ıı0ıııFrom Date
+4ıı8ııı0
+4ıı25ııı1
+2ıREPORT.DRIVER*Form1*txtFromDateıı16ı17ı3ı11ı1.25ı256
+4ıı29ııı6
+4ıı8ııı0
+2ıREPORT.DRIVER*Form1*lblToDateıı15ı1ı5.5ı15ı1.25ı0
+4ıı0ıııTo Date
+4ıı8ııı0
+4ıı25ııı1
+2ıREPORT.DRIVER*Form1*txtToDateıı16ı17ı5.5ı11ı1.25ı256
+4ıı29ııı6
+4ıı8ııı0
+2ıREPORT.DRIVER*Form1*lblSSPathıı15ı19ı11ı26ı1.25ı0
+4ıı11ııı2
+2ıREPORT.DRIVER*Form1*btnCreateıı18ı5ı13ı10ı1.75ı32
+4ıı22ıııCreate
+2ıREPORT.DRIVER*Form1*btnCancelıı18ı36ı13ı10ı1.75ı32
+4ıı22ıııCancel
+4ıı10ııı2
+2ıREPORT.DRIVER*Form1*OptPrintıı19ı2ı7.5ı16.5ı5ı256
+4ıı22ıııOutput Selection
+4ıı27ııı0
+4ıı28ııı0
+4ıı26ıııPrint Report On UnitıSpreadSheet Report, Path
+4ıı0ııı2
+4ıı67ııı0
+2ıREPORT.DRIVER*Form1*lblPrintUnitıı15ı19ı8.5ı3ı1.25ı0
+4ıı11ııı2
+0ı-1

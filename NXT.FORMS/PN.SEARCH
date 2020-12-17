@@ -1,0 +1,73 @@
+TEMPLATEı41569.85508ıPN.SEARCHıNXT.BPüPN.SEARCHü3ü0
+0ı1.4ı4
+2ıPN.SEARCHıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPN.SEARCH
+4ıı59ııı0
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııSEARCH PARTS FILE FOR MATCHING PATTERN
+2ıPN.SEARCH*PNSıı7ıautoıautoı56.75ı12.25ı1
+4ıı22ıııPart Search
+4ıı48ııı0
+4ıı9ııı0
+2ıPN.SEARCH*PNS*lblSearchıı15ı1ı1ı8ı1.25ı0
+4ıı0ıııSearch By
+2ıPN.SEARCH*PNS*lblPartıı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııPart Number
+2ıPN.SEARCH*PNS*cbPnıı23ı11.62ı2.5ı34ı1.25ı288
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı21ı22
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııPart NumberıDescription
+4ıı33ııı3
+2ıPN.SEARCH*PNS*btnSearchPnıı18ı47ı2.5ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıPN.SEARCH*PNS*lblDescıı15ı1ı4.5ı10.5ı1.25ı0
+4ıı0ıııPart Description
+2ıPN.SEARCH*PNS*cbDescıı23ı11.5ı4.5ı34ı1.25ı288
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı21ı22
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııPart NumberıDescription
+4ıı33ııı3
+2ıPN.SEARCH*PNS*btnSearchDescıı18ı47ı4.5ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıPN.SEARCH*PNS*lblDrawıı15ı1ı6.5ı8ı1.25ı0
+4ıı0ıııDrawing
+2ıPN.SEARCH*PNS*cbDrawıı23ı11.5ı6.5ı34ı1.25ı288
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı21ı22
+4ıı39ııı1
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııPart NumberıDescription
+4ıı33ııı3
+2ıPN.SEARCH*PNS*btnSearchDrawıı18ı47ı6.5ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıPN.SEARCH*PNS*btnCancelıı18ı23ı9ı10ı1.5ı32
+4ıı22ıııCancel
+2ıPN.SEARCH*PNS*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+0ı-1

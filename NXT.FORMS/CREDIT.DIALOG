@@ -1,0 +1,93 @@
+TEMPLATEı42047.58488ıCREDITıNXT.BPüCREDIT.DIALOGü3ü0
+0ı1.4ı4
+2ıCREDITıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııCredit Memo
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııNexjob Credit Memo Module
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıCREDIT*CREDITıı7ıautoıautoı91ı28.75ı1
+4ıı22ıııCredit Memo
+4ıı48ııı0
+4ıı9ııı0
+2ıCREDIT*CREDIT*lblOrderıı15ı1ı.5ı8.5ı1.25ı0
+4ıı0ıııOrder Number
+2ıCREDIT*CREDIT*frmBillToıı26ı1ı2ı72ı6ı0
+4ıı0ıııBill To
+2ıCREDIT*CREDIT*lbl1BillToıfrmBillToı15ı1ı1ı11.5ı1.25ı0
+4ıı0ıııCust Nbr / Name
+4ıı67ııı0
+2ıCREDIT*CREDIT*lbl1BillNameValıfrmBillToı15ı31ı1ı29ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BilllAddr1ıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııAddr
+4ıı67ııı0
+2ıCREDIT*CREDIT*lbl1BillAddr1ValıfrmBillToı15ı7ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BillAddr2ValıfrmBillToı15ı38ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BillCSıfrmBillToı15ı1ı4ı8ı1.25ı0
+4ıı0ıııCity, St. Zip
+4ıı67ııı0
+2ıCREDIT*CREDIT*lbl1BillCityValıfrmBillToı15ı9ı4ı22ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BillStValıfrmBillToı15ı32ı4ı5ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BillZipValıfrmBillToı15ı38ı4ı15ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lblBillCustıfrmBillToı15ı13ı1ı16ı1.25ı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*lbl1BillCoValıfrmBillToı15ı55ı4ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*btnCancelıı18ı1ı25ı9ı2ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+2ıCREDIT*CREDIT*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıCREDIT*CREDIT*TXTORDNBRıı16ı10ı.5ı16.5ı1.25ı256
+2ıCREDIT*CREDIT*frmItemsıı26ı1ı8.5ı89ı9.75ı0
+4ıı67ııı0
+4ıı0ıııSelect Order Invoice Items to Credit
+2ıCREDIT*CREDIT*grdLinesıfrmItemsı28ı1ı1ı87ı8ı32
+4ıı27ııı9
+4ıı32ıııSelectıInvoiceı Part NumberıDate ShippedıQty Shippedı Lot$ı Price Ea.ıLine TotalıGL Trans Code
+4ıı38ııı0ı0ı0ı2ı1ı0ı1ı2ı0
+4ıı37ııı4.75ı6ı23.62ı9ı8.38ı5.5ı7.75ı12.25ı13.12
+4ıı34ııı2ı0ı0ı0ı0ı0ı0ı0ı0
+4ıı35ııı0ı0ı0ı6ı8ı0ı5ı5ı0
+4ıı33ııı3
+4ıı0ııı0üüüüüüüüıüüüüüüüüıüüüüüüüüıüüüüüüüüıüüüüüüüü
+4ıı12ııı0ı1ı1ı0ı0ı0ı0ı0ı0
+4ıı39ııı0ı0ı0ı0ı0ı0ı2ı0ı0
+4ıı36ııııııııı|ıı
+2ıCREDIT*CREDIT*frmCrditıı26ı1ı18.5ı89ı6ı0
+4ıı0ıııCredit Information
+4ıı67ııı0
+2ıCREDIT*CREDIT*lblDescıfrmCrditı15ı1ı1ı10ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıCREDIT*CREDIT*txtCRdescıfrmCrditı17ı10ı1ı69ı2.25ı256
+4ıı10ııı1
+2ıCREDIT*CREDIT*lblAmountıfrmCrditı15ı1ı4ı6ı1.25ı0
+4ıı0ıııAmount
+4ıı67ııı0
+2ıCREDIT*CREDIT*btnFileıfrmCrditı18ı78ı4ı9ı1.5ı32
+4ıı22ıııFile
+2ıCREDIT*CREDIT*lblCreditIDıfrmCrditı15ı28ı4ı10.5ı1.25ı0
+4ıı0ıııCredit Memo Nbr
+4ıı67ııı0
+2ıCREDIT*CREDIT*lblCreditIDVıfrmCrditı15ı40ı4ı13ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıCREDIT*CREDIT*LBLTOTAMTıfrmCrditı15ı7ı4ı11.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+0ı-1

@@ -1,0 +1,67 @@
+TEMPLATEı42080.4331ıQAMASTERıNXT.BPüQAMASTER.DIALOGü3ü0
+0ı1.4ı4
+2ıQAMASTERıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııQA Master
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııQA Master Maintain QA Records for Part
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıQAMASTER*QAMASTERıı7ıautoıautoı83ı30.5ı1
+4ıı22ıııQA MASTER
+4ıı48ııı0
+4ıı9ııı0
+2ıQAMASTER*QAMASTER*frmPartıı26ı0ı.5ı80ı6.75ı0
+4ıı0ıııPart Information
+4ıı8ııı0
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*lbl2PnıfrmPartı15ı1ı1ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*txt2PnıfrmPartı16ı10ı1ı30ı1.25ı256
+4ıı49ıııEnter Part Number
+2ıQAMASTER*QAMASTER*lblDescıfrmPartı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*lblDrawıfrmPartı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*lblDrawVıfrmPartı15ı10ı4ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQAMASTER*QAMASTER*lblDescVıfrmPartı15ı10ı2.5ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıQAMASTER*QAMASTER*lstRTlistıfrmPartı24ı56ı1ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.38ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı1
+4ıı32ıııEng IdıRev
+2ıQAMASTER*QAMASTER*lblRtIdıfrmPartı15ı49ı1ı5.5ı1ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*frmQaDataıı26ı0ı7.5ı81.5ı22ı0
+4ıı67ııı0
+2ıQAMASTER*QAMASTER*QAGRIDıfrmQaDataı28ı.5ı1ı80.5ı18ı2080
+4ıı27ııı9
+4ıı32ıııActiveıIdıInspection CharacteristicıAQLıLocıRt SeqıInsp MethodıValue 1ıValue 2
+4ıı38ııı0ı2ı0ı0ı0ı0ı0ı0ı0
+4ıı37ııı4.62ı4.75ı25.88ı5.62ı3.75ı7ı11.5ı8.38ı7.25
+4ıı34ııı2ı1ı1ı3ı1ı3ı3ı1ı1
+4ıı33ııı3
+4ıı0ııı-1üüüüüüüüıüüüüüüüüıüüüüüüüüıüüüüüüüüıüüüüüüüü
+4ıı10ııı1
+4ıı35ııı0ı0ı0ı0ı0ı0ı0ı2ı2
+2ıQAMASTER*QAMASTER*btnDeleteıfrmQaDataı18ı1ı20ı7.5ı1.25ı32
+4ıı22ıııDelete
+2ıQAMASTER*QAMASTER*btnPrintıfrmQaDataı18ı71ı20ı7.5ı1.25ı32
+4ıı22ıııPrint
+0ı-1

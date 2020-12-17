@@ -1,0 +1,79 @@
+TEMPLATEı41801.90593ıREPRINTıNXT.BPüREPRINT.FORMSü3ü0
+0ı1.4ı4
+2ıREPRINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııFORMS REPRINT
+4ıı59ııı0
+4ıı43ıııNexjob Invocing Module
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıREPRINT*REPRINTıı7ıautoıautoı49.25ı26ı1
+4ıı22ıııREPRINT
+4ıı48ııı0
+4ıı9ııı0
+2ıREPRINT*REPRINT*lblOrderıı15ı1ı.5ı8.5ı1.25ı0
+4ıı0ıııOrder Number
+2ıREPRINT*REPRINT*TXT1ORDVALıı16ı10ı.5ı9.5ı1.25ı256
+2ıREPRINT*REPRINT*chkPDFıı20ı38ı.5ı10ı1.25ı32
+4ıı22ıııCreate PDF
+4ıı67ııı0
+2ıREPRINT*REPRINT*frmBillToıı26ı1ı2.5ı36ı10.5ı0
+4ıı0ıııCustomer
+2ıREPRINT*REPRINT*lbl1BillToıfrmBillToı15ı1ı1ı11.5ı1.25ı0
+4ıı0ıııCustomer Number
+2ıREPRINT*REPRINT*lbl1BillNameıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıREPRINT*REPRINT*lbl1BillNameValıfrmBillToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lbl1BilllAddr1ıfrmBillToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıREPRINT*REPRINT*lbl1BillAddr1ValıfrmBillToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lbl1BillAddr2ıfrmBillToı15ı1ı5.5ı4.5ı1.25ı0
+4ıı0ıııAddr2
+2ıREPRINT*REPRINT*lbl1BillAddr2ValıfrmBillToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lbl1BillCSıfrmBillToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St. 
+2ıREPRINT*REPRINT*lbl1BillCityValıfrmBillToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lbl1BillStValıfrmBillToı15ı28.75ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lbl1BillZipıfrmBillToı15ı1ı8.5ı4ı1.25ı0
+4ıı0ıııZip
+4ıı25ııı1
+2ıREPRINT*REPRINT*lbl1BillZipValıfrmBillToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*lblBillCustıfrmBillToı15ı13ı1ı16ı1.25ı0
+4ıı11ııı2
+2ıREPRINT*REPRINT*btnCancelıı18ı1ı21.5ı9.5ı2.75ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+2ıREPRINT*REPRINT*lstInvıı21ı1ı13.5ı47ı7.25ı32
+4ıı27ııı5
+4ıı38ııı0ı0ı0ı0ı0
+4ıı37ııı15.25ı6.25ı5.12ı8ı8
+4ıı49ıııSelect order to invoice
+4ıı32ıııPart NumberıDel DateıQty ıPackslipıInvoice
+4ıı33ııı3
+4ıı26ıııüüüüıüüüüıüüüüıüüüüıüüüüıüüüü
+4ıı8ııı0
+2ıREPRINT*REPRINT*btnInvoiceıı18ı39ı21.5ı9.5ı2.75ı32
+4ıı22ıııPrint Invoice
+4ıı49ıııClick to invoice this item
+4ıı8ııı0
+2ıREPRINT*REPRINT*btnPackslipıı18ı13ı21.5ı9.5ı2.75ı32
+4ıı22ıııPrint Packslip
+4ıı8ııı0
+2ıREPRINT*REPRINT*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıREPRINT*REPRINT*btnCertıı18ı26ı21.5ı9.5ı2.75ı32
+4ıı22ıııPrint Cert
+4ıı8ııı0
+0ı-1

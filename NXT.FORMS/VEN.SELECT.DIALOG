@@ -1,0 +1,118 @@
+TEMPLATEı41718.81569ıVEN.MAINTıNXT.BPüVEN.SELECT.DIALOGü3ü0
+0ı1.4ı4
+2ıVEN.MAINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııVendor Maintenance
+4ıı59ııı0
+4ıı41ıııVendor Maintenance
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıVEN.MAINT*VEN.MAINTıı7ıautoıautoı75ı13.75ı1
+4ıı22ıııVendor Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıVEN.MAINT*VEN.MAINT*frmBillToıı26ı1ı.5ı36ı13ı0
+2ıVEN.MAINT*VEN.MAINT*lst1VenNameıfrmBillToı24ı20ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı15ı15ı10
+4ıı39ııı1
+4ıı49ıııSelect customer name
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııCM NbrıNameıAddressıCity
+4ıı33ııı3
+4ıı68ııı0
+2ıVEN.MAINT*VEN.MAINT*lbl1BillToıfrmBillToı15ı5ı1ı11.5ı1.25ı0
+4ıı0ıııVendor Number
+4ıı67ııı0
+2ıVEN.MAINT*VEN.MAINT*lbl1BillNameıfrmBillToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıVEN.MAINT*VEN.MAINT*lbl1BilllAddr1ıfrmBillToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıVEN.MAINT*VEN.MAINT*LBLVENNAMEıfrmBillToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıVEN.MAINT*VEN.MAINT*lbl1BillAddr1ValıfrmBillToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillAddr2ıfrmBillToı15ı1ı5.5ı4.5ı1.25ı0
+4ıı0ıııAddr2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillAddr2ValıfrmBillToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillCSıfrmBillToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St. 
+2ıVEN.MAINT*VEN.MAINT*lbl1BillCityValıfrmBillToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillStValıfrmBillToı15ı28.75ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillZipıfrmBillToı15ı2.88ı8.5ı3.5ı1.25ı0
+4ıı0ıııZip
+2ıVEN.MAINT*VEN.MAINT*lbl1BillCoıfrmBillToı15ı3ı10ı2.5ı1.25ı0
+4ıı0ıııCo
+2ıVEN.MAINT*VEN.MAINT*lbl1BillZipValıfrmBillToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1BillCoValıfrmBillToı15ı6ı10ı15ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*btn1EditBillıfrmBillToı18ı26ı9ı7.5ı1.25ı32
+4ıı22ıııEdit
+4ıı49ıııEdit Customer's Bill To Information
+2ıVEN.MAINT*VEN.MAINT*btn1NewBillıfrmBillToı18ı26ı11ı7.5ı1.25ı32
+4ıı22ıııNew
+4ıı49ıııCreate New Customer
+2ıVEN.MAINT*VEN.MAINT*frmShipToıı26ı38ı.5ı36ı13ı0
+2ıVEN.MAINT*VEN.MAINT*lst1ShipToıfrmShipToı24ı20ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı5.88ı16.12ı12.62ı4.5
+4ıı39ııı1
+4ıı49ıııSelect ship to name
+4ıı53ııı3
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı32ıııShipToıAddressıCityıState
+4ıı33ııı3
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipToıfrmShipToı15ı9ı1ı10.5ı1.25ı0
+4ıı0ıııShip To Number
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipNameıfrmShipToı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipNameValıfrmShipToı15ı5ı2.5ı29ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipAddr1ıfrmShipToı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipAddr1ValıfrmShipToı15ı5ı4ı29ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipAddr2ıfrmShipToı15ı1ı5.5ı4ı1.25ı0
+4ıı0ıııAddr2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipAddr2valıfrmShipToı15ı5ı5.5ı29ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipCSıfrmShipToı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St.
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipCityValıfrmShipToı15ı6ı7ı22ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipStValıfrmShipToı15ı28.5ı7ı5ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipZipıfrmShipToı15ı3ı8.5ı3ı1.25ı0
+4ıı0ıııZip
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipZipValıfrmShipToı15ı6ı8.5ı15ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipCoıfrmShipToı15ı3ı10ı2.5ı1.25ı0
+4ıı0ıııCo
+2ıVEN.MAINT*VEN.MAINT*lbl1ShipCoValıfrmShipToı15ı6ı10ı15ı1.25ı0
+4ıı11ııı2
+2ıVEN.MAINT*VEN.MAINT*btn1NewShipıfrmShipToı18ı26ı11ı7.5ı1.25ı32
+4ıı22ıııNew
+4ıı49ıııCreate New Customer Ship To
+2ıVEN.MAINT*VEN.MAINT*btn1EditShipıfrmShipToı18ı26ı9ı7.5ı1.25ı32
+4ıı22ıııEdit
+4ıı49ıııClick to edit ship to
+0ı-1

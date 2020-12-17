@@ -1,0 +1,247 @@
+TEMPLATEı42468.43487ıWCıNXT.BPüWC.DIALOGü3ü0
+0ı1.4ı4
+2ıWCıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııWork Centers
+4ıı59ııı0
+4ıı41ıııWork Center Maintenance
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıWC*WCıı7ıautoıautoı58.5ı42.62ı1
+4ıı22ıııWork Centers
+4ıı48ııı0
+4ıı9ııı0
+2ıWC*WC*lblWcıı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Center
+4ıı67ııı0
+2ıWC*WC*lstWcıı24ı9ı1ı18ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıWC*WC*lblNameıı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııName
+4ıı67ııı0
+2ıWC*WC*txtNameıı16ı9ı2.5ı23ı1.25ı256
+4ıı8ııı0
+2ıWC*WC*lblDescıı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıWC*WC*txtDescıı16ı9ı4ı23ı1.25ı256
+4ıı8ııı0
+2ıWC*WC*lblDeptıı15ı1ı5.5ı8ı1.25ı0
+4ıı0ıııDepartment
+4ıı67ııı0
+2ıWC*WC*txtDeptıı16ı9ı5.5ı23ı1.25ı256
+4ıı8ııı0
+2ıWC*WC*frmNewIdıı26ı34ı.5ı18ı3.75ı0
+4ıı0ıııNew WC Id
+4ıı9ııı0
+4ıı67ııı0
+2ıWC*WC*txtNewIdıfrmNewIdı16ı.5ı1ı17ı1.25ı256
+2ıWC*WC*frmSaveAsıı26ı34ı.5ı18ı3.75ı0
+4ıı0ıııSave As
+4ıı9ııı0
+2ıWC*WC*txtSaveAsıfrmSaveAsı16ı1ı1ı15.5ı1.25ı256
+2ıWC*WC*frmRoutıı26ı2ı7ı55ı5.5ı0
+4ıı0ıııRoutings
+4ıı67ııı0
+4ıı8ııı0
+2ıWC*WC*chkSubıfrmRoutı20ı1ı1ı12ı1.25ı32
+4ıı22ıııSub Contract
+4ıı67ııı0
+2ıWC*WC*chkAutoIpıfrmRoutı20ı1ı2.5ı20ı1.25ı32
+4ıı22ıııAuto Create Su/Ip/Run Seqs
+4ıı67ııı0
+2ıWC*WC*lblSignoffıfrmRoutı15ı22ı1ı11ı1.25ı0
+4ıı0ıııSignoff Block Id
+4ıı67ııı0
+2ıWC*WC*LSTSIGNOFFıfrmRoutı24ı32ı1ı15ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıWC*WC*frmRatesıı26ı2ı12.5ı55ı9ı0
+4ıı0ıııRates
+4ıı8ııı0
+4ıı67ııı0
+2ıWC*WC*frmEmpRatesıfrmRatesı26ı1ı1ı52.5ı3.5ı0
+4ıı0ıııEmployee (Default) $ / Hour
+4ıı67ııı0
+2ıWC*WC*lblESuıfrmEmpRatesı15ı1ı1ı4.5ı1.5ı0
+4ıı0ıııSetup
+4ıı10ııı1
+4ıı67ııı0
+2ıWC*WC*txtESuRateıfrmEmpRatesı16ı6ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*lblERunıfrmEmpRatesı15ı17ı1ı4ı1.5ı0
+4ıı0ıııRun
+4ıı10ııı1
+4ıı67ııı0
+2ıWC*WC*txtERunRateıfrmEmpRatesı16ı21ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*lblEOHıfrmEmpRatesı15ı31ı1ı8ı1.25ı0
+4ıı0ıııOverhead
+4ıı67ııı0
+2ıWC*WC*txtEOverheadıfrmEmpRatesı16ı38ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*frmMachRatesıfrmRatesı26ı1ı4.5ı52.5ı4.25ı0
+4ıı0ıııMachine $ / Hour (For Operations that track Emp and Machine Hours Separately)
+4ıı67ııı0
+2ıWC*WC*Label1ıfrmMachRatesı15ı1ı1ı4.5ı1.5ı0
+4ıı0ıııSetup
+4ıı10ııı1
+4ıı67ııı0
+2ıWC*WC*txtMSuRateıfrmMachRatesı16ı6ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*Label2ıfrmMachRatesı15ı17ı1ı4ı1.5ı0
+4ıı0ıııRun
+4ıı10ııı1
+4ıı67ııı0
+2ıWC*WC*txtMRunRateıfrmMachRatesı16ı21ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*Label3ıfrmMachRatesı15ı31ı1ı8ı1.25ı0
+4ıı0ıııOverhead
+4ıı67ııı0
+2ıWC*WC*txtMOverheadıfrmMachRatesı16ı38ı1ı8ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*chkFlatRateıfrmMachRatesı20ı1ı2.5ı30.5ı1.25ı32
+4ıı22ıııFlat Rate (Use Setup Field to Define Amount)
+4ıı67ııı0
+2ıWC*WC*frmWrkDaysıı26ı2ı21.5ı48.5ı5.75ı0
+4ıı0ıııScheduling - Hrs / Day
+4ıı67ııı0
+2ıWC*WC*lblMonıfrmWrkDaysı15ı1ı.5ı4ı1ı0
+4ıı0ıııMon
+4ıı67ııı0
+2ıWC*WC*txtMonıfrmWrkDaysı16ı1ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtTueıfrmWrkDaysı16ı7ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtWedıfrmWrkDaysı16ı13ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtThurıfrmWrkDaysı16ı20ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtFriıfrmWrkDaysı16ı27ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtSatıfrmWrkDaysı16ı34ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*txtSunıfrmWrkDaysı16ı41ı2ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*lblTueıfrmWrkDaysı15ı7ı.5ı4ı1ı0
+4ıı0ıııTue
+4ıı67ııı0
+2ıWC*WC*lblWedıfrmWrkDaysı15ı13ı.5ı4ı1ı0
+4ıı0ıııWed
+4ıı67ııı0
+2ıWC*WC*lblThruıfrmWrkDaysı15ı20ı.5ı4ı1ı0
+4ıı0ıııThru
+4ıı67ııı0
+2ıWC*WC*lblFriıfrmWrkDaysı15ı27ı.5ı4ı1ı0
+4ıı0ıııFri
+4ıı67ııı0
+2ıWC*WC*lblSatıfrmWrkDaysı15ı34ı.5ı4ı1ı0
+4ıı0ıııSat
+4ıı67ııı0
+2ıWC*WC*lblSunıfrmWrkDaysı15ı41ı.5ı4ı1ı0
+4ıı0ıııSun
+4ıı67ııı0
+2ıWC*WC*lblMıfrmWrkDaysı15ı1ı4ı11.5ı1.25ı0
+4ıı0ıııWc Move Hours
+4ıı67ııı0
+2ıWC*WC*txtMoveıfrmWrkDaysı16ı12ı4ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*lblQıfrmWrkDaysı15ı19ı4ı10.5ı1.25ı0
+4ıı0ıııWc Queue Hours
+4ıı67ııı0
+2ıWC*WC*txtQueueıfrmWrkDaysı16ı31ı4ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*chkDispatchıfrmWrkDaysı20ı38ı4ı9ı1.25ı32
+4ıı22ıııDispatch
+4ıı67ııı0
+2ıWC*WC*frmSchdıı26ı2ı27.25ı55ı4.75ı0
+4ıı0ıııCapacity
+4ıı67ııı0
+4ıı8ııı0
+2ıWC*WC*lblHrsWKıfrmSchdı15ı1ı1ı9ı1.25ı0
+4ıı0ıııHours / Week
+4ıı67ııı0
+2ıWC*WC*lblEffıfrmSchdı15ı35ı1ı8.5ı1.25ı0
+4ıı0ııı%Efficiency
+4ıı67ııı0
+2ıWC*WC*txtUnitsıfrmSchdı16ı28ı1ı4ı1.25ı256
+4ıı29ııı8
+2ıWC*WC*txtEffıfrmSchdı16ı44ı1ı5.5ı1.25ı256
+4ıı29ııı9
+4ıı25ııı1
+2ıWC*WC*lblCapıfrmSchdı15ı17ı3ı11ı1.25ı0
+4ıı0ıııCapacity Horizon
+4ıı67ııı0
+2ıWC*WC*txtCapHozıfrmSchdı16ı28ı3ı4ı1.25ı256
+4ıı29ııı5
+2ıWC*WC*chkCapacityıfrmSchdı20ı36ı3ı14ı1.25ı32
+4ıı22ıııCapacity Planning
+4ıı67ııı0
+2ıWC*WC*lblUnitsıfrmSchdı15ı16ı1ı11ı1.25ı0
+4ıı0ıııProduction Units
+4ıı67ııı0
+2ıWC*WC*lblHrsWkVıfrmSchdı15ı11ı1ı4ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWC*WC*lblTotCapıfrmSchdı15ı1ı3ı11ı1.25ı0
+4ıı0ıııCapacity / Week
+4ıı67ııı0
+2ıWC*WC*lblTotCapVıfrmSchdı15ı12ı3ı4ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWC*WC*frmUsersıı26ı2ı32ı55ı6.5ı0
+4ıı0ıııUser Defined
+4ıı67ııı0
+4ıı8ııı0
+2ıWC*WC*lblU1ıfrmUsersı15ı1ı1ı6ı1.25ı0
+4ıı0ıııUser 1
+4ıı67ııı0
+2ıWC*WC*txtU1ıfrmUsersı16ı7ı1ı20ı1.25ı256
+2ıWC*WC*lblU2ıfrmUsersı15ı1ı2.5ı6ı1.25ı0
+4ıı0ıııUser 2
+4ıı67ııı0
+2ıWC*WC*txtU2ıfrmUsersı16ı7ı2.5ı20ı1.25ı256
+2ıWC*WC*lblU3ıfrmUsersı15ı1ı4ı6ı1.25ı0
+4ıı0ıııUser 3
+4ıı67ııı0
+2ıWC*WC*txtU3ıfrmUsersı16ı7ı4ı20ı1.25ı256
+2ıWC*WC*lblU4ıfrmUsersı15ı28ı1ı6ı1.25ı0
+4ıı0ıııUser 4
+4ıı67ııı0
+2ıWC*WC*lblU5ıfrmUsersı15ı28ı2.5ı6ı1.25ı0
+4ıı0ıııUser 5
+4ıı67ııı0
+2ıWC*WC*lblU6ıfrmUsersı15ı28ı4ı5.5ı1.25ı0
+4ıı0ıııUser 6
+4ıı67ııı0
+2ıWC*WC*txtU4ıfrmUsersı16ı34ı1ı20ı1.25ı256
+2ıWC*WC*txtU5ıfrmUsersı16ı34ı2.5ı20ı1.25ı256
+2ıWC*WC*txtU6ıfrmUsersı16ı34ı4ı20ı1.25ı256
+2ıWC*WC*frmButtonsıı26ı2ı38.5ı54.5ı4ı0
+4ıı67ııı0
+2ıWC*WC*btnNewıfrmButtonsı18ı2ı1.5ı8.5ı1.75ı32
+4ıı22ıııNew
+2ıWC*WC*btnFileıfrmButtonsı18ı13ı1.5ı8ı1.75ı32
+4ıı22ıııFile
+4ıı8ııı0
+2ıWC*WC*btnCancelıfrmButtonsı18ı24ı1.5ı8ı1.75ı32
+4ıı22ıııClose
+2ıWC*WC*btnSaveAsıfrmButtonsı18ı34ı1.5ı8ı1.75ı32
+4ıı22ıııSave As
+4ıı8ııı0
+2ıWC*WC*btnDeleteıfrmButtonsı18ı45ı1.5ı8ı1.75ı32
+4ıı22ıııDelete
+4ıı8ııı0
+0ı-1

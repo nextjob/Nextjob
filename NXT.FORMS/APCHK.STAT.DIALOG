@@ -1,0 +1,79 @@
+TEMPLATEı41843.57531ıAPCHKıNXT.BPüAPCHK.STAT.DIALOGü3ü0
+0ı1.4ı4
+2ıAPCHKıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııAP Check Status
+4ıı59ııı0
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııAP Check Status
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıAPCHK*APCHKıı7ıautoıautoı69.5ı19ı1
+4ıı22ıııAP Check Status
+4ıı48ııı0
+4ıı9ııı0
+2ıAPCHK*APCHK*LSTBANKıı24ı8ı.5ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8.25ı15
+4ıı53ııı8
+4ıı32ıııBank IdıName
+4ıı39ııı1
+2ıAPCHK*APCHK*txtCheckıı16ı8ı2.5ı14ı1.25ı256
+4ıı49ıııEnter customer check number
+4ıı29ııı8
+2ıAPCHK*APCHK*LBLVENDNAMEıı15ı37ı.5ı26.5ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıAPCHK*APCHK*Grid1ıı28ı1ı6.5ı32.5ı9.5ı0
+4ıı27ııı3
+4ıı32ıııInvoice NumberıDue DateıInvoice Amount
+4ıı38ııı0ı0ı0
+4ıı37ııı11ı8.25ı11
+4ıı34ııı1ı0ı0
+4ıı35ııı2ı0ı0
+4ıı33ııı3
+4ıı10ııı1
+4ıı12ııı0ı1ı1
+2ıAPCHK*APCHK*lblCheckıı15ı1ı2.5ı7ı1.25ı0
+4ıı0ıııCheck Nbr
+2ıAPCHK*APCHK*lblDateıı15ı25ı2.5ı4ı1.25ı0
+4ıı0ıııDate
+4ıı67ııı0
+2ıAPCHK*APCHK*lblAmountıı15ı41ı2.5ı9.5ı1.25ı0
+4ıı0ıııCheck Amount
+2ıAPCHK*APCHK*BTNRTNıı18ı37ı7.5ı8ı2ı32
+4ıı22ıııReturned
+2ıAPCHK*APCHK*btnCloseıı18ı54ı7.5ı8ı2ı32
+4ıı22ıııClose
+4ıı49ıııClick to cancel AR entry
+2ıAPCHK*APCHK*LBLBANKıı15ı1ı.5ı6ı1.25ı0
+4ıı0ıııBank
+4ıı67ııı0
+2ıAPCHK*APCHK*LBLCHKDATEıı15ı29ı2.5ı9.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı2
+2ıAPCHK*APCHK*LBLCHKAMTVıı15ı52ı2.5ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıAPCHK*APCHK*LBPAYEEıı15ı28ı.5ı8ı1.25ı0
+4ıı0ıııPayee
+4ıı67ııı0
+2ıAPCHK*APCHK*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıAPCHK*APCHK*btnVoidıı18ı54ı13.5ı8ı2ı32
+4ıı22ıııVoid Check
+2ıAPCHK*APCHK*lblStatıı15ı1ı4.5ı7ı1.25ı0
+4ıı0ıııStatus
+4ıı67ııı0
+2ıAPCHK*APCHK*lblstatusıı15ı8ı4.5ı11ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+0ı-1

@@ -1,0 +1,60 @@
+SUBROUTINE PCL.3OF9(TXT,HIGH,WIDE,STR)
+*
+* Converts TXT to the PCL5 string to print as a 3 of 9 Barcode
+* Input:  TXT  - Original Text
+*         HIGH - Height in Dots TRY 91
+*         WIDE - Narrow Bar Width TRY 3
+* Output: STR  - Return String
+*
+* Define Valid Characters and corresponding 3 Wide Bar Sets
+*
+* Tom Pellitieri http://www.precisonline.com/
+* http://www.precisonline.com/forum/index.php/topic,143.0/wap2.html
+*
+CMAP = "* $%+-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+MAP = "257.237.246.468.268.279.127.248.457.149.349.134.459.145.345."
+MAP := "479.147.347.169.369.136.569.156.356.679.167.367.567.189.389"
+MAP := ".138.589.158.358.789.178.378.578.129.239.123.259.125.235"
+CONVERT "." TO @AM IN MAP
+DIM BWIDE(10)
+E = CHAR(27)
+*
+* STR1 Saves the current Cursor position, STRZ Restores it.
+* Force Text to Upper Case and remove asterisks, since they
+* are used to denote the start and end of the barcode.
+*
+STR1 = E:"&f0S":E:"*p+":WIDE*10:"X"
+STRZ = E:"&f1S"
+STR = ""
+NTXT = OCONV(TXT,"MCU")
+CONVERT "*" TO "" IN NTXT
+NTXT = "*":NTXT:"*"
+IX = LEN(NTXT)
+*
+* Convert each character to a set of 5 solid rectangles.  The
+* character must be in the valid character set.
+* BWIDE is the width of each bar, which is tripled for 3 of
+* the 9 bars in the code.  Even bars are white, odd are black.
+* The 10th bar is the space between characters.
+* PCL Commands draw a bar, then move the drawing cursor the
+* width of that bar plus the space afterwards.
+*
+IF IX > 2 THEN
+   FOR I = 1 TO IX
+      LOC = INDEX(CMAP,NTXT[I,1],1)
+      IF LOC # 0 THEN
+         BMAP = MAP<LOC>
+         MAT BWIDE = WIDE
+         FOR J = 1 TO 3
+            BWIDE(BMAP[J,1]) *= 3
+         NEXT J
+         FOR J = 1 TO 9 STEP 2
+            STR := E:"*c":BWIDE(J):"a":HIGH:"b0P"
+            STR := E:"*p+":BWIDE(J)+BWIDE(J+1):"X"
+         NEXT J
+      END
+   NEXT I
+   STR = STR1:STR:STRZ
+END
+END
+

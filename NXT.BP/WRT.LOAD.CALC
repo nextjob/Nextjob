@@ -1,0 +1,143 @@
+SUBROUTINE WRT.LOAD.CALC(SEQ.COUNT,MAT SEQ.ARRAY,SHP.CAL,NS,QU,SU,SC,CMP)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: WRT.LOAD.CALC
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 01/01/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* ENTRY:
+* SEQ.COUNT - ROWS IN SEQ.ARRAY
+* SEQ.ARRAY - 2 DIM ARRAY CONTAINING SEQ DATA IN ROWS SEE NXT.EQUATES FOR LAYOUT
+*           - POPULATED VIA WO.GRDRT.UPDATE
+*
+* NS,QU,SU,SC,CMP - OP STATUS CODES AS DEFINED IN NXT.INCLUDES NXT.WO.STATUS.DEF
+*
+* EXIT:
+* SEQ.ARRAY - POPULATED WITH SEQ LOAD HOURS
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* ROUTINE WILL CALC HOURS OF LOAD CREATED BY ROUTING SEQUENCE
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES WR.H
+*
+DIM SEQ.ARRAY(1,1)   ;* DUMMY DECLARE FOR COMPILER
+*
+FOR I = 1 TO SEQ.COUNT
+  *
+  * CALC LOAD FOR THIS SEQ
+  *
+  OP.STAT =  SEQ.ARRAY(I,SQI_STAT)     ;* SEQ STATUS
+  MFG.QTY =  SEQ.ARRAY(I,SQI_QTY)      ;* QTY TO MFG
+  *
+  PLAN.RN.MACH = OCONV((SEQ.ARRAY(I,SQI_MRN) * MFG.QTY),WRT_MACHHPP.CNV)     ;* TOTAL PLAN RUN TIME FOR MACHINE
+  PLAN.SU.MACH = OCONV(SEQ.ARRAY(I,SQI_MSU),WRT_SUMACH.CNV)                  ;* PLAN S/U
+  ACT.SU.MACH  = OCONV(SEQ.ARRAY(I,SQI_AMSU),WR_ACT_SUMACH.CNV)              ;* ACTUAL SETUP HOURS
+  *
+  PLAN.RN.EMP = OCONV((SEQ.ARRAY(I,SQI_ERN) * MFG.QTY),WRT_EMPHPP.CNV)    ;* TOTAL PLAN RUN TIME FOR EMPLOYEE
+  PLAN.SU.EMP = OCONV(SEQ.ARRAY(I,SQI_ESU),WRT_SUEMP.CNV)                 ;* PLAN S/U
+  ACT.SU.EMP =  OCONV(SEQ.ARRAY(I,SQI_AESU),WR_ACT_SUEMP.CNV)             ;* ACTUAL SETUP HOURS
+  *
+  *
+  * DETERMINE OP STATUS
+  *
+  COMP = @FALSE
+  SEQRN = @TRUE
+  *
+  BEGIN CASE
+    CASE OP.STAT = NS OR OP.STAT = QU    ;* SEQ NOT STARTED
+      LOAD.HRS.EMP = PLAN.SU.EMP + PLAN.RN.EMP
+      LOAD.HRS.MACH = PLAN.SU.MACH + PLAN.RN.MACH
+      SEQRN = @FALSE
+      *
+    CASE OP.STAT = SU   ;* SU STARTED
+
+      IF ACT.SU.EMP < 0 THEN
+        ACT.SU.EMP = 0
+      END
+      IF ACT.SU.MACH < 0 THEN
+        ACT.SU.MACH = 0
+      END
+      PLAN.SU.EMP = PLAN.SU.EMP - ACT.SU.EMP    ;* REM HRS OF SU
+      PLAN.SU.MACH = PLAN.SU.MACH - ACT.SU.MACH ;* REM HRS OF SU
+      IF PLAN.SU.EMP < 0 THEN PLAN.SU.EMP = 0
+      IF PLAN.SU.MACH < 0 THEN PLAN.SU.MACH = 0
+      LOAD.HRS.EMP = PLAN.SU.EMP + PLAN.RN.EMP
+      LOAD.HRS.MACH = PLAN.SU.MACH + PLAN.RN.MACH
+      *
+    CASE OP.STAT = SC  ;* S/U COMP
+      LOAD.HRS.EMP = PLAN.RN.EMP
+      LOAD.HRS.MACH = PLAN.RN.MACH
+      *
+    CASE OP.STAT = CMP  ;* COMPLETE
+      COMP = @TRUE
+      LOAD.HRS.EMP = 0
+      LOAD.HRS.MACH = 0
+      *
+    CASE 1   ;* ASSUME RUNNING
+      *
+      REM.QTY = MFG.QTY - SEQ.ARRAY(I,SQI_CMP)  ;* REM QTY TO MFG
+      IF REM.QTY GT 0 THEN
+        *
+        * CALC REMAINING HOURS
+        *
+        LOAD.HRS.EMP = OCONV(REM.QTY * SEQ.ARRAY(I,SQI_ERN) ,WRT_EMPHPP.CNV)
+        LOAD.HRS.MACH =OCONV( REM.QTY * SEQ.ARRAY(I,SQI_MRN),WRT_MACHHPP.CNV)
+
+      END ELSE   ;* MORE MFG THEN TO MFG, ASSUME COMP
+        LOAD.HRS.EMP = 0
+        LOAD.HRS.MACH = 0
+        COMP = @TRUE
+      END
+  END CASE
+
+  SEQ.ARRAY(I,SQI_EMPL) = LOAD.HRS.EMP
+  SEQ.ARRAY(I,SQI_MCHL) = LOAD.HRS.MACH
+  SEQ.ARRAY(I,SQI_SCHST) = COMP
+  SEQ.ARRAY(I,SQI_SCHRN) = SEQRN
+  *
+NEXT I
+*
+RETURN
+END

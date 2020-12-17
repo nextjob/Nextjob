@@ -1,0 +1,160 @@
+SUBROUTINE ROUTER.TEMPLATE(FD)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: PROCESS.TEMPLATE
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* FD - FORM TEMPLATE RETURNED TO CALLER
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CREATE PCL PROCESS FORM TEMPLATE
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+********** PROGRAM EQUATES
+**
+*
+GET_REC_MSG_LIST = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC # '' THEN
+  COMPANY.NAME = COMPANY_REC<COMP_NAME>[1,25]  ;* 25 characters max
+END ELSE
+  COMPANY.NAME = 'Company Not Found'
+END
+*
+NAME.LEN = LEN(COMPANY.NAME)
+NAME.INCH = NAME.LEN/8  ;* 8 cpi
+NAME.OFF  =  8 - NAME.INCH
+NAME.OFF  = INT(NAME.OFF * 300)
+*
+FD = HPHPOS:'0x0Y':CG15
+FD = FD:'Process Router'
+FD = FD:HPHPOS:NAME.OFF:'x0Y':COMPANY.NAME"L#25"
+*
+FD = FD:ESC:'*p0x50Y':ESC:'*c2395a8b0P'     ;* top HZ
+FD = FD:ESC:'*p0x3015Y':ESC:'*c2395a5b0P'     ;*BOTTOM hz
+FD = FD:ESC:'*p0x50Y':ESC:'*c8a2972b0P'     ;* lf vt
+FD = FD:ESC:'*p2392x50Y':ESC:'*c10a2972b0P'  ;* rt vt*
+FD = FD:ESC:'*p0x180Y':ESC:'*c2395a5b0P'      ;* hz (job number bottom line of box)
+FD = FD:ESC:'*p0x300Y':ESC:'*c2395a5b0P'      ;* hz (material condition bottom line)
+FD = FD:ESC:'*p0x420Y':ESC:'*c2395a5b0P'      ;* hz (HEADING bottom line)
+*
+FD = FD:ESC:'*p300x50Y':ESC:'*c5a130b0P'     ;* (job # right vt)
+FD = FD:ESC:'*p888x50Y':ESC:'*c5a370b0P'     ;* (cust  right vt)
+FD = FD:ESC:'*p1386x50Y':ESC:'*c5a130b0P'    ;* (po #  right vt)
+FD = FD:ESC:'*p2230x50Y':ESC:'*c5a130b0P'    ;* (part #  right vt)
+*
+FD = FD:ESC:'*p534x180Y':ESC:'*c5a120b0P'     ;* (MATERIAL CONDITION # right vt)
+FD = FD:ESC:'*p1275x180Y':ESC:'*c5a120b0P'    ;* (target dt  right vt)
+FD = FD:ESC:'*p1845x180Y':ESC:'*c5a120b0P'    ;* (part desc  right vt)
+FD = FD:ESC:'*p2115x180Y':ESC:'*c5a120b0P'    ;* (issue by   right vt)
+*
+FD = FD:ESC:'*p1626x300Y':ESC:'*c5a120b0P'    ;* (TEST SAMPLES  right vt)
+FD = FD:ESC:'*p1944x300Y':ESC:'*c5a120b0P'    ;* (approv by  right vt)
+FD = FD:ESC:'*p2094x300Y':ESC:'*c5a120b0P'    ;* (rev  right vt)
+FD = FD:ESC:'*p0x555Y':ESC:'*c2395a5b0P'      ;* bOttom of seq pro desc header block hz
+
+
+*
+FD = FD:ESC:'*p174x420Y':ESC:'*c5a2590b0P'     ;* seq rt vt
+FD = FD:ESC:'*p456x420Y':ESC:'*c5a2590b0P'     ;* procedure rt vt
+*
+FD = FD:ESC:'*p1345x420Y':ESC:'*c5a2590b0P'     ;* desc rt vt
+FD = FD:ESC:'*p1495x420Y':ESC:'*c5a2590b0P'     ;* time rt vt
+FD = FD:ESC:'*p1645x420Y':ESC:'*c5a2590b0P'     ;* temp rt vt
+FD = FD:ESC:'*p1795x420Y':ESC:'*c5a2590b0P'     ;* volts rt vt
+FD = FD:ESC:'*p1945x420Y':ESC:'*c5a2590b0P'     ;* qty rt vt
+FD = FD:ESC:'*p2182x420Y':ESC:'*c5a2590b0P'     ;* insp rt vt
+*
+*
+FD = FD:CG10
+FD = FD:ESC:'*p30x110Y':'Job Number:'
+FD = FD:ESC:'*p332x110Y':'Customer:'
+FD = FD:ESC:'*p920x110Y':'Purchase Order:'
+FD = FD:ESC:'*p1415x110Y':'Part Number:'
+FD = FD:ESC:'*p2260x110Y':'Rev.:'
+*
+FD = FD:ESC:'*p30x220Y':'Material/Condition:'
+FD = FD:ESC:'*p560x220Y':'Quantity:'
+FD = FD:ESC:'*p920x220Y':'Target Date:'
+FD = FD:ESC:'*p1305x220Y':'Part Description:'
+FD = FD:ESC:'*p1875x220Y':'Issued'
+FD = FD:ESC:'*p1875x270Y':'By:'
+FD = FD:ESC:'*p2145x220Y':'Date'
+*
+FD = FD:ESC:'*p30x340Y':"Test Pieces Req/d:"
+FD = FD:ESC:'*p920x340Y':"Customer Frozen Process:"
+
+FD = FD:ESC:'*p1656x340Y':'Approved By'
+FD = FD:ESC:'*p1975x340Y':'Rev.'
+FD = FD:ESC:'*p2124x340Y':'Date'
+*
+
+*
+FD = FD:CG12
+FD = FD:ESC:'*p30x480Y':"Seq"
+FD = FD:ESC:'*p205x480Y':"Procedure"
+FD = FD:ESC:'*p486x480Y':"Description"
+*
+FD = FD:ESC:'*p1360x480Y':"Tank"
+FD = FD:ESC:'*p1360x540Y':"Time"
+*
+FD = FD:ESC:'*p1510x480Y':"Ramp"
+FD = FD:ESC:'*p1510x540Y':"Time"
+*
+FD = FD:ESC:'*p1660x480Y':"Max"
+FD = FD:ESC:'*p1660x540Y':"Volts"
+*
+FD = FD:ESC:'*p1810x480Y':"QTY"
+FD = FD:ESC:'*p1810x540Y':"ACC"
+FD = FD:ESC:'*p1999x480Y':"INSP/"
+FD = FD:ESC:'*p1999x540Y':"OPER"
+FD = FD:ESC:'*p2212x480Y':"DATE"
+*
+FD = FD:ESC:'*p1950x3085Y':CG12:'CF700-1 Rev A'
+*
+FD = FD:ESC:'*p0x0Y'                             ;* BACK TO TOP
+RETURN
+END

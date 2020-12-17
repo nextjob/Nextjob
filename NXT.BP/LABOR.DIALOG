@@ -1,0 +1,1433 @@
+SUBROUTINE LABOR.DIALOG(LBT_ID,OPTIONS,GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: LABOR.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 10/15/2015
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* LBT_ID  - LABOR RECORD ID, IF NOT NULL, EDIT THIS RECORD
+*         - IF NULL ACT AS A DATA ENTRY SCREEN FOR LABOR
+* OPTIONS - DEFINED IN NXT.INCLUDES NXT.EQUATES
+* OPTIONS<1>
+* EQU LBR_ENTRY_MODE TO 1       ;* ENTER AS DATA ENTRY MODE
+*     In this mode labor tickets are posted as entered
+*
+* EQU LBR_COLLECTION_MODE TO 2  ;* ENTER AS DATA COLLECTION MODE
+*     In this mode labor tickets are written to the "Labor Ticket File" LABOR_TICKETS these tickets will require posting inorder to update
+*     WR records / Status fields
+*
+* EQU LBR_EDIT_TICKET TO 3      ;* ENTER AS LABOR_TICKET EDIT MODE
+*     In this mode we edit labor tickets, no need for reversing entry. These tickets will require posting inorder to update
+*     WR records / Status fields
+*
+* EQU LBR_EDIT_TRANS  TO 4      ;* ENTER AS LABOR_TRANS EDIT MODE
+*     This mode requires a reversing entry to be created entered into the LABOR_TRANS file (via posting)
+*     And then the new "editted" record also written to the LABOR_TRANS file (posted)
+*
+*
+*  note to self:
+*   Shifts are currently defined as start and end times, should it be start and hours???
+*
+*   Need to have routine auto populate break hours when clock in / clock out overlaps a defined break
+*   We have not made the requirement that a break id must match a shift id but should
+*   This also will only allow for 1 unpaided break per shift
+*
+*   For routing seq with "track employee and machine" checked
+*   we require a labor ticket for both the machine and employee when flag is set.
+*   May want to add: If set ask if user wants routine to auto-create a duplicate ticket for them.
+*
+*   Need to look into what we do if user goes into work order routing and toggles this flag after data has been entered.
+**
+*
+*   Edit procedure: Create "reversing" ticket entry, then populate fields with "old" ticket allowing user to make changes
+*   suggest addition of old ticket id in comments field of "editted" ticket.
+*
+*
+* FOR LBR_COLLECTION_MODE
+*    EMP ENTERS EMP# WO# AND SEQ#
+*       ROUTINE SEARCHES FOR MATCHING TICKET IN LABOR_TICKETS THAT IS NOT COMPLETE (MISSING CLOCK OUT TIME AND OR ELAPSED HOURS)
+*       IF FOUND (PUNCH OUT OF EXISTING LABOR TICKET)
+*          POPULATE FIELDS WITH INFO ON LABOR_TICKET
+*          PROCEED WITH BALANCE OF DATA ENTRY
+*       IF NOT FOUND (PUNCH IN NEW LABOR TICKET)
+*          ALLOW FILE BUTTON TO SAVE NEW LABOR_TICKET
+*          WILL NEED TO MODIFY VALIDATION ROUTINE TO SKIP EVERYTHING UNDER CLOCK IN LINE
+*
+* QUESTION- DO WE ALLOW EMP TO ENTER COMPLETE TICKET (NOT GO THROUGH PUNCH IN / OUT PROCESS?
+*           THIS SHOULD BE A SYSTEM OPTION
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* DIALOG IS CALLED TO MAINTAIN OR ENTER LABOR
+* LABOR_TICKETS KEY = SYSTEM(19)
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES NXT.WO.STATUS.DEF
+$INCLUDE NXT.INCLUDES EMPLOYEES.H
+$INCLUDE NXT.INCLUDES LABOR_TICKETS.H
+$INCLUDE NXT.INCLUDES WC.H
+$INCLUDE NXT.INCLUDES WO.H
+$INCLUDE NXT.INCLUDES WRT.H
+*
+$INCLUDE GUIBP ATGUIEQUATES
+*
+* MACHINE_ID AND MACHINE_NAME USED TO ID USER SELECTED MACHINE ONLY HOURS TO POST
+* (DEFINED IN NXT.EQUATES!)
+* EQU LBR_MACHINE_ID TO "---"
+* EQU LBR_MACHINE_NAME TO "MACHINE HOURS"
+*
+PROG_ID   = "LABOR.DIALOG"
+GUIERRORS = ''
+GUIAPP = "LABOR"  ;* SEED GUIAPP AND GUIFRM PRIOR TO ACTUAL EVENT WAIT LOOP
+GUIFRM = "LABOR"  ;* crease dialog startup time.
+GET_REC_MSG_LIST = ''  ;* GET RECORD MESSAGE OVERRIDE
+*
+* THE FOLLOWING 2 VALUES ARE USED BY THE POST.LABOR.SUB TO INDICATE IF WE ALREADY HAVE
+* A VALID LIST OF WR IDS FOR THE WORK ORDER BEING POSTED (PREVENTS RE SELECTION OF WR IDS)
+* START OUT AS NULL
+CACHED.WR_WO_ID = ''
+CACHED.WR_ID_LIST = ''
+*
+ENTRY.MODE = OPTIONS<1>   ;* SET ENTRY MODE
+*
+GUIERRORS = ''
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+   CALL ATGUIERROR(3,'LABOR.DIALOG','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+   RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'LABOR.DIALOG' ELSE
+   CALL ATGUIERROR(3,'LABOR.DIALOG','',0,GRFATAL,"'LABOR.DIALOG' is not on file.",GUIERRORS)
+   RETURN
+END
+* Add your equates and code to open files here...
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+   CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+* GET THE SEQ STATUS CODES
+*
+NS =  WORK.ORDER.SEQ.STATUS.LIST<1,WO.NS.IDX,1>
+QU =  WORK.ORDER.SEQ.STATUS.LIST<1,WO.Q.IDX,1>
+SU =  WORK.ORDER.SEQ.STATUS.LIST<1,WO.SU.IDX,1>
+SC =  WORK.ORDER.SEQ.STATUS.LIST<1,WO.SC.IDX,1>
+RN =  WORK.ORDER.SEQ.STATUS.LIST<1,WO.RN.IDX,1>
+CMP = WORK.ORDER.SEQ.STATUS.LIST<1,WO.C.IDX,1>
+RJT =   WORK.ORDER.SEQ.STATUS.LIST<1,WO.RJ.IDX,1>
+*
+CALL LIST.LOAD(C.VALIDATION_FILE,"SHIFTS","3,4",'MT,MT',SHIFT.LIST,SHIFT.IDX,SHIFT.COUNT,EMSG)
+CALL LIST.LOAD(C.VALIDATION_FILE,"SEQ.STATUS","2",'',STAT.LIST,STAT.IDX,LIST.COUNT,EMSG)
+GOSUB LOAD.LSTEMPID
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* Add your code to load initial values here...
+CALL ATGUISHOW('LABOR','LABOR','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*-->END GUI STARTUP<--*
+*
+* COMPANY RECORD
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC = '' THEN
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing COMPANY_RECORD from SYSTEM_FILE"
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+BEGIN CASE
+   CASE (ENTRY.MODE = LBR_ENTRY_MODE OR ENTRY.MODE = LBR_EDIT_TRANS)
+      LABOR.FILE = "LABOR_TRANS"
+      C.LABOR.FILE = C.LABOR_TRANS
+      *
+   CASE (ENTRY.MODE = LBR_COLLECTION_MODE OR ENTRY.MODE = LBR_EDIT_TICKET)
+      LABOR.FILE = "LABOR_TICKETS"
+      C.LABOR.FILE = C.LABOR_TICKETS
+      *
+   CASE 1
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Invalid Entry Mode for LABOR.DIALOG: ":ENTRY.MODE
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+      RETURN
+END CASE
+*
+*  DID CALLER PASS A LBT ID (ARE WE IN EDIT MODE)?
+*
+*
+IF LBT_ID = '' THEN
+   * NOPE MUST BE ENTRY MODE
+   EDITING.LBT = @FALSE
+   GOSUB CLEAR.BUFFERS
+   * options checked
+   * CLEAR_EMP_ON_FILE - IF TRUE (CHECKED) CLEAR THE EMPLOYEE ID ON LABOR TICKET FILE, OTHERWISE START ENTRY AT WORK ORDER #, ASSUMING THE SAME EMP & LABOR DATE
+   * CLEAR_DATE_ON_FILE - IF TRUE (CHECKED) CLEAR THE LABOR TICKET DATE ON TICKET FILE
+   CALL ATGUIGETPROP(GUIAPP,GUIFRM,"CHKCLREMP",GPVALUE, 0, 0, CLEAR_EMP_ON_FILE, GUIERRORS, GUISTATE)
+   CALL ATGUIGETPROP(GUIAPP,GUIFRM,"CHKCLRDATE",GPVALUE, 0, 0, CLEAR_DATE_ON_FILE, GUIERRORS, GUISTATE)
+END ELSE
+   CLEAR_EMP_ON_FILE = @FALSE
+   CLEAR_DATE_ON_FILE = @FALSE
+   EDITING.LBT = @TRUE    ;* ENTERED WITH LBT TO EDIT FLAG IT
+   GOSUB CLEAR.BUFFERS
+   *
+   * ENABLE THE DELETE BUTTON
+   CALL ATGUISETPROP(GUIAPP,GUIFRM, "BTNDELETE",GPENABLED, 0, 0, 1, GUIERRORS, GUISTATE)
+   * HIDE THE OPTIONS FRAME
+   CALL ATGUISETPROP(GUIAPP,GUIFRM, "FRMOPTS",GPVISIBLE, 0, 0, 0, GUIERRORS, GUISTATE)
+   *
+   * GET  RECORD TO EDIT
+   GET_REC_MSG_LIST<1> = NXT.CANCEL.ON.LOCKED
+   CALL GET.RECORD( LABOR.FILE,C.LABOR.FILE,LBT_ID,LBT_REC,@TRUE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   GET_REC_MSG_LIST = ''
+   BEGIN CASE
+      CASE ERROR_STATUS = ERR_NOF
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Missing Passed Labor_Tickets: ":LBT_ID
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+         RETURN
+      CASE ERROR_STATUS = ERR_BUSY
+         PRMPT = 'Unable to Lock Labor_Ticket, try later'
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+         RETURN
+   END CASE
+   *
+   * NEED EMP RECORD
+   *
+   EMP_ID = LBT_REC<LBT_EMP>
+   IF EMP_ID = LBR_MACHINE_ID THEN
+      NULL
+   END ELSE
+      CALL GET.RECORD("EMPLOYEES",C.EMPLOYEES,EMP_ID,EMP_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      IF ERROR_STATUS = ERR_NOF THEN
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Labor_Tickets: ":LBT_ID:" Has Invalid Employee Ref: ":EMP_ID
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+         RETURN
+      END
+   END
+   *
+   * NEED WO RECORD
+   *
+   WO_ID = LBT_REC<LBT_WO_ID>
+   CALL GET.RECORD("WO",C.WO,WO_ID,WO_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF ERROR_STATUS = ERR_NOF THEN
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Labor_Tickets: ":LBT_ID:" Has Invalid Work Order Ref: ":WO_ID
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+      RETURN
+   END
+   *
+   * NEED WR RECORD
+   *
+   WR_ID = LBT_REC<LBT_WO_ID>:'*':LBT_REC<LBT_SEQ_ID>
+   CALL GET.RECORD("WR",C.WR,WR_ID,WRT_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF ERROR_STATUS = ERR_NOF THEN
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Labor_Tickets: ":LBT_ID:" Has Invalid WR Ref: ":WR_ID
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+      RETURN
+   END
+
+   *
+   * NEED WC DATA
+   WC_ID = WRT_REC<WRT_WCID>
+   CALL GET.RECORD("WC",C.WC,WC_ID,WC_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF ERROR_STATUS = ERR_NOF THEN
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Labor_Tickets: ":LBT_ID:" Has Invalid WC Ref: ":WC_ID
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+      RETURN
+   END
+   WC.SU.EMP = WC_REC<WC_EMPSU> + WC_REC<WC_EMPOH>
+   WC.SU.MACH = WC_REC<WC_MACHSU> + WC_REC<WC_MACHOH>
+   WC.RN.EMP = WC_REC<WC_EMPRN> + WC_REC<WC_EMPOH>
+   WC.RN.MACH = WC_REC<WC_MACHRN> + WC_REC<WC_MACHOH>
+   *
+   GOSUB  LOAD.CONTROLS
+   GOSUB  LOAD.TICKET
+
+   *
+   * IF LABOR ALREADY POSTED FOR THIS LABOR TICKET WHAT DO WE ALLOW?
+   * ASK IF USER WANTS TO "DELETE" BY CREATING LABOR_TICKET WITH
+   * NEGITIVE QTY AND TIME FOR THE REOCRD. THIS PROCESS WOULD SIMPLY CREATE A COPY OF THE
+   * RECORD, SET LABOR DATE TO TODAY AND ENTER NEG VALUES FOR QTY AND TIME
+   * WOULD RESULT IN TIME CHARGE TO WORK ORDER BEING CORRECT AFTER POSTING, BUT WOULD
+   * REQUIRE THE USER TO MANUALY UPDATE QTY COMPLETE FOR THE WORK ORDER SEQ
+   BEGIN CASE
+      CASE  ENTRY.MODE = LBR_EDIT_TRANS
+         * display the ticket then send message
+         PRMPT = "Posted Labor Ticket, Edit Not Allowed."
+         PRMPT<1,1,2> =" Create Labor Ticket to Back OUT Labor Time?"
+         STYLE   = 2  ;* !
+         BUTTONS = 4  ;* YES / NO
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         IF RESPONSE = NXT.YES.RSP THEN
+            *
+            * RELEASE THE LOCK ON THE PASSED LABOR_TRANS RECORD
+            IF LBT_ID # '' THEN
+               RELEASE C.FILE.VAR(C.LABOR.FILE), LBT_ID
+            END
+            *
+            LBT_BACKUP = LBT_REC
+            * create a ticket to back out labor time, then tell user about it.
+            LBT_REC<LBT_ELAPSED> = LBT_REC<LBT_ELAPSED> * -1
+            LBT_REC<LBT_QTY_CMP> = LBT_REC<LBT_QTY_CMP> * -1
+            LBT_REC<LBT_QTY_SCRP> = LBT_REC<LBT_QTY_SCRP> * -1
+            LBT_REC<LBT_CMMTS> := " Backed Out"
+            LBT_ID = '' ;* FORCE CREATION OF NEW RECORD (DON'T WANT TO OVERWRITE EXISITING!)
+            GOSUB LOAD.TICKET
+            GOSUB POST.LBT  ;* ROUTINE MUST WRITE LABOR RECORD AND UPDATE WR RECORD
+            PRMPT = "Reversing Labor Ticket Created,"
+            PRMPT<1,1,2> = "  Add Correcting Ticket?"
+            STYLE   = 2  ;* !
+            BUTTONS = 4 ;* YES / NO
+            HELPID = ""
+            CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+            IF RESPONSE = NXT.YES.RSP THEN
+               LBT_ID = '' ;* FORCE CREATION OF NEW RECORD (DON'T WANT TO OVERWRITE THE BACKOUT ONE JUST CREATED!)
+               LBT_REC = LBT_BACKUP   ;* NOW PROCEED WITH EDIT
+               GOSUB  LOAD.CONTROLS
+               GOSUB  LOAD.TICKET
+            END ELSE
+               * user selected to skip add new  labor ticket, go home
+               GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+               RETURN
+            END
+
+         END ELSE
+            * user selected to skip labor backout, cannot proceed
+            GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+            RETURN
+         END
+
+      CASE ENTRY.MODE = LBR_EDIT_TICKET
+         * THERE IS NOTHING SPECIAL FOR LABOR TICKET EDIT, JUST GO AHEAD AND ALLOW THE USER CHANGES
+         NULL
+      CASE 1
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Entered Labor Dialog with LBT Id but Edit Mode Not Set, Abort!"
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+         RETURN
+   END CASE
+
+END
+***********************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN RETURN
+   IF GUIEVT EQ GEQUIT THEN
+      GUI.DLG.EXIT = 1
+   END ELSE
+      GUIAPP=OCONV(GUIAPP,'MCU')
+      GUIFRM=OCONV(GUIFRM,'MCU')
+      GUICTL=OCONV(GUICTL,'MCU')
+      GOSUB GUI.DECODE.EVENT
+   END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+   GUI.APP.LIST = ''
+   CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+   IF GUI.APP.LIST EQ '' THEN
+      * Quit event fired after last GUI object is deleted - discard it
+      CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+      * We could call ATGUISHUTDOWN here if we wanted, but there's no
+      * harm just leaving the GUI environment initialized, in case we
+      * want to use it again...
+   END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+   * Add your code here...
+END ELSE
+   * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+   BEGIN CASE
+      CASE GUIAPP='LABOR'
+         BEGIN CASE
+            CASE GUIFRM='LABOR'
+               BEGIN CASE
+                  CASE GUICTL=''
+                     BEGIN CASE
+                        CASE GUIEVT=GECLOSE
+                           GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCANCEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.BTNCANCEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDELETE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.BTNDELETE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNFILE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.BTNFILE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKCLRDATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.CHKCLRDATE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKCLREMP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.CHKCLREMP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTEMP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.LSTEMP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSEQSTAT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.LSTSEQSTAT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSHIFT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.LABOR.LABOR.LSTSHIFT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTBREAK'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTBREAK.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTCLOCKIN'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTCLOCKIN.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTCLOCKOUT'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTCLOCKOUT.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTCMMTS'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTCMMTS.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTDATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTDATE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTELAPSED'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTELAPSED.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQTYCMP'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTQTYCMP.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQTYSCRP'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTQTYSCRP.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTSEQ'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTSEQ.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTWOID'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.LABOR.LABOR.TXTWOID.VALIDATE;GUIEVT=0
+                     END CASE
+               END CASE
+         END CASE
+   END CASE
+   IF GUIEVT THEN
+      * Unhandled event - may be dynamic
+      GOSUB GUI.DYNAMIC.EVENTS
+   END
+END ELSE
+   GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.BTNCANCEL.CLICK: *
+IF EDITING.LBT THEN
+   *
+   * WHEN IN EDIT MODE, AT COMPLETION, GO HOME
+   GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+END ELSE
+   GOSUB CLEAR.BUFFERS
+   GOSUB LOAD.CONTROLS
+   GOSUB LOAD.TICKET
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "LSTEMP", GUIERRORS, GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.BTNDELETE.CLICK: *
+IF EDITING.LBT THEN    ;* ACTUALLY, THIS ONLY ACTIVE IN EDIT MODE
+   *
+   IF  LBT_REC<LBT_POSTED> THEN
+      PRMPT = "Labor Ticket Posted, Delete Not Allowed"
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   END ELSE
+      * WHEN IN EDIT MODE, AT COMPLETION, GO HOME
+      DELETE C.FILE.VAR(C.LABOR_TICKETS), LBT_ID
+      LBT_ID = ''
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.BTNFILE.CLICK: *
+GOSUB VALIATE.LBT
+IF LBT.VALID THEN
+   IF (ENTRY.MODE = LBR_COLLECTION_MODE OR ENTRY.MODE = LBR_EDIT_TICKET) THEN
+      * ONLY NEED TO WORRY ABOUT LABOR_TCIKET FILE, NO POSTING REQUIRED
+      * WRITE THE LBT RECORD
+      GOSUB WRITE.LBT
+   END ELSE
+      * MUST BE LABOR_TRANS WE ARE DEALING WITH (ENTRY.MODE = LBR_ENTRY_MODE OR ENTRY.MODE = LBR_EDIT_TRANS)
+      GOSUB POST.LBT  ;* ROUTINE MUST WRITE LABOR RECORD AND UPDATE WR RECORD
+   END
+   *
+   IF EDITING.LBT THEN
+      *
+      * WHEN IN EDIT MODE, AT COMPLETION, GO HOME
+      GOSUB GUI.LABOR.LABOR.CLOSE;GUIEVT=0
+   END ELSE
+      *
+      SAVE.LBT_REC = LBT_REC
+      SAVE.EMP_REC = EMP_REC
+      SAVE.EMP_ID  = EMP_ID
+      *
+      GOSUB CLEAR.BUFFERS
+      *
+      IF CLEAR_DATE_ON_FILE THEN
+         NULL
+      END ELSE
+         LBT_REC<LBT_DATE> = SAVE.LBT_REC<LBT_DATE>
+      END
+      *
+      IF CLEAR_EMP_ON_FILE THEN
+         NULL
+      END ELSE
+         LBT_REC<LBT_EMP> = SAVE.LBT_REC<LBT_EMP>
+         EMP_REC = SAVE.EMP_REC
+         EMP_ID = SAVE.EMP_ID
+      END
+      *
+      GOSUB LOAD.CONTROLS
+      GOSUB LOAD.TICKET
+      *
+      BEGIN CASE
+         CASE NOT(CLEAR_EMP_ON_FILE)
+            CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTWOID", GUIERRORS, GUISTATE)
+         CASE NOT(CLEAR_DATE_ON_FILE)
+            CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "LSTEMP", GUIERRORS, GUISTATE)
+         CASE 1
+            CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTDATE", GUIERRORS, GUISTATE)
+      END CASE
+   END
+END
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.CHKCLRDATE.CLICK: *
+CLEAR_DATE_ON_FILE = GUIARGS<1,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.CHKCLREMP.CLICK: *
+CLEAR_EMP_ON_FILE = GUIARGS<1,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.LABOR.LABOR.CLOSE: *
+IF LBT_ID # '' THEN
+   RELEASE C.FILE.VAR(C.LABOR.FILE), LBT_ID
+END
+* Default form close event handler
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+   GOSUB GUI.DIALOG.RETURN
+   CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+   GUI.DLG.EXIT = 1
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.LSTEMP.CLICK: *
+EMP_ID  =  EMP.LIST<1,GUIARGS<1>,1>
+*
+IF EMP_ID = LBR_MACHINE_ID THEN
+   LBT_REC<LBT_EMP> =  LBR_MACHINE_ID  ;* MACHINE HOURS ENTRY
+   LBT_REC<LBT_SHIFT> = ''
+END ELSE
+   *
+   CALL GET.RECORD("EMPLOYEES",C.EMPLOYEES,EMP_ID,EMP_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   BEGIN CASE
+      CASE ERROR_STATUS = ERR_NOF  ;* USER ENTERED NON - EXISTENT EMP id #
+         *
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Missing Employee record: ":EMP_ID
+         IF LBT_ID # '' THEN
+            ERROR_MSG :=  "LABOR_TICKETS: ":LBT_ID
+         END
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         EMP_REC = ''
+         EMP_ID = ''
+      CASE 1
+         LBT_REC<LBT_EMP> = EMP_ID
+         * IF LABOR DATE SET THEN SET SHIFT
+         IF LBT_REC<LBT_DATE> # '' THEN
+            DAYOFWEEK = OCONV(LBT_REC<LBT_DATE>,"DW")
+            *
+            BEGIN CASE
+               CASE DAYOFWEEK = 1
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_MON>
+               CASE DAYOFWEEK = 2
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_TUE>
+               CASE DAYOFWEEK = 3
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_WED>
+               CASE DAYOFWEEK = 4
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_THUR>
+               CASE DAYOFWEEK = 5
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_FRI>
+               CASE DAYOFWEEK = 6
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_SAT>
+               CASE DAYOFWEEK = 7
+                  LBT_REC<LBT_SHIFT> = EMP_REC<EMP_SHIFT_SUN>
+            END CASE
+            *
+         END
+   END CASE
+END
+*
+GOSUB LOAD.CONTROLS
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.LSTSEQSTAT.CLICK: *
+STAT.IDX = GUIARGS<1>
+LBT_REC<LBT_SEQ_STAT> = STAT.LIST<1,STAT.IDX,1>   ;*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.LSTSHIFT.CLICK: *
+SHIFT.IDX = GUIARGS<1>
+LBT_REC<LBT_SHIFT> = SHIFT.LIST<1,SHIFT.IDX,1>   ;*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTBREAK.VALIDATE: *
+VALID.VAL = GUIARGS<2>
+GOSUB VALIDATE.HOURS
+IF VALID.HOURS THEN
+   LBT_REC<LBT_BREAK> = ICONV(VALID.VAL,LBT_BREAK.CNV)
+   GOSUB LOAD.TICKET
+END ELSE
+   PRMPT = 'Invalid Break Hours, Please Correct!'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB LOAD.TICKET
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTBREAK", GUIERRORS, GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTCLOCKIN.VALIDATE: *
+LBT_REC<LBT_CLK_IN> = ICONV(GUIARGS<2>,LBT_CLK_IN.CNV)
+GOSUB CLOCK_VALIDATE
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTCLOCKOUT.VALIDATE: *
+LBT_REC<LBT_CLK_OUT> = ICONV(GUIARGS<2>,LBT_CLK_OUT.CNV)
+GOSUB CLOCK_VALIDATE
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTCMMTS.VALIDATE: *
+LBT_REC<LBT_CMMTS> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTDATE.VALIDATE: *
+LBT_REC<LBT_DATE> = ICONV(GUIARGS<2>,LBT_DATE.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTELAPSED.VALIDATE: *
+VALID.VAL = GUIARGS<2>
+GOSUB VALIDATE.HOURS
+IF VALID.HOURS THEN
+   LBT_REC<LBT_ELAPSED> = ICONV(VALID.VAL,LBT_ELAPSED.CNV)
+   GOSUB LOAD.TICKET
+END ELSE
+   PRMPT = 'Invalid Elapsed Hours, Please Correct!'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB LOAD.TICKET
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTELAPSED", GUIERRORS, GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTQTYCMP.VALIDATE: *
+VALID.VAL = GUIARGS<2>
+GOSUB VALIDATE.QTY
+IF VALID.QTY THEN
+   LBT_REC<LBT_QTY_CMP> =VALID.VAL
+   GOSUB LOAD.TICKET
+END ELSE
+   PRMPT = 'Invalid Quantity Complete Value, Please Correct!'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB LOAD.TICKET
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTQTYCMP", GUIERRORS, GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTQTYSCRP.VALIDATE: *
+VALID.VAL = GUIARGS<2>
+GOSUB VALIDATE.QTY
+IF VALID.QTY THEN
+   LBT_REC<LBT_QTY_SCRP> =VALID.VAL
+   GOSUB LOAD.TICKET
+END ELSE
+   PRMPT = 'Invalid Quantity Scrap Value, Please Correct!'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB LOAD.TICKET
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTQTYSCRP", GUIERRORS, GUISTATE)
+END
+RETURN
+
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTSEQ.VALIDATE: *
+SEQ_ID = TRIM(GUIARGS<2>)
+*
+IF WO_ID = '' THEN
+   PRMPT = 'Work Order Entry Required Before Seq'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   SEQ_ID = ''
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTWOID", GUIERRORS, GUISTATE)
+END ELSE
+   WR_ID = WO_ID:"*":SEQ_ID
+   CALL GET.RECORD("WR",C.WR,WR_ID,WRT_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF ERROR_STATUS = ERR_NOF THEN
+      PRMPT = SEQ_ID:' Is Not a Valid Work Order Seq, Retry'
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      WR_ID = ''
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTSEQ", GUIERRORS, GUISTATE)
+   END ELSE
+      *
+      * NEED WC DATA
+      WC_ID = WRT_REC<WRT_WCID>
+      CALL GET.RECORD("WC",C.WC,WC_ID,WC_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      WC.SU.EMP = WC_REC<WC_EMPSU> + WC_REC<WC_EMPOH>
+      WC.SU.MACH = WC_REC<WC_MACHSU> + WC_REC<WC_MACHOH>
+      WC.RN.EMP = WC_REC<WC_EMPRN> + WC_REC<WC_EMPOH>
+      WC.RN.MACH = WC_REC<WC_MACHRN> + WC_REC<WC_MACHOH>
+      *
+      LBT_REC<LBT_SEQ_ID> = SEQ_ID
+   END
+END
+GOSUB LOAD.CONTROLS
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.LABOR.LABOR.TXTWOID.VALIDATE: *
+WO_ID = OCONV(TRIM(GUIARGS<2>),"MCU")
+CALL GET.RECORD("WO",C.WO,WO_ID,WO_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF ERROR_STATUS = ERR_NOF THEN
+   PRMPT = WO_ID:' Is Not a Valid Work Order, Retry'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   WO_ID = ''
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTWOID", GUIERRORS, GUISTATE)
+END ELSE
+   LBT_REC<LBT_WO_ID> = WO_ID
+END
+**
+* WHEN EVER USER ENTERS NEW WORK ORDER RESET SEQ ID AND SEQ RECORD
+*
+WRT_REC = ''
+LBT_REC<LBT_SEQ_ID> = ""
+GOSUB LOAD.CONTROLS
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+*
+*
+************************************************************
+
+LOAD.LSTEMPID: *
+*
+CTRLIDS = ""
+PROPS   = ""
+VALUES  = ""
+*
+* LOADS LOADS EMP IDS INTO DROPDOWN LIST LSTEMPID
+*
+MAX.LIST = 500
+START.LIST = 1
+CALL GUI.SEARCH2 ("EMPLOYEES","","*","EMP_LAST_NAME","EMP_LAST_NAME EMP_FIRST_NAME EMP_MIDDLE_NAME",MAX.LIST,START.LIST,EMP.LIST,EMP.IDS,LIST.CT,EMSG)
+*
+IF LIST.CT = 0 THEN  ;* NO ITEMS FOUND
+   EMP.LIST = LBR_MACHINE_ID:@SVM:LBR_MACHINE_NAME:@SVM:"":@SVM:""
+END ELSE
+   EMP.LIST = LBR_MACHINE_ID:@SVM:LBR_MACHINE_NAME:@SVM:"":@SVM:"":@VM:EMP.LIST
+   EMP.IDS = "DMMY":@VM:EMP.IDS
+END
+*
+CTRLIDS<1> = "LSTEMP"
+PROPS<1>   = GPITEMS
+VALUES<1>  = EMP.LIST
+*
+CTRLIDS<2> = "LSTSHIFT"
+PROPS<2>   = GPITEMS
+VALUES<2>  = SHIFT.LIST
+*
+*
+CTRLIDS<3> = "LSTSEQSTAT"
+PROPS<3>   = GPITEMS
+VALUES<3>  = STAT.LIST
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+CLEAR.BUFFERS: *
+EMP_ID = ''
+EMP_REC = ''
+*
+IF NOT(EDITING.LBT) THEN
+   LBT_ID = ''
+END
+LBT_REC = ''
+*
+WO_ID = ''
+WO_REC = ''
+*
+WR_ID = ''
+WRT_REC = ''
+RETURN
+******************************************************************************************
+VALIATE.LBT: *
+LBT.VALID = @TRUE
+MSG = ''
+BCK_TO_CTL = ''
+BEGIN CASE
+   CASE LBT_REC<LBT_EMP> = ''
+      MSG = "Labor Ticket Missing Emp, Please Correct"
+      BCK_TO_CTL = "LSTEMP"
+   CASE LBT_REC<LBT_WO_ID> = ''
+      MSG = "Labor Ticket Missing Work Order, Please Correct"
+      BCK_TO_CTL = "TXTWOID"
+   CASE LBT_REC<LBT_SEQ_ID> = ''
+      MSG = "Labor Ticket Missing Sequence Number, Please Correct"
+      BCK_TO_CTL = "TXTSEQ"
+   CASE EMP_ID = LBR_MACHINE_ID
+      IF NOT(WRT_REC<WRT_EMPMACH>) THEN
+         MSG = "Charging Machine Hours to Seq Not Setup to Track Emp and Machine Hours"
+      END
+   CASE LBT_REC<LBT_DATE> LE COMPANY_REC<COMP_LABCUTOFF>
+      MSG = "Date of Labor Ticket Prior to Cutoff Date, Not Allowed"
+      BCK_TO_CTL = "TXTDATE"
+   CASE LBT_REC<LBT_DATE> GT DATE()
+      MSG = "Date of Labor Ticket Cannot Be In the Future"
+      BCK_TO_CTL = "TXTDATE"
+   CASE LBT_REC<LBT_ELAPSED> = ''
+      MSG = "Labor Ticket Missing Elapsed Time, Enter Clock In / Out or Elapsed Time"
+      BCK_TO_CTL = "TXTCLOCKIN"
+   CASE LBT_REC<LBT_QTY_CMP> = ''
+      MSG = "Labor Ticket Missing Quantity Complete Value"
+      BCK_TO_CTL = "TXTQTYCMP"
+   CASE LBT_REC<LBT_SEQ_STAT> = ''
+      MSG = "Labor Ticket Missing Sequence Status Value"
+      BCK_TO_CTL = "LSTSEQSTAT"
+   CASE (LBT_REC<LBT_ELAPSED> - LBT_REC<LBT_BREAK>) < 0
+      MSG = "Net Labor Time Cannot be < 0"
+      BCK_TO_CTL = "TXTCLOCKIN"
+
+END CASE
+IF MSG # '' THEN
+   PRMPT = "Cannot File Labor Ticket, ":MSG
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   LBT.VALID = @FALSE
+   *
+   IF BCK_TO_CTL # '' THEN
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM, BCK_TO_CTL, GUIERRORS, GUISTATE)
+   END
+END
+RETURN
+******************************************************************************************
+VALIDATE.HOURS: *
+* VALID.VAL - HOURS VALUE TO VALIDATE
+VALID.HOURS = @TRUE
+BEGIN CASE
+   CASE VALID.VAL < 0
+      VALID.HOURS = @FALSE
+   CASE VALID.VAL > 24
+      VALID.HOURS = @FALSE
+END CASE
+RETURN
+******************************************************************************************
+VALIDATE.QTY:
+VALID.QTY = @TRUE
+VALID.VAL = INT(VALID.VAL)
+BEGIN CASE
+   CASE VALID.VAL < 0
+      VALID.QTY = @FALSE
+END CASE
+RETURN
+******************************************************************************************
+CLOCK_VALIDATE:
+IF LBT_REC<LBT_CLK_IN> # '' AND LBT_REC<LBT_CLK_OUT> # '' THEN
+   IF LBT_REC<LBT_CLK_IN> LT LBT_REC<LBT_CLK_OUT> THEN
+      LBT_REC<LBT_ELAPSED> = ICONV((LBT_REC<LBT_CLK_OUT> - LBT_REC<LBT_CLK_IN>)/3600,LBT_ELAPSED.CNV)
+      GOSUB LOAD.TICKET
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTBREAK", GUIERRORS, GUISTATE)
+   END ELSE
+      PRMPT = 'Clock Out Must be After Clock In, Please Correct!'
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      GOSUB LOAD.TICKET
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM, "TXTCLOCKIN", GUIERRORS, GUISTATE)
+   END
+END
+RETURN
+******************************************************************************************
+LOAD.CONTROLS:
+*
+* routine LOADS controls
+*
+*
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<1> = "TXTWOID"
+PROPS<1>   = GPVALUE
+VALUES<1>  = LBT_REC<LBT_WO_ID>
+*
+CTRLIDS<2> = "LBLPNV"
+PROPS<2>   = GPVALUE
+VALUES<2>  = WO_REC<WO_PARTNBR>
+*
+CTRLIDS<3> = "LBLDESCV"
+PROPS<3>   = GPVALUE
+VALUES<3>  = WO_REC<WO_PT_DESC>
+*
+CTRLIDS<4> = "LBLDRAWV"
+PROPS<4>   = GPVALUE
+VALUES<4>  = WO_REC<WO_PT_DRAWING>
+*
+CTRLIDS<5> = "TXTSEQ"
+PROPS<5>   = GPVALUE
+VALUES<5>  = LBT_REC<LBT_SEQ_ID>
+*
+CTRLIDS<6> = "LBLWOQTYVAL"
+PROPS<6>   = GPVALUE
+VALUES<6>  = WRT_REC<WR_QTY_TO_MFG>
+*
+CTRLIDS<7> = "LBLQTYRMVAL"
+PROPS<7>   = GPVALUE
+VALUES<7>  = WRT_REC<WR_QTY_TO_MFG> - WRT_REC<WR_QTY_COMP>
+*
+CTRLIDS<8> = "LBLEMPNAME"
+PROPS<8>   = GPVALUE
+IF LBT_REC<LBT_EMP> = LBR_MACHINE_ID THEN
+   VALUES<8>  = LBR_MACHINE_NAME
+END ELSE
+   VALUES<8>  = EMP_REC<EMP_LAST_NAME>:' ':EMP_REC<EMP_FIRST_NAME>
+   *
+   IF LBT_REC<LBT_EMP> = '' THEN
+      CTRLIDS<9> = "LSTSHIFT"
+      PROPS<9>   = GPVALUE
+      VALUES<9>  = 0
+      *
+      CTRLIDS<10> = "LSTEMP"
+      PROPS<10>   = GPVALUE
+      VALUES<10>  = 0
+   END ELSE
+      *
+      LOCATE LBT_REC<LBT_EMP> IN EMP.IDS<1,1> SETTING IDX THEN
+         CTRLIDS<9> = "LSTEMP"
+         PROPS<9>   = GPVALUE
+         VALUES<9>  = IDX
+      END ELSE
+         CTRLIDS<9> = "LSTEMP"
+         PROPS<9>   = GPVALUE
+         VALUES<9>  = 0
+      END
+      *
+      IF LBT_REC<LBT_SHIFT> = ''  THEN
+         CTRLIDS<10> = "LSTSHIFT"
+         PROPS<10>   = GPVALUE
+         VALUES<10>  = 0
+      END ELSE
+         LOCATE LBT_REC<LBT_SHIFT> IN SHIFT.IDX<1> SETTING IDX THEN
+            CTRLIDS<10> = "LSTSHIFT"
+            PROPS<10>   = GPVALUE
+            VALUES<10>  = IDX
+         END ELSE
+            CTRLIDS<10> = "LSTSHIFT"
+            PROPS<10>   = GPVALUE
+            VALUES<10>  = 0
+         END
+      END
+   END
+END
+*
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+*
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+*
+******************************************************************************************
+LOAD.TICKET:
+*
+* routine LOADS controls / CALCULATES LBT_REC<LBT_LAB_HRS>
+*
+*
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<1> = "TXTDATE"
+PROPS<1>   = GPVALUE
+IF LBT_REC<LBT_DATE> # '' THEN
+   VALUES<1>  = OCONV(LBT_REC<LBT_DATE>,LBT_DATE.CNV)
+END ELSE
+   VALUES<1>  = ''
+END
+*
+CTRLIDS<2> = "TXTCLOCKIN"
+PROPS<2>   = GPVALUE
+IF LBT_REC<LBT_CLK_IN> # '' THEN
+   VALUES<2>  = OCONV(LBT_REC<LBT_CLK_IN>,LBT_CLK_IN.CNV)
+END ELSE
+   VALUES<2>  = ''
+END
+*
+CTRLIDS<3> = "TXTCLOCKOUT"
+PROPS<3>   = GPVALUE
+IF LBT_REC<LBT_CLK_OUT> # '' THEN
+   VALUES<3>  = OCONV(LBT_REC<LBT_CLK_OUT>,LBT_CLK_OUT.CNV)
+END ELSE
+   VALUES<3>  = ''
+END
+*
+CTRLIDS<4> = "TXTELAPSED"
+PROPS<4>   = GPVALUE
+IF LBT_REC<LBT_ELAPSED> # '' THEN
+   VALUES<4>  = OCONV(LBT_REC<LBT_ELAPSED>,LBT_ELAPSED.CNV)
+END ELSE
+   VALUES<4>  = ''
+END
+*
+CTRLIDS<5> = "TXTBREAK"
+PROPS<5>   = GPVALUE
+IF LBT_REC<LBT_BREAK> # '' THEN
+   VALUES<5>  = OCONV(LBT_REC<LBT_BREAK>,LBT_BREAK.CNV)
+END ELSE
+   VALUES<5>  = ''
+END
+*
+CTRLIDS<6> = "TXTQTYCMP"
+PROPS<6>   = GPVALUE
+VALUES<6>  = LBT_REC<LBT_QTY_CMP>
+*
+CTRLIDS<7> = "TXTQTYSCRP"
+PROPS<7>   = GPVALUE
+VALUES<7>  = LBT_REC<LBT_QTY_SCRP>
+*
+CTRLIDS<8> = "LSTSEQSTAT"
+PROPS<8>   = GPVALUE
+VALUES<8>  = LBT_REC<LBT_SEQ_STAT>
+*
+CTRLIDS<9> = "TXTCMMTS"
+PROPS<9>   = GPVALUE
+VALUES<9>  = LBT_REC<LBT_CMMTS>
+*
+BEGIN CASE
+   CASE LBT_REC<LBT_ELAPSED> LT 0  ;* ASSUME REVERSING LABOR
+      LBT_REC<LBT_LAB_HRS> = LBT_REC<LBT_ELAPSED> + LBT_REC<LBT_BREAK>
+   CASE LBT_REC<LBT_ELAPSED> LT LBT_REC<LBT_BREAK>
+      LBT_REC<LBT_LAB_HRS> = 0
+   CASE 1
+      LBT_REC<LBT_LAB_HRS> = LBT_REC<LBT_ELAPSED> - LBT_REC<LBT_BREAK>
+END CASE
+*
+CTRLIDS<10> ="LBLLABTMV"
+PROPS<10>   = GPVALUE
+VALUES<10>  = OCONV(LBT_REC<LBT_LAB_HRS>,LBT_LAB_HRS.CNV)
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+*
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+****************************************************************************
+POST.LBT: ;* ROUTINE MUST WRITE LABOR RECORD AND UPDATE WR RECORD
+*
+* NEED TO WRITE A SUBROUTINE THAT TAKES THE PASSED LABOR RECORD AND
+* UPDATES TIMES AND STATUS ON WR RECORDS,
+* THEN CALL WRITE.LBT TO WRITE THE ACTUAL RECORD
+* REM THIS ROUTINE WILL ALSO BE CALLED FROM POST.LABOR.DIALOG
+*   IT WILL BE THE POST.LABOR.DIALOG ROUTINES RESPONSIBLITY TO WRITE THE LABOR_TRANS RECORD
+*   AND DELETE THE LABOR_TICKET RECORD
+*
+* DO WE ALREADY HAVE A LIST OF WR ID FOR THIS WORK ORDER?
+IF CACHED.WR_WO_ID = LBT_REC<LBT_WO_ID> THEN
+   NULL  ;* YES, REUSE THEM
+END ELSE
+   CACHED.WR_WO_ID = ''  ;* NO, POST.LABOR.SUB WILL FIND THEM
+   CACHED.WR_ID_LIST = ''
+END
+CALL POST.LABOR.SUB(LBT_REC,UPDATE.WR.OK,CACHED.WR_WO_ID,CACHED.WR_ID_LIST,GUIERRORS,GUISTATE)
+IF UPDATE.WR.OK THEN
+   GOSUB WRITE.LBT
+   *
+END ELSE
+   *
+   * for some reason we could not post this labor ticket, notify user and save as a LABOR_TICKET
+   * for posting later
+   *
+   PRMPT = 'Labor Post Unsuccessful: ':UPDATE.WR.OK<2>
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   *
+   GOSUB WRITE.LABOR.TICKET
+END
+RETURN
+****************************************************************************
+* WRITE.LBT WRITE LBT RECORD (MAY BE LABOR_TRANS OR LABOR_TICKETS
+* DEPENDING ON HOW ROUTINE WAS ENTERED)
+****************************************************************************
+*
+WRITE.LBT:
+*
+GOSUB SET.LBT.ID.AND.RATES
+*
+CALL WRITE.RECORD(LBT_ID,LBT_REC,C.LABOR.FILE,@FALSE,ERROR_STATUS)
+LBT_ID = ''
+RETURN
+****************************************************************************
+* WRITE.LABOR.TICKET
+****************************************************************************
+WRITE.LABOR.TICKET: *
+*
+GOSUB SET.LBT.ID.AND.RATES
+*
+CALL WRITE.RECORD(LBT_ID,LBT_REC,C_LABOR_TICKETS,@FALSE,ERROR_STATUS)
+LBT_ID = ''
+RETURN
+***************************************************************************
+* SET LBT RATES (AND KEY)
+***************************************************************************
+SET.LBT.ID.AND.RATES:
+IF LBT_ID = '' THEN
+   LBT_ID = SYSTEM(19)
+END
+*
+* IS THIS A MACHINE TICKET OR EMPLOYEE TICKET
+IF LBT_REC<LBT_EMP> =  LBR_MACHINE_ID THEN
+   LBT_REC<LBT_EMPMACH>  = "M"  ;* MACHINE LABOR TRANS
+   LBT.SU.RATE = WC.SU.MACH
+   LBT.RN.RATE = WC.RN.MACH
+END ELSE
+   LBT_REC<LBT_EMPMACH>  = "E"
+   LBT.SU.RATE = WC.SU.EMP   ;* EMP LABOR TRANS
+   LBT.RN.RATE = WC.RN.EMP
+END
+*
+* ADD HOURLY RATES BASED ON SEQ STATUS (SETUP OR RUN RATES)
+*
+IF LBT_REC<LBT_SEQ_STAT> = SU OR LBT_REC<LBT_SEQ_STAT> = SC THEN
+   LBT_REC<LBT_RATE>  = LBT.SU.RATE
+END ELSE
+   LBT_REC<LBT_RATE> = LBT.RN.RATE
+END
+RETURN
+**************************************************************************
+END

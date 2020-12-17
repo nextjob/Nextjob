@@ -1,0 +1,79 @@
+TEMPLATEı41842.67352ıAPDEBITıNXT.BPüAPDEBIT.DIALOGü3ü0
+0ı1.4ı4
+2ıAPDEBITıı1ıautoıautoı60ı20ı1073741825
+4ıı22ıııAP DEBIT
+4ıı7ııı4
+4ıı59ııı0
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııCreate Debit Memo for Vendor
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+2ıAPDEBIT*APDEBITıı7ıautoıautoı73ı15.12ı1
+4ıı22ıııAP DEBIT
+4ıı48ııı0
+4ıı9ııı0
+2ıAPDEBIT*APDEBIT*lblVendıı15ı25ı1ı5.5ı1.25ı0
+4ıı0ıııVendor
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*lblUserIdıı15ı52ı1ı5ı1.25ı0
+4ıı0ıııUser Id
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*lblVendorValıı15ı31ı1ı18ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*lblUserIdVıı15ı58ı1ı12ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıAPDEBIT*APDEBIT*lblInvıı15ı1ı3ı8.5ı1.25ı0
+4ıı0ıııDebit  Nbr
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*txtInvıı16ı10ı3ı16.5ı1.25ı256
+4ıı8ııı0
+2ıAPDEBIT*APDEBIT*lblDateıı15ı29ı3ı5ı1.25ı0
+4ıı0ıııDate
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*txtDateıı16ı34ı3ı8ı1.25ı256
+4ıı29ııı6
+2ıAPDEBIT*APDEBIT*lblInvAmtıı15ı44ı3ı5.5ı1.25ı0
+4ıı0ıııAmount
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*txtInvAmtıı16ı50ı3ı11.5ı1.25ı256
+4ıı29ııı5
+2ıAPDEBIT*APDEBIT*txtNotesıı17ı2ı7ı68.5ı4.5ı256
+4ıı10ııı1
+2ıAPDEBIT*APDEBIT*lbl1Venıı15ı1ı1ı11.5ı1.25ı0
+4ıı0ıııVendor Number
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*lst1VenNameıı24ı12ı1ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı15ı15ı10
+4ıı39ııı1
+4ıı49ıııSelect vendor name
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı32ıııCM NbrıNameıAddressıCity
+4ıı33ııı3
+2ıAPDEBIT*APDEBIT*BTNFILEıı18ı2ı12.5ı7.5ı1.75ı32
+4ıı22ıııFile
+2ıAPDEBIT*APDEBIT*lstGlTransıı24ı11ı5ı20ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.12ı15
+4ıı53ııı8
+4ıı39ııı1
+4ıı32ıııGl CodeıDescription
+2ıAPDEBIT*APDEBIT*blbGlCdıı15ı1ı5ı9.5ı1.25ı0
+4ıı0ıııGL Trans Code
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*CHKPDFıı20ı54ı12.5ı6.5ı1.25ı0
+4ıı22ıııPDF
+4ıı67ııı0
+2ıAPDEBIT*APDEBIT*BTNPRINTıı18ı61ı12.5ı7.5ı1.75ı32
+4ıı22ıııPRINT
+0ı-1

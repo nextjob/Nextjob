@@ -1,0 +1,79 @@
+TEMPLATEı42355.89826ıMAINTıNXT.BPüMAINT.MENU.DIALOGü3ü0
+0ı1.4ı4
+2ıMAINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııMaintenance Menu
+4ıı59ııı0
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı43ıııMenu for maintenance selection
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıMAINT*MAINTıı7ıautoıautoı55ı18.62ı1
+4ıı22ıııMaintenance Menu
+4ıı48ııı0
+4ıı9ııı0
+2ıMAINT*MAINT*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıMAINT*MAINT*frmCodeıı26ı1ı.5ı40ı16.5ı0
+4ıı0ıııValidation Codes
+2ıMAINT*MAINT*btnTermsıfrmCodeı18ı1ı1ı8ı2ı32
+4ıı22ıııA.R. Terms
+2ıMAINT*MAINT*btnCertsıfrmCodeı18ı1ı3.5ı8ı2ı32
+4ıı22ıııCert Codes
+2ıMAINT*MAINT*btnCoıfrmCodeı18ı1ı6ı8ı2ı32
+4ıı22ıııCountrys
+2ıMAINT*MAINT*btnCMStatıfrmCodeı18ı1ı8.5ı8ı2ı32
+4ıı22ıııCustomer Status
+2ıMAINT*MAINT*btnExtraıfrmCodeı18ı1ı13.5ı8ı2ı32
+4ıı22ıııExtra Charges
+2ıMAINT*MAINT*btnLotıfrmCodeı18ı11ı1ı8ı2ı32
+4ıı22ıııLot Charges
+2ıMAINT*MAINT*btnMtlıfrmCodeı18ı11ı3.5ı8ı2ı32
+4ıı22ıııMaterial Types
+2ıMAINT*MAINT*btnOrderClassıfrmCodeı18ı11ı6ı8ı2ı32
+4ıı22ıııOrder Class
+2ıMAINT*MAINT*btnOrderTypeıfrmCodeı18ı11ı8.5ı8ı2ı32
+4ıı22ıııOrder Type
+2ıMAINT*MAINT*btnProcessGroupsıfrmCodeı18ı11ı11ı8ı2ı32
+4ıı22ıııProcess Groups
+2ıMAINT*MAINT*btnProcessıfrmCodeı18ı11ı13.5ı8ı2ı32
+4ıı22ıııProcess Steps
+2ıMAINT*MAINT*btnSPCıfrmCodeı18ı21ı1ı8ı2ı32
+4ıı22ıııSales Codes
+2ıMAINT*MAINT*btnSalespersonıfrmCodeı18ı21ı3.5ı8ı2ı32
+4ıı22ıııSales Persons
+2ıMAINT*MAINT*BTNTAXıfrmCodeı18ı21ı6ı8ı2ı32
+4ıı22ıııSales Tax
+2ıMAINT*MAINT*btnSignoffıfrmCodeı18ı21ı8.5ı8ı2ı32
+4ıı22ıııSignoff Block
+2ıMAINT*MAINT*btnShipViaıfrmCodeı18ı21ı11ı8ı2ı32
+4ıı22ıııShip Via
+2ıMAINT*MAINT*btnStatesıfrmCodeı18ı21ı13.5ı8ı2ı32
+4ıı22ıııStates
+2ıMAINT*MAINT*btnVnStatıfrmCodeı18ı31ı1ı8ı2ı32
+4ıı22ıııVendor Status
+2ıMAINT*MAINT*btnQAMethodsıfrmCodeı18ı31ı3.5ı7.5ı2ı32
+4ıı22ıııQA Methods
+2ıMAINT*MAINT*btnBanksıfrmCodeı18ı31ı11ı7.5ı2ı32
+4ıı22ıııBanks
+2ıMAINT*MAINT*BTNGLCODESıfrmCodeı18ı31ı13.5ı7.5ı2.5ı32
+4ıı22ıııGL Trans Codes
+4ıı16ıııMS Sans Serif
+4ıı17ııı8.25
+2ıMAINT*MAINT*btnDeptıfrmCodeı18ı1ı11ı8ı2ı32
+4ıı22ıııDepartments
+2ıMAINT*MAINT*frmSysıı26ı42ı0ı11ı16.75ı0
+4ıı0ıııAdmin
+4ıı8ııı0
+2ıMAINT*MAINT*btnCompıfrmSysı18ı1ı1ı8ı2ı32
+4ıı22ıııCompany
+2ıMAINT*MAINT*btnUsersıfrmSysı18ı1ı3.5ı8ı2ı32
+4ıı22ıııUsers
+2ıMAINT*MAINT*btnDfltsıfrmSysı18ı1ı13.5ı8ı2ı32
+4ıı22ıııSystem Defaults
+0ı-1

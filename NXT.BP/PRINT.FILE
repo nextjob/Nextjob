@@ -1,0 +1,22 @@
+SUBROUTINE PRINT.FILE(DOC.NAME)
+************************************************************
+* AccuTerm GUI Application Subroutine Skeleton
+*
+* Date selection subroutine, clicking on a date passes back
+* a valid Pick style internal date via the PASS.DATE variable
+* or else a Null is returned on a bail out.
+*
+* Alan Gruskoff - Performant Systems, september 2004
+************************************************************
+$INCLUDE NXT.INCLUDES NXT.COMMON
+EQU ESC TO CHAR(27), STX TO CHAR(2), CR TO CHAR(13), EM TO CHAR(25)
+*
+     SCR='On Error Resume Next'
+     SCR = SCR:EM:'Dim Filename As String'
+     SCR = SCR:EM:'Filename = "':DOC.NAME:'"'
+     SCR = SCR:EM:'Set objShell = CreateObject("Shell.Application")'
+     SCR = SCR:EM:'objShell.ShellExecute Filename, "", "", "print", 1'
+     SCR = SCR:EM:'Set objShell = Nothing'
+     PRINT ESC:STX:'P':SCR:CR:
+RETURN
+END

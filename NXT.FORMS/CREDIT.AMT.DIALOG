@@ -1,0 +1,37 @@
+TEMPLATEı42045.57826ıCREDIT.AMTıNXT.BPüCREDIT.AMT.DIALOGü3ü0
+0ı1.4ı4
+2ıCREDIT.AMTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııCredit Memo
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııNexjob Credit Memo Module
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıCREDIT.AMT*CREDIT.AMTıı7ıautoıautoı37ı7.5ı1
+4ıı22ıııCredit Memo - Item Detail
+4ıı48ııı0
+4ıı9ııı0
+2ıCREDIT.AMT*CREDIT.AMT*lblQtyıı15ı5ı.5ı6ı1.25ı0
+4ıı0ıııQuantity
+4ıı67ııı0
+2ıCREDIT.AMT*CREDIT.AMT*txtQtyıı16ı5ı2ı8ı1.25ı256
+4ıı29ııı8
+2ıCREDIT.AMT*CREDIT.AMT*lblEachıı15ı15ı.5ı6ı1.25ı0
+4ıı0ıııPrice Ea
+4ıı67ııı0
+2ıCREDIT.AMT*CREDIT.AMT*txtPriceıı16ı15ı2ı8ı1.25ı256
+4ıı29ııı5
+2ıCREDIT.AMT*CREDIT.AMT*lblTotalıı15ı25ı.5ı8ı1.25ı0
+4ıı0ıııLine Total
+4ıı67ııı0
+2ıCREDIT.AMT*CREDIT.AMT*lblTotAmtıı15ı25ı2ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıCREDIT.AMT*CREDIT.AMT*btnOKıı18ı14ı4.5ı9ı2ı32
+4ıı22ıııOK
+0ı-1

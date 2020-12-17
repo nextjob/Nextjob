@@ -1,0 +1,122 @@
+TEMPLATEı42355.91199ıPROCESS.MAINTıNXT.BPüPROCESS.MAINTü3ü0
+0ı1.4ı4
+2ıPROCESS.MAINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııPROCESS.MAINT
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıPROCESS.MAINT*Form1ıı7ıautoıautoı55ı34.62ı1
+4ıı22ıııProcess Step Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıPROCESS.MAINT*Form1*lblProcessıı15ı1ı1ı5.5ı1.25ı0
+4ıı0ıııStep Id
+2ıPROCESS.MAINT*Form1*lstProıı24ı8ı1ı24.5ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıPROCESS.MAINT*Form1*frmNewIdıı26ı34ı.5ı18ı5ı0
+4ıı0ıııNew Step Id
+4ıı9ııı0
+2ıPROCESS.MAINT*Form1*txtNewIdıfrmNewIdı16ı.5ı1ı17ı1.25ı256
+2ıPROCESS.MAINT*Form1*frmSaveAsıı26ı34ı.5ı17.5ı5ı0
+4ıı0ıııSave As
+4ıı9ııı0
+2ıPROCESS.MAINT*Form1*txtSaveAsıfrmSaveAsı16ı1ı1ı15.5ı1.25ı256
+2ıPROCESS.MAINT*Form1*lblProcessNameıı15ı1ı3ı9.5ı1.25ı0
+4ıı0ıııStep Name
+2ıPROCESS.MAINT*Form1*txtProcessNameıı16ı8ı3ı24.5ı1.25ı256
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*lblProcessDescıı15ı3ı5ı13ı1.25ı0
+4ıı0ıııStep Description
+2ıPROCESS.MAINT*Form1*txtProcessDescıı17ı3ı6ı49ı4.25ı256
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*frmChecksıı26ı3ı11ı49ı3.75ı0
+4ıı0ıııProcess Router Required Checks
+2ıPROCESS.MAINT*Form1*chkTimeıfrmChecksı20ı1ı1.5ı8ı1.25ı32
+4ıı22ıııTime
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*chkTempıfrmChecksı20ı9ı1.5ı8ı1.25ı32
+4ıı22ıııRamp
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*chkVoltsıfrmChecksı20ı17ı1.5ı6ı1.25ı32
+4ıı22ıııVolts
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*chkQtyıfrmChecksı20ı24ı1.5ı8ı1.25ı32
+4ıı22ıııQty
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*chkOPRıfrmChecksı20ı31ı1.5ı8ı1.25ı32
+4ıı22ıııOper
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*chkDateıfrmChecksı20ı39ı1.5ı8ı1.25ı32
+4ıı22ıııDate
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*lblCertCodeıı15ı3ı15.5ı17ı1ı0
+4ıı0ıııCert Code and Description
+2ıPROCESS.MAINT*Form1*LstCertCodeıı24ı20ı15.5ı32ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı13.62ı40
+4ıı8ııı0
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııCert IdıCert Description
+4ıı26ıııüıüıüıü
+4ıı33ııı3
+2ıPROCESS.MAINT*Form1*lblCertDescıı15ı3ı17.5ı49ı1.25ı0
+4ıı11ııı2
+2ıPROCESS.MAINT*Form1*frmWCıı26ı3ı19.5ı49ı5.5ı0
+4ıı0ıııWork Center
+2ıPROCESS.MAINT*Form1*lstWcıfrmWCı24ı3ı1.5ı10ı1.25ı32
+4ıı8ııı0
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıPROCESS.MAINT*Form1*lblWcIdıfrmWCı15ı1ı1.5ı2ı1.25ı0
+4ıı0ıııId
+2ıPROCESS.MAINT*Form1*lblWcNameıfrmWCı15ı15ı1.5ı4.5ı1.25ı0
+4ıı0ıııName
+2ıPROCESS.MAINT*Form1*lblWcNameValıfrmWCı15ı19ı1.5ı28.5ı1.25ı0
+4ıı11ııı2
+2ıPROCESS.MAINT*Form1*lblWcDescıfrmWCı15ı1ı3.5ı4.5ı1.25ı0
+4ıı0ıııDesc
+2ıPROCESS.MAINT*Form1*lblWcDescValıfrmWCı15ı5ı3.5ı42.5ı1.25ı0
+4ıı11ııı2
+2ıPROCESS.MAINT*Form1*frmRatesıı26ı3ı25ı49ı5ı0
+4ıı0ıııRates
+2ıPROCESS.MAINT*Form1*lblSuıfrmRatesı15ı1ı1.5ı6ı2ı0
+4ıı0ıııHours To Setup
+4ıı10ııı1
+2ıPROCESS.MAINT*Form1*txtSuHrsıfrmRatesı16ı7ı2ı8ı1.25ı256
+4ıı8ııı0
+4ıı29ııı8
+2ıPROCESS.MAINT*Form1*lblHppıfrmRatesı15ı18ı1.5ı5ı2ı0
+4ıı0ıııHours Per Part
+4ıı10ııı1
+2ıPROCESS.MAINT*Form1*txtHppıfrmRatesı16ı24ı2ı8ı1.25ı256
+4ıı29ııı8
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*btnFileıı18ı14ı31.5ı8ı1.75ı32
+4ıı22ıııFile
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*btnCancelıı18ı24ı31.5ı8ı1.75ı32
+4ıı22ıııCancel
+2ıPROCESS.MAINT*Form1*btnSaveAsıı18ı34ı31.5ı8ı1.75ı32
+4ıı22ıııSave As
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*btnDeleteıı18ı44ı31.5ı8ı1.75ı32
+4ıı22ıııDelete
+4ıı8ııı0
+2ıPROCESS.MAINT*Form1*btnNewıı18ı3ı31.5ı8.5ı1.75ı32
+4ıı22ıııNew
+0ı-1

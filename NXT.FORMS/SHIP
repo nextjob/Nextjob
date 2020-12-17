@@ -1,0 +1,100 @@
+TEMPLATEı41962.6059ıSHIPıNXT.BPüSHIP.DIALOGü1ü0
+0ı1.4ı4
+2ıSHIPıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııShipping
+4ıı59ııı0
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııShipping Dialog
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıSHIP*SHIPıı7ıautoıautoı84ı32.25ı1
+4ıı22ıııShipping
+4ıı48ııı0
+4ıı9ııı0
+2ıSHIP*SHIP*lblOrderıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııOrder Number
+2ıSHIP*SHIP*txt1OrdValıı16ı10ı1ı10.5ı1.25ı256
+4ıı49ıııEnter order number to ship
+2ıSHIP*SHIP*lblCustıı15ı24ı1ı6.5ı1.25ı0
+4ıı0ıııCustomer
+2ıSHIP*SHIP*lblCustValıı15ı31ı1ı25ı1.25ı0
+4ıı11ııı2
+2ıSHIP*SHIP*lblCustPOıı15ı57ı1ı5.5ı1.25ı0
+4ıı0ıııCust PO
+2ıSHIP*SHIP*lblCustPOValıı15ı63ı1ı19.5ı1.25ı0
+4ıı11ııı2
+2ıSHIP*SHIP*lstItemıı21ı1ı3.5ı81.5ı4.25ı32
+4ıı27ııı4
+4ıı32ıııItem #ıPart NumberıPart DescriptionıStatus
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı25ı40ı6
+4ıı33ııı3
+4ıı49ıııScrowl to desired item and Click to make active
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı8ııı0
+4ıı26ıııüüüıüüüıüüü
+2ıSHIP*SHIP*lblPnıı15ı2ı8.5ı9.5ı1.25ı0
+4ıı0ıııPart Number
+2ıSHIP*SHIP*lblPnValıı15ı12ı8.5ı35ı1.25ı0
+4ıı11ııı2
+2ıSHIP*SHIP*lblDescıı15ı2ı10ı9.5ı1.25ı0
+4ıı0ıııDescription
+2ıSHIP*SHIP*lblDescValıı15ı12ı10ı35ı1.25ı0
+4ıı11ııı2
+2ıSHIP*SHIP*lblDrawıı15ı2ı11.5ı8ı1.25ı0
+4ıı0ıııDrawing
+2ıSHIP*SHIP*LBLDrawValıı15ı12ı11.5ı35ı1.25ı0
+4ıı11ııı2
+2ıSHIP*SHIP*lblDueıı15ı3ı17.5ı8ı1.25ı0
+4ıı0ıııBalance Due
+2ıSHIP*SHIP*lblDueValıı15ı13ı17.5ı8ı3ı0
+4ıı11ııı2
+4ıı16ıııMS Sans Serif
+4ıı17ııı13.5
+4ıı18ııı1
+4ıı19ııı0
+2ıSHIP*SHIP*lblOCNotesıı15ı2ı13.5ı8ı1.25ı0
+4ıı0ıııItem Notes
+2ıSHIP*SHIP*txt2Notesıı17ı12ı13ı39.5ı3.25ı0
+4ıı8ııı0
+4ıı12ııı1
+2ıSHIP*SHIP*lblShpQtyıı15ı31ı17.5ı10ı1.25ı0
+4ıı0ıııQty To Ship
+4ıı25ııı1
+2ıSHIP*SHIP*txtShpQtyıı16ı43ı17.5ı8ı2.75ı256
+4ıı49ıııEnter shipping quantity
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı13.5
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı8ııı0
+2ıSHIP*SHIP*lblNotesıı15ı2ı21.5ı10ı1.25ı0
+4ıı0ıııPackslip Notes
+4ıı25ııı1
+2ıSHIP*SHIP*txtNotesıı17ı13ı21ı38.5ı6.25ı256
+4ıı49ıııEnter Notes to appear on packslip
+4ıı8ııı0
+2ıSHIP*SHIP*btnShipıı18ı14ı28ı9ı2.5ı32
+4ıı22ıııShip Item
+4ıı49ıııClick to create pack list and certs
+4ıı8ııı0
+2ıSHIP*SHIP*btnCancelıı18ı42ı28ı9.5ı2.5ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel current shipment
+2ıSHIP*SHIP*picItemıı25ı56ı13ı26ı13.5ı0
+4ıı10ııı2
+2ıSHIP*SHIP*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+0ı-1

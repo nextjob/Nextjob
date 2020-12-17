@@ -1,0 +1,89 @@
+TEMPLATEı41843.65819ıARıNXT.BPüAR.DIALOGü3ü0
+0ı1.4ı4
+2ıARıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııAccounts Receivable
+4ıı59ııı0
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı43ıııAR Entry Form
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıAR*ARıı7ıautoıautoı67.75ı22.75ı1
+4ıı22ıııAccounts Receivable
+4ıı48ııı0
+4ıı9ııı0
+2ıAR*AR*LSTBANKıı24ı15ı.5ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8.25ı15
+4ıı53ııı8
+4ıı32ıııBank IdıName
+4ıı39ııı1
+2ıAR*AR*lblCustıı15ı1ı3ı12ı1.25ı0
+4ıı0ıııCustomer Number
+2ıAR*AR*lstCustıı24ı20ı3ı9.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5.75ı19.12
+4ıı39ııı1
+4ıı49ıııSelect customer name from drop down list
+4ıı53ııı8
+2ıAR*AR*LBLCUSTNAMEıı15ı1ı5ı29ı1.25ı0
+4ıı11ııı2
+2ıAR*AR*lblDateıı15ı38ı1ı8.5ı1.25ı0
+4ıı0ıııCheck Date
+2ıAR*AR*txtDateıı16ı48ı1ı14ı1.25ı256
+4ıı8ııı0
+4ıı29ııı6
+2ıAR*AR*lblCheckıı15ı39ı3ı7.5ı1.25ı0
+4ıı0ıııCheck Nbr
+2ıAR*AR*txtCheckıı16ı48ı3ı14ı1.25ı256
+4ıı49ıııEnter customer check number
+4ıı8ııı0
+4ıı29ııı8
+2ıAR*AR*lblAmountıı15ı37ı5ı9.5ı1.25ı0
+4ıı0ıııCheck Amount
+2ıAR*AR*txtamountıı16ı48ı5ı14ı1.25ı256
+4ıı49ıııEnter check amount
+4ıı29ııı5
+4ıı8ııı0
+2ıAR*AR*Grid1ıı28ı1ı7.5ı66ı11ı1024
+4ıı27ııı6
+4ıı32ıııInvoice NumberıDue DateıInvoice AmountıBalance DueıWrite OffıAmt to Apply
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı11ı8.25ı11ı11ı11ı9.38
+4ıı34ııı1ı0ı0ı0ı1ı1
+4ıı35ııı2ı0ı0ı0ı5ı5
+4ıı33ııı3
+4ıı10ııı1
+4ıı11ııı2
+4ıı12ııı0ı1ı1ı0ı1ı1
+4ıı8ııı0
+2ıAR*AR*lblBalıı15ı46ı19.5ı6.5ı1ı0
+4ıı0ıııBalance
+2ıAR*AR*lblBalValıı15ı54ı19.5ı12ı1.25ı0
+4ıı11ııı2
+2ıAR*AR*btnProcessıı18ı1ı19ı8ı2ı32
+4ıı22ıııProcess
+4ıı49ıııClick to process check
+4ıı8ııı0
+2ıAR*AR*btnSaveıı18ı11ı19ı7.5ı2ı32
+4ıı22ıııSave
+4ıı8ııı0
+2ıAR*AR*btnCancelıı18ı30ı19ı8ı2ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel AR entry
+2ıAR*AR*btnDeleteıı18ı20ı19ı7.5ı2ı32
+4ıı22ıııDelete Invoice
+4ıı8ııı0
+2ıAR*AR*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıAR*AR*LBLBANKıı15ı1ı.5ı11ı1.25ı0
+4ıı0ıııDepsoit To Bank
+4ıı67ııı0
+0ı-1

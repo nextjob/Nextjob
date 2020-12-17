@@ -1,0 +1,970 @@
+SUBROUTINE VF.DIALOG(VF_ID,GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: VF.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2008
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+* 09/27/08 -  ADD ATGUICLEAREVENTS TO COMBO BOX CLICK TO PREVENT VALIDATE FIRING
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* VF_ID - VALIDATAION_FILE RECORD TO EDIT
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* ROUTINE IS CALLED TO CREATE OR MODIFY A VALIDATION_FILE RECORD BASED ON THE VALIDATION_FILE_DESC ITEM FOR THE CORRESPONDING VALIDATION FILE ITEM:
+*
+*VF_VAL_DESC    1    VALIDATION DIALOG FRAME NAME
+*VF_ID_NAME     2    VALIDATION DIALOG COMBO BOX LABEL FOR CODE
+*VF_ID_DESC     3    VALIDATION DIALOG LABEL FOR CODE DESCRIPTION
+*VF_NOTES       4    VALIDATION DIALOG TEXT NOTES
+*VF_VAL1        5    VALIDATION DIALOG FRAME NAME FOR VALUE 1
+*VF_VAL1_DESC   6    VALIDATION DIALOG LABEL FOR CODE VALUE 1
+*VF_VAL1_HELP   7    VALUE 1 HELP
+*VF_VAL1_EDITS  8    ATGUI VALUE 1 TEXTBOX EDITS (GPDATATYPE)
+*VF_VAL1_CONV   9    VALUE1 CONVERSION CODE
+*VF_VAL2       10    VALIDATION DIALOG FRAME NAME FOR VALUE 2
+*VF_VAL2_DESC  11    VALIDATION DIALOG LABEL FOR CODE VALUE 2
+*VF_VAL2_HELP  12    VALUE 2 HELP
+*VF_VAL2_EDITS 13    ATGUI VALUE 2 TEXBOX EDITS (GPDATATYPE)
+*VF_VAL2_CONV  14    VALUE 2 CONVERSION CODE
+*VF_VALIDATION_SUB 15S  SUBROUTINE CALLED TO VALIDATE VALIDATION RECORD ENTRY
+*
+*
+* VALIDATION FILE RECORDS ARE MULTIVALUED AND HAVE THE FOLLOWING FORMAT:
+*
+*CODE_ID       M     1    CODE ID
+*CODE_DESC     M     2    DESCRIPTION
+*CODE_VAL1     M     3    VALUE 1
+*CODE_VAL2     M     4    VALUE 2
+*CODE_DEL_FLA  M     5    DELETE NOT ALLOWED FOR THIS CODE ID (0/1)
+
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES VALIDATION_FILE_DESC.H
+$INCLUDE NXT.INCLUDES VALIDATION_FILE.H
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+*
+$INCLUDE GUIBP ATGUIEQUATES
+*
+PROG_ID   = "VF.DIALOG"
+GUIERRORS = ''
+GUIAPP = "VF.MAINT"  ;* SEED GUIAPP AND GUIFRM PRIOR TO ACTUAL EVENT WAIT LOOP
+GUIFRM = "FORM1"
+GET_REC_MSG_LIST = ''
+USER.NAME = @LOGNAME
+*
+*
+GUIERRORS = ''
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+   CALL ATGUIERROR(3,'VF.MAINT','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+   RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'VF.MAINT' ELSE
+   CALL ATGUIERROR(3,'VF.MAINT','',0,GRFATAL,"'VF.MAINT' is not on file.",GUIERRORS)
+   RETURN
+END
+* Add your equates and code to open files here...
+
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+   CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* GET TERMS DESCS
+VF.LIST = ''
+VF.IDX  = ''
+*
+CALL ATGUISHOW('VF.MAINT','FORM1','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*
+* GET THE DESCRIPTION FILE FOR THIS VALIDATION RECORD
+*
+OPEN 'VALIDATION_FILE_DESC' TO VF.FILE.DESC THEN
+   READ VF_DESC_REC FROM VF.FILE.DESC, VF_ID THEN
+      *
+      *  ADD FIELD DESCRIPTIONS TO THE FORM FOR THIS VALIDATION ITEM
+      *
+      CTRLIDS = ''
+      PROPS   = ''
+      VALUES  = ''
+      *
+      CTRLIDS<1> = "FRAME1"
+      PROPS<1>   = GPCAPTION
+      VALUES<1>  = VF_DESC_REC<VF_VAL_DESC>
+      *
+      CTRLIDS<2> = "LBLIDNAME"
+      PROPS<2>   = GPVALUE
+      VALUES<2>  = VF_DESC_REC<VF_ID_NAME>
+      *
+      CTRLIDS<3> = "LBLIDDESC"
+      PROPS<3>   = GPVALUE
+      VALUES<3>  = VF_DESC_REC<VF_ID_DESC>
+      *
+      CTRLIDS<4> = "TXTNOTES"
+      PROPS<4>   = GPVALUE
+      VALUES<4>  = VF_DESC_REC<VF_NOTES>
+      *
+      IF VF_DESC_REC<VF_VAL1> # '' THEN
+         VF.VAL1.CONV = VF_DESC_REC<VF_VAL1_CONV>
+         VF.VAL1.RQD = @TRUE
+         CTRLIDS<5> = "FRAME2"
+         PROPS<5>   = GPVISIBLE
+         VALUES<5>  = 1
+         *
+         CTRLIDS<6> = "FRAME2"
+         PROPS<6>   = GPCAPTION
+         VALUES<6>  = VF_DESC_REC<VF_VAL1>
+         *
+         CTRLIDS<7> = "LBLVAL1"
+         PROPS<7>   = GPVALUE
+         VALUES<7>  = VF_DESC_REC<VF_VAL1_DESC>
+         * is there an edit control?
+         IF VF_DESC_REC<VF_VAL1_EDITS,1> # '' THEN
+            EDT.DATA.TYPE = VF_DESC_REC<VF_VAL1_EDITS,1>
+            GOSUB DATA.TYPE.VAL
+            IF EDT.DATA.TYPE # '' THEN
+               CTRLIDS<-1> = "TXTVAL1"
+               PROPS<-1>   = GPDATATYPE
+               VALUES<-1>  = EDT.DATA.TYPE
+            END
+         END
+      END ELSE
+         VF.VAL1.RQD = @FALSE
+         VF.VAL1.CONV = ''
+      END
+      IF VF_DESC_REC<VF_VAL2> # '' THEN
+         VF.VAL2.CONV = VF_DESC_REC<VF_VAL2_CONV>
+         VF.VAL2.RQD = @TRUE
+         CTRLIDS<-1> = "FRAME3"
+         PROPS<-1>   = GPVISIBLE
+         VALUES<-1>  = 1
+         *
+         CTRLIDS<-1> = "FRAME3"
+         PROPS<-1>   = GPCAPTION
+         VALUES<-1>  = VF_DESC_REC<VF_VAL2>
+         *
+         CTRLIDS<-1> = "LBLVAL2"
+         PROPS<-1>   = GPVALUE
+         VALUES<-1>  = VF_DESC_REC<VF_VAL2_DESC>
+         * is there an edit control?
+         IF VF_DESC_REC<VF_VAL2_EDITS,1> # '' THEN
+            EDT.DATA.TYPE = VF_DESC_REC<VF_VAL2_EDITS,1>
+            GOSUB DATA.TYPE.VAL
+            IF EDT.DATA.TYPE # '' THEN
+               CTRLIDS<-1> = "TXTVAL2"
+               PROPS<-1>   = GPDATATYPE
+               VALUES<-1>  = EDT.DATA.TYPE
+            END
+         END
+      END ELSE
+         VF.VAL2.RQD = @FALSE
+         VF.VAL2.CONV = ''
+      END
+
+      *
+      *  POPULATE THE FORM WITH THE LABEL DESRIPTIONS
+      *
+      CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+      *
+   END ELSE
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Cannot Read Validation_file_Desc: ":VF_ID:", Abort"
+      CALL LOG.ERROR(LOG.OPTS,"VF.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+      RETURN
+   END
+   *
+END ELSE
+   *
+   LOG.OPTS = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Cannot Open Validation_file_Desc, Abort"
+   CALL LOG.ERROR(LOG.OPTS,"VF.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+* GET THE PASSED VALIDATION FILE RECORD
+*
+CALL GET.RECORD("VALIDATION_FILE",C.VALIDATION_FILE,VF_ID,VF_REC,@TRUE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+*
+IF ERROR_STATUS = ERR_NOF THEN
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  VF_ID:" not found in VALIDATION_FILE"
+   CALL LOG.ERROR(LOG.OPTS,"VF.MAINT", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   RELEASE C.FILE.VAR(C.VALIDATION_FILE), VF_ID
+   GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+IF ERROR_STATUS = ERR_BUSY THEN
+   PRMPT = VF_ID:", In use, try later"
+   CAPTION = "VF Maint"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+* GET USER RECORD
+USER.ID = "USER*":USER.NAME
+GET_REC_MSG_LIST = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,USER.ID,USER_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+*
+IF ERROR_STATUS = ERR_NOF THEN
+   PRMPT = "User Record Not on File"
+   CAPTION = "VF.Dialog"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   USER.ID = ''
+   GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+CALL LIST.LOAD(C.VALIDATION_FILE,VF_ID,"2",'',VF.LIST,VF.IDX,VF.COUNT,EMSG)
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"CBID",GPITEMS,0,0,VF.LIST,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+GOSUB CLEAR.BUFFERS
+*-->END GUI STARTUP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN RETURN
+   IF GUIEVT EQ GEQUIT THEN
+      GUI.DLG.EXIT = 1
+   END ELSE
+      GUIAPP=OCONV(GUIAPP,'MCU')
+      GUIFRM=OCONV(GUIFRM,'MCU')
+      GUICTL=OCONV(GUICTL,'MCU')
+      GOSUB GUI.DECODE.EVENT
+   END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+   GUI.APP.LIST = ''
+   CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+   IF GUI.APP.LIST EQ '' THEN
+      * Quit event fired after last GUI object is deleted - discard it
+      CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+      * We could call ATGUISHUTDOWN here if we wanted, but there's no
+      * harm just leaving the GUI environment initialized, in case we
+      * want to use it again...
+   END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+   * Add your code here...
+END ELSE
+   * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+   BEGIN CASE
+      CASE GUIAPP='VF.MAINT'
+         BEGIN CASE
+            CASE GUIFRM='FORM1'
+               BEGIN CASE
+                  CASE GUICTL=''
+                     BEGIN CASE
+                        CASE GUIEVT=GECLOSE
+                           GOSUB GUI.VF.MAINT.FORM1.CLOSE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCANCEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.VF.MAINT.FORM1.BTNCANCEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDELETE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.VF.MAINT.FORM1.BTNDELETE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNFILE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.VF.MAINT.FORM1.BTNFILE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNREPORT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.VF.MAINT.FORM1.BTNREPORT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CBID'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.VF.MAINT.FORM1.CBID.CLICK;GUIEVT=0
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.VF.MAINT.FORM1.CBID.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTIDDESC'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.VF.MAINT.FORM1.TXTIDDESC.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTVAL1'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.VF.MAINT.FORM1.TXTVAL1.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTVAL2'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.VF.MAINT.FORM1.TXTVAL2.VALIDATE;GUIEVT=0
+                     END CASE
+               END CASE
+         END CASE
+   END CASE
+   IF GUIEVT THEN
+      * Unhandled event - may be dynamic
+      GOSUB GUI.DYNAMIC.EVENTS
+   END
+END ELSE
+   GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.BTNREPORT.CLICK: *
+SELECT.STR =  'list validation_file = "':VF_ID:'" CODE_ID CODE_DESC CODE_VAL1 CODE_VAL2 CODE_DEL_FLAG '
+OPTIONS = ''
+CALL NXT.SPREADSHEET.REPORT(SELECT.STR,"VF_REPORT.CSV",@TRUE,OPTIONS, GUIERRORS, GUISTATE)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.CBID.CLICK: *
+GOSUB CLEAR.BUFFERS
+VF.ITEM = GUIARGS<1>    ;* GET ID USER CLICKED ON, AND DISPLAY
+GOSUB LOAD.VF.ITEM
+CALL ATGUICLEAREVENTS(GUIAPP,GUIFRM,GUICTL,0,0,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.CBID.VALIDATE: *
+GOSUB CLEAR.BUFFERS
+VF.ITEM =  GUIARGS<2>
+GOSUB LOAD.VF.ITEM
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.CLOSE: *
+* Default form close event handler
+IF VF_ID # '' THEN
+   RELEASE C.FILE.VAR(C.VALIDATION_FILE), VF_ID
+END
+*
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+   GOSUB GUI.DIALOG.RETURN
+   CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+   GUI.DLG.EXIT = 1
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.BTNCANCEL.CLICK: *
+*
+GOSUB CLEAR.BUFFERS
+GOSUB RESET.CTRLS
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.BTNDELETE.CLICK: *
+ERM = ''
+BEGIN CASE  ;* SOME VALIDATION ITEMS CANNOT BE CHANGED, SHOULD ADD A FIELD TO THE RECORD TO PREVENT EDIT, BUT THIS WORKS FOR NOW
+   CASE VF_ID = "CERT.DESC" AND VF.ITEM = "NONE"
+      ERM = '"NONE" Cannot Be Edited or Removed from CERT.DESC'
+   CASE VF_ID = "CERT.DESC" AND VF.ITEM = "CUSTOM"
+      ERM = '"CUSTOM" Cannot Be Edited or Removed from CERT.DESC'
+   CASE VF_ID = "EXTRA.CHARGES" AND VF.ITEM = "SALESTAX"
+      ERM = '"SALESTAX" Cannot Be Edited or Removed from EXTRA.CHARGES'
+   CASE VF_REC<CODE_DEL_FLAG,IDX>
+      ERM = 'Deletion of this item is Not Allowed'
+END CASE
+*
+IF ERM = '' THEN
+   *
+   LOCATE VF.ITEM IN VF_REC<1,1> SETTING IDX THEN
+      PRMPT = "Are you sure you want to delete item: ":VF.ITEM
+      CAPTION = VF_DESC_REC<VF_VAL_DESC>
+      STYLE   = 2  ;* !
+      BUTTONS = 4  ;* ok only
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      IF RESPONSE = 6 THEN  ;* YES
+         VF_REC = DELETE(VF_REC,CODE_ID,IDX)
+         VF_REC = DELETE(VF_REC,CODE_DESC,IDX)
+         *
+         IF VF.VAL1.RQD THEN
+            VF_REC = DELETE(VF_REC,CODE_VAL1,IDX)
+         END
+         IF VF.VAL2.RQD THEN
+            VF_REC = DELETE(VF_REC,CODE_VAL2,IDX)
+         END
+         *
+         VF_REC = DELETE(VF_REC,CODE_DEL_FLAG,IDX)
+         CALL WRITE.RECORD(VF_ID,VF_REC,C.VALIDATION_FILE,@FALSE,ERROR_STATUS)
+         GOSUB CLEAR.BUFFERS
+         GOSUB RESET.CTRLS
+
+      END
+   END
+END ELSE
+   PRMPT = ERM
+   CAPTION = "VF Maint"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.BTNFILE.CLICK: *
+ERM = ''
+BEGIN CASE
+   CASE VF_ID = "CERT.DESC" AND VF.ITEM = "NONE"
+      ERM = '"NONE" Cannot Be Edited or Removed from CERT.DESC'
+   CASE VF_ID = "CERT.DESC" AND VF.ITEM = "CUSTOM"
+      ERM = '"CUSTOM" Cannot Be Edited or Removed from CERT.DESC'
+   CASE VF.ITEM = ''
+      ERM = VF_DESC_REC<VF_ID_NAME>:" not set, Please correct"
+   CASE VF.ITEM.DESC = ''
+      ERM = VF_DESC_REC<VF_ID_DESC>:" not set, Please correct"
+   CASE VF.VALUE1  = '' AND VF.VAL1.RQD
+      ERM = VF_DESC_REC<VF_VAL1_DESC>:" not set, Please correct"
+   CASE VF.VALUE2  = '' AND VF.VAL2.RQD
+      ERM = VF_DESC_REC<VF_VAL2_DESC>:" not set, Please correct"
+END CASE
+IF ERM = '' THEN
+
+
+   LOCATE VF.ITEM IN VF_REC<1,1> BY "AL" SETTING IDX THEN
+      VF_REC<CODE_DESC,IDX> = VF.ITEM.DESC
+      IF VF.VAL1.RQD THEN
+         IF VF.VAL1.CONV # '' THEN
+            VF.VALUE1 = ICONV(VF.VALUE1,VF.VAL1.CONV)
+         END
+         VF_REC<CODE_VAL1,IDX> = VF.VALUE1
+      END
+      IF VF.VAL2.RQD THEN
+         IF VF.VAL2.CONV # '' THEN
+            VF.VALUE2 = ICONV(VF.VALUE2,VF.VAL2.CONV)
+         END
+         VF_REC<CODE_VAL2,IDX> = VF.VALUE2
+      END
+   END ELSE
+      VF_REC = INSERT(VF_REC,CODE_ID,IDX;VF.ITEM)
+      VF_REC = INSERT(VF_REC,CODE_DESC,IDX;VF.ITEM.DESC)
+      *
+      IF VF.VAL1.RQD THEN
+         IF VF.VAL1.CONV # '' THEN
+            VF.VALUE1 = ICONV(VF.VALUE1,VF.VAL1.CONV)
+         END
+         VF_REC = INSERT(VF_REC,CODE_VAL1,IDX;VF.VALUE1)
+      END
+      IF VF.VAL2.RQD THEN
+         IF VF.VAL2.CONV # '' THEN
+            VF.VALUE2 = ICONV(VF.VALUE2,VF.VAL2.CONV)
+         END
+         VF_REC = INSERT(VF_REC,CODE_VAL2,IDX;VF.VALUE2)
+      END
+      VF_REC = INSERT(VF_REC,CODE_DEL_FLAG,IDX;0)  ;* DELETE FLAG, SET TO OK TO DELETE FOR NEW ITEMS, MUST BE MANUALLY EDITED
+   END
+   *
+   * IS THERE A VALIDATION ROUTINE?
+   *
+   IF VF_DESC_REC<VF_VALIDATION_SUB> # '' THEN
+      STATUS = ""
+      SUB.NAME = VF_DESC_REC<VF_VALIDATION_SUB>
+      CALL !FINDPROG(RESULT,SUB.NAME)
+      IF RESULT = '' THEN
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "Reference Validation Routine: ":SUB.NAME:" not found!"
+         CALL LOG.ERROR(LOG.OPTS,"VF.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOTO GUI.VF.MAINT.FORM1.BTNFILE.CLICK.99
+      END ELSE
+         CALL @SUB.NAME(VF_REC,STATUS,GUIERRORS,GUISTATE)
+      END
+   END ELSE
+      STATUS = "OK"
+   END
+   *
+   IF STATUS = "OK" THEN
+      CALL WRITE.RECORD(VF_ID,VF_REC,C.VALIDATION_FILE,@FALSE,ERROR_STATUS)
+      GOSUB CLEAR.BUFFERS
+      GOSUB RESET.CTRLS
+   END ELSE
+      PRMPT = STATUS
+      CAPTION = "VF Maint"
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok only
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   END
+END ELSE
+   PRMPT = ERM
+   CAPTION = "VF Maint"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+GUI.VF.MAINT.FORM1.BTNFILE.CLICK.99: *
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.TXTIDDESC.VALIDATE: *
+VF.ITEM.DESC = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.TXTVAL1.VALIDATE: *
+VF.VALUE1 = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.VF.MAINT.FORM1.TXTVAL2.VALIDATE: *
+VF.VALUE2  = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,"VF.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+************************************************************
+* $PAGE$
+************************************************************
+CLEAR.BUFFERS:
+VF.ITEM = ''
+VF.ITEM.DESC = ''
+VF.ITEM.NOTES = ''
+VF.VALUE1  = ''
+VF.VALUE2  = ''
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+* CONVERT TEXT DATA TYPE TO ACCUTERM VALUE
+* EDT.DATA.TYPE ON ENTRY TEXT VALUE
+* ON RETURN NUMBERIC VALUE OR NULL IF NO MATCH FOUND
+DATA.TYPE.VAL:
+BEGIN CASE
+   CASE EDT.DATA.TYPE = "GDANY" ;* 0
+      EDT.DATA.TYPE = GDANY
+   CASE EDT.DATA.TYPE = "GDALPHA" ;* 1
+      EDT.DATA.TYPE = GDALPHA
+   CASE EDT.DATA.TYPE = "GDALPHANUM" ;* 2
+      EDT.DATA.TYPE = GDALPHANUM
+   CASE EDT.DATA.TYPE = "GDBOOL" ;* 3
+      EDT.DATA.TYPE = GDBOOL
+   CASE EDT.DATA.TYPE = "GDCOUNTRY" ;* 4
+      EDT.DATA.TYPE = GDCOUNTRY
+   CASE EDT.DATA.TYPE = "GDCURRENCY" ;* 5
+      EDT.DATA.TYPE = GDCURRENCY
+   CASE EDT.DATA.TYPE = "GDDATE" ;* 6
+      EDT.DATA.TYPE = GDDATE
+   CASE EDT.DATA.TYPE = "GDFINANCIAL" ;* 7
+      EDT.DATA.TYPE = GDFINANCIAL
+   CASE EDT.DATA.TYPE = "GDNUMERIC" ;* 8
+      EDT.DATA.TYPE = GDNUMERIC
+   CASE EDT.DATA.TYPE = "GDPERCENT" ;* 9
+      EDT.DATA.TYPE = GDPERCENT
+   CASE EDT.DATA.TYPE = "GDPHONE" ;* 10
+      EDT.DATA.TYPE = GDPHONE
+   CASE EDT.DATA.TYPE = "GDSSN" ;* 11
+      EDT.DATA.TYPE = GDSSN
+   CASE EDT.DATA.TYPE = "GDSTATE" ;* 12
+      EDT.DATA.TYPE = GDSTATE
+   CASE EDT.DATA.TYPE = "GDTIME" ;* 13
+      EDT.DATA.TYPE = GDTIME
+   CASE EDT.DATA.TYPE = "GDZIPCODE" ;* 14
+      EDT.DATA.TYPE = GDZIPCODE
+   CASE 1
+      EDT.DATA.TYPE = ''
+END CASE
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+
+LOAD.VF.ITEM:
+* routine LOADS INFO FROM VF_REC FOR VF.ITEM
+*
+LOCATE VF.ITEM IN VF_REC<CODE_ID,1> SETTING IDX THEN
+   CTRLIDS = ''
+   PROPS   = ''
+   VALUES  = ''
+   *
+   VF.ITEM.DESC =  VF_REC<CODE_DESC,IDX>
+   *
+   CTRLIDS<1> = "TXTIDDESC"
+   PROPS<1>   = GPVALUE
+   VALUES<1>  = VF.ITEM.DESC
+   *
+   CTRLIDS<2> = "CBID"
+   PROPS<2>   = GPENABLED
+   VALUES<2>  = 0
+   *
+   CTRLIDS<3> = "TXTIDDESC"
+   PROPS<3>   = GPENABLED
+   VALUES<3>  = 1
+   *
+   CTRLIDS<4> = "TXTVAL1"
+   PROPS<4>   = GPENABLED
+   VALUES<4>  = 1
+   *
+   CTRLIDS<5> = "TXTVAL2"
+   PROPS<5>   = GPENABLED
+   VALUES<5>  = 1
+   *
+   CTRLIDS<6> = "BTNFILE"
+   PROPS<6>   = GPENABLED
+   VALUES<6>  = 1
+   *
+   CTRLIDS<7> = "BTNCANCEL"
+   PROPS<7>   = GPENABLED
+   VALUES<7>  = 1
+   *
+   CTRLIDS<8> = "BTNDELETE"
+   PROPS<8>   = GPENABLED
+   VALUES<8>  = NOT(VF_REC<CODE_DEL_FLAG,IDX>)
+
+   IF VF.VAL1.RQD THEN
+      IF VF.VAL1.CONV # '' THEN
+         VF.VALUE1 = OCONV(VF_REC<CODE_VAL1,IDX>,VF.VAL1.CONV)
+      END ELSE
+         VF.VALUE1 = VF_REC<CODE_VAL1,IDX>
+      END
+      CTRLIDS<9> = "TXTVAL1"
+      PROPS<9>   = GPVALUE
+      VALUES<9>  = VF.VALUE1
+   END
+   *
+   IF VF.VAL2.RQD THEN
+      IF VF.VAL2.CONV # '' THEN
+         VF.VALUE2 = OCONV(VF_REC<CODE_VAL2,IDX>,VF.VAL2.CONV)
+      END ELSE
+         VF.VALUE2 = VF_REC<CODE_VAL2,IDX>
+      END
+      CTRLIDS<10> = "TXTVAL2"
+      PROPS<10>   = GPVALUE
+      VALUES<10>  = VF.VALUE2
+   END
+
+   *
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+END ELSE
+   *
+   CTRLIDS = ''
+   PROPS   = ''
+   VALUES  = ''
+   *
+   VF.ITEM.DESC =  ""
+   *
+   *
+   CTRLIDS<1> = "TXTIDDESC"
+   PROPS<1>   = GPVALUE
+   VALUES<1>  = VF.ITEM.DESC
+   *
+   CTRLIDS<2> = "CBID"
+   PROPS<2>   = GPENABLED
+   VALUES<2>  = 0
+   *
+   CTRLIDS<3> = "TXTIDDESC"
+   PROPS<3>   = GPENABLED
+   VALUES<3>  = 1
+   *
+   CTRLIDS<4> = "TXTVAL1"
+   PROPS<4>   = GPENABLED
+   VALUES<4>  = 1
+   *
+   CTRLIDS<5> = "TXTVAL2"
+   PROPS<5>   = GPENABLED
+   VALUES<5>  = 1
+   *
+   CTRLIDS<6> = "BTNFILE"
+   PROPS<6>   = GPENABLED
+   VALUES<6>  = 1
+   *
+   CTRLIDS<7> = "BTNCANCEL"
+   PROPS<7>   = GPENABLED
+   VALUES<7>  = 1
+   *
+   IF VF.VAL1.RQD THEN
+      VF.VALUE1 = ""
+      CTRLIDS<8> = "TXTVAL1"
+      PROPS<8>   = GPVALUE
+      VALUES<8>  = VF.VALUE1
+   END
+   *
+   IF VF.VAL2.RQD THEN
+      VF.VALUE2 = ""
+      CTRLIDS<9> = "TXTVAL2"
+      PROPS<9>   = GPVALUE
+      VALUES<9>  = VF.VALUE2
+   END
+
+   *
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+   PRMPT = "Adding new ":VF_ID:" ":VF.ITEM
+   CAPTION = "VF Maint"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+
+   CALL ATGUIACTIVATE(GUIAPP,GUIFRM,"TXTIDDESC",GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+
+END
+
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+RESET.CTRLS:
+*
+* routine RESETS FORM TO INITIAL START STATE *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<1> = "CBID"
+PROPS<1>   = GPENABLED
+VALUES<1>  = 1
+*
+CTRLIDS<2> = "TXTIDDESC"
+PROPS<2>   = GPENABLED
+VALUES<2>  = 0
+*
+CTRLIDS<3> = "TXTIDDESC"
+PROPS<3>   = GPVALUE
+VALUES<3>  = ""
+*
+CTRLIDS<4> = "TXTVAL1"
+PROPS<4>   = GPVALUE
+VALUES<4>  = ""
+*
+CTRLIDS<5> = "TXTVAL2"
+PROPS<5>   = GPVALUE
+VALUES<5>  = ""
+*
+CTRLIDS<6> = "CBID"
+PROPS<6>   = GPVALUE
+VALUES<6>  = ""
+*
+CTRLIDS<7> = "TXTVAL1"
+PROPS<7>   = GPENABLED
+VALUES<7>  = 0
+*
+CTRLIDS<8> = "TXTVAL2"
+PROPS<8>   = GPENABLED
+VALUES<8>  = 0
+*
+CTRLIDS<9> = "BTNFILE"
+PROPS<9>   = GPENABLED
+VALUES<9>  = 0
+*
+CTRLIDS<10> = "BTNCANCEL"
+PROPS<10>   = GPENABLED
+VALUES<10>  = 0
+*
+CTRLIDS<11> = "BTNDELETE"
+PROPS<11>   = GPENABLED
+VALUES<11>  = 0
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+CALL LIST.LOAD(C.VALIDATION_FILE,VF_ID,"2",'',VF.LIST,VF.IDX,VF.COUNT,EMSG)
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"CBID",GPITEMS,0,0,VF.LIST,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+**********************************************************************************
+END

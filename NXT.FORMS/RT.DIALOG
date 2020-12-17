@@ -1,0 +1,290 @@
+TEMPLATEı42374.45919ıRoutıNXT.BPüRT.DIALOGü3ü0
+0ı1.4ı4
+2ıRoutıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııRouting
+4ıı59ııı0
+4ıı41ıııRouting Dialog
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıRout*Routıı7ıautoıautoı76ı44.5ı1
+4ıı22ıııRouting
+4ıı48ııı0
+4ıı9ııı1
+2ıRout*Rout*lblPNıı15ı1ı.5ı8.5ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıRout*Rout*lblPnVıı15ı10ı.5ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*lblDescıı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıRout*Rout*lblDescVıı15ı10ı2.5ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*lblDrawıı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıRout*Rout*lblDrawVıı15ı10ı4ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*lblSeqıı15ı39ı3ı6ı1.25ı0
+4ıı0ıııSeq Nbr
+4ıı67ııı0
+2ıRout*Rout*lblSeqVıı15ı46ı3ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*lblEngıı15ı56ı3ı5.5ı1.25ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıRout*Rout*lblEngVıı15ı62ı3ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*lblOpCodeıı15ı39ı4.5ı10.5ı1.25ı0
+4ıı0ıııOperation Code
+4ıı67ııı0
+2ıRout*Rout*lstOpCodeıı24ı50ı4.5ı21.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.5ı28.62
+4ıı53ııı8
+4ıı32ıııOp CodeıDescription
+4ıı33ııı1
+4ıı39ııı1
+2ıRout*Rout*lblQuoteıı15ı40ı6ı9ı1.25ı0
+4ıı0ıııOp Quote Ref
+4ıı67ııı0
+2ıRout*Rout*txtQuoteıı16ı50ı6ı21.5ı1.25ı32
+2ıRout*Rout*frmSupDocıı26ı0ı26ı72ı8.5ı0
+4ıı0ıııSupporting Information
+4ıı67ııı0
+2ıRout*Rout*grdToolıfrmSupDocı28ı1ı1.5ı70ı5ı32
+4ıı27ııı3
+4ıı32ıııType (Tool / Doc)ıDescriptionı Reference
+4ıı38ııı0ı0ı0
+4ıı37ııı11ı20.12ı15
+4ıı34ııı0ı0ı0
+4ıı33ııı3
+4ıı0ıııüüıüüıüüıüüıüü
+4ıı10ııı1
+4ıı12ııı1ı1ı0
+2ıRout*Rout*btnInsDocıfrmSupDocı18ı7ı7ı7.5ı1.25ı32
+4ıı22ıııInsert
+2ıRout*Rout*btnDisplayıfrmSupDocı18ı21ı7ı7.5ı1.25ı32
+4ıı22ıııDisplay
+2ıRout*Rout*btnDelDocıfrmSupDocı18ı35ı7ı7.5ı1.25ı32
+4ıı22ıııDelete
+2ıRout*Rout*frmUsersıı26ı1ı35ı70.5ı5.75ı0
+4ıı0ıııUser Defined
+4ıı67ııı0
+2ıRout*Rout*lblU1ıfrmUsersı15ı1ı1ı6ı1.25ı0
+4ıı0ıııUser 1
+4ıı67ııı0
+2ıRout*Rout*txtU1ıfrmUsersı16ı7ı1ı26ı1.25ı256
+2ıRout*Rout*lblU2ıfrmUsersı15ı1ı2.5ı6ı1.25ı0
+4ıı0ıııUser 2
+4ıı67ııı0
+2ıRout*Rout*txtU2ıfrmUsersı16ı7ı2.5ı26ı1.25ı256
+2ıRout*Rout*lblU3ıfrmUsersı15ı1ı4ı6ı1.25ı0
+4ıı0ıııUser 3
+4ıı67ııı0
+2ıRout*Rout*txtU3ıfrmUsersı16ı7ı4ı26ı1.25ı256
+2ıRout*Rout*lblU4ıfrmUsersı15ı36ı1ı5ı1.25ı0
+4ıı0ıııUser 4
+4ıı67ııı0
+2ıRout*Rout*lblU5ıfrmUsersı15ı36ı2.5ı4.5ı1.25ı0
+4ıı0ıııUser 5
+4ıı67ııı0
+2ıRout*Rout*lblU6ıfrmUsersı15ı36ı4ı5ı1.25ı0
+4ıı0ıııUser 6
+4ıı67ııı0
+2ıRout*Rout*txtU4ıfrmUsersı16ı42ı1ı26ı1.25ı256
+2ıRout*Rout*txtU5ıfrmUsersı16ı42ı2.5ı26ı1.25ı256
+2ıRout*Rout*txtU6ıfrmUsersı16ı42ı4ı26ı1.25ı256
+2ıRout*Rout*BtnFileıı18ı6ı41ı8ı1.75ı32
+4ıı22ıııFile
+2ıRout*Rout*BtnCanıı18ı15ı41ı7.5ı1.75ı32
+4ıı22ıııClose
+2ıRout*Rout*BtnCopyıı18ı24ı41ı7.5ı1.75ı32
+4ıı22ıııCopy
+2ıRout*Rout*frmOPıı26ı42ı41ı29ı2.5ı0
+4ıı0ıııSave as Operation
+4ıı67ııı0
+4ıı9ııı0
+2ıRout*Rout*txtOpIdıfrmOPı16ı1ı1ı12ı1.25ı0
+4ıı29ııı2
+2ıRout*Rout*btnSaveOpıfrmOPı18ı16ı.5ı7.5ı1.75ı32
+4ıı22ıııOp Save
+2ıRout*Rout*tabGrp1ıı30ı1ı7.5ı71.5ı9.5ı0
+4ıı10ııı0
+2ıRout*Rout*WCRATESıtabGrp1ı31ı0ı0ı0ı0ı0
+4ıı22ıııWC and Rates
+2ıRout*Rout*frmRateıWCRATESı26ı0ı0ı70.5ı8.75ı0
+4ıı67ııı0
+2ıRout*Rout*frmEmpRatesıfrmRateı26ı36ı.5ı34ı2.75ı0
+4ıı0ıııEmployee
+4ıı67ııı0
+2ıRout*Rout*lblESuıfrmEmpRatesı15ı1ı1ı4.5ı1.25ı0
+4ıı0ıııSetup
+4ıı10ııı1
+4ıı67ııı0
+2ıRout*Rout*txtESuRateıfrmEmpRatesı16ı6ı1ı8ı1.25ı256
+4ıı29ııı7
+2ıRout*Rout*lblERunıfrmEmpRatesı15ı15ı1ı6ı1.25ı0
+4ıı0ıııRun HPP
+4ıı10ııı1
+4ıı67ııı0
+2ıRout*Rout*txtERunRateıfrmEmpRatesı16ı21ı1ı8ı1.25ı256
+4ıı29ııı7
+2ıRout*Rout*BTNPPHıfrmEmpRatesı18ı30ı1ı3.5ı1.25ı32
+4ıı22ıııPPH
+2ıRout*Rout*frmMachRatesıfrmRateı26ı36ı3.5ı34ı2.75ı0
+4ıı0ıııMachine
+4ıı67ııı0
+2ıRout*Rout*Label1ıfrmMachRatesı15ı1ı1ı4.5ı1.25ı0
+4ıı0ıııSetup
+4ıı10ııı1
+4ıı67ııı0
+2ıRout*Rout*txtMSuRateıfrmMachRatesı16ı6ı1ı8ı1.25ı256
+4ıı29ııı7
+2ıRout*Rout*Label2ıfrmMachRatesı15ı15ı1ı6ı1.25ı0
+4ıı0ıııRun HPP
+4ıı10ııı1
+4ıı67ııı0
+2ıRout*Rout*txtMRunRateıfrmMachRatesı16ı21ı1ı8ı1.25ı256
+4ıı29ııı7
+2ıRout*Rout*BTNPPH2ıfrmMachRatesı18ı30ı1ı3.5ı1.25ı32
+4ıı22ıııPPH
+2ıRout*Rout*lstWcıfrmRateı24ı12ı1ı21ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.25ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııWc IdıWc Description
+4ıı33ııı1
+2ıRout*Rout*lblWcıfrmRateı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Center
+4ıı67ııı0
+2ıRout*Rout*lblSignoffıfrmRateı15ı1ı4ı11ı1.25ı0
+4ıı0ıııSignoff Block Id
+4ıı67ııı0
+2ıRout*Rout*LSTSIGNOFFıfrmRateı24ı12ı4ı15ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııSignoff Id
+2ıRout*Rout*lblNameıfrmRateı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııName
+4ıı67ııı0
+2ıRout*Rout*lblNameVıfrmRateı15ı12ı2.5ı21ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*txtMultıfrmRateı16ı12ı5.5ı7ı1.25ı256
+4ıı29ııı5
+2ıRout*Rout*lblMultıfrmRateı15ı1ı5.5ı11ı1.25ı0
+4ıı0ıııQuantity Multiplier
+4ıı67ııı0
+2ıRout*Rout*chkLabMachıfrmRateı20ı24ı6.5ı22ı1.25ı32
+4ıı22ıııTrack Employee and Machine
+4ıı67ııı0
+2ıRout*Rout*chkSchdConcurrentıfrmRateı20ı48ı6.5ı13.5ı1.25ı32
+4ıı22ıııConcurrent Schd
+4ıı67ııı0
+2ıRout*Rout*SchdıtabGrp1ı31ı0ı0ı0ı0ı0
+4ıı22ıııScheduling
+4ıı9ııı0
+2ıRout*Rout*frmSchdıSchdı26ı0ı0ı71ı8.75ı0
+4ıı67ııı0
+2ıRout*Rout*lblSchStartıfrmSchdı15ı1ı1ı10.5ı1.25ı0
+4ıı0ıııSchd Start Date
+4ıı67ııı0
+2ıRout*Rout*txtSchStartıfrmSchdı16ı11ı1ı8ı1.25ı256
+4ıı29ııı6
+2ıRout*Rout*lblSchEndıfrmSchdı15ı1ı2.5ı10ı1.25ı0
+4ıı0ıııSchd End Date
+4ıı67ııı0
+2ıRout*Rout*txtSchEndıfrmSchdı16ı11ı2.5ı8ı1.25ı256
+4ıı29ııı6
+2ıRout*Rout*lblSeqStatıfrmSchdı15ı36ı1ı7ı1.25ı0
+4ıı0ıııSeq Status
+4ıı67ııı0
+2ıRout*Rout*lstSeqStatıfrmSchdı24ı44ı1ı12.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8ı15
+4ıı53ııı8
+4ıı32ıııStatus CodeıStatus Description
+4ıı39ııı1
+2ıRout*Rout*lblStatDateıfrmSchdı15ı36ı2.5ı7.5ı1.25ı0
+4ıı0ıııStatus Date
+4ıı67ııı0
+2ıRout*Rout*txtStatDateıfrmSchdı16ı44ı2.5ı8ı1.25ı0
+4ıı29ııı6
+2ıRout*Rout*lblActStartıfrmSchdı15ı20ı1ı6ı1.25ı0
+4ıı0ıııAct Start
+4ıı67ııı0
+2ıRout*Rout*txtActStartıfrmSchdı16ı26ı1ı8ı1.25ı256
+2ıRout*Rout*lblActEndıfrmSchdı15ı20ı2.5ı6ı1.25ı0
+4ıı0ıııAct End
+4ıı67ııı0
+2ıRout*Rout*txtActEndıfrmSchdı16ı26ı2.5ı8ı1.25ı256
+4ıı29ııı6
+2ıRout*Rout*lblQtyToMfgıfrmSchdı15ı1ı4ı8ı1.25ı0
+4ıı0ıııQty to Mfg
+4ıı67ııı0
+2ıRout*Rout*txtQtyToMfgıfrmSchdı16ı11ı4ı6ı1.25ı256
+4ıı29ııı8
+2ıRout*Rout*lblQtyCmpıfrmSchdı15ı20ı4ı7ı1.25ı0
+4ıı0ıııComplete
+4ıı67ııı0
+2ıRout*Rout*txtQtyCmpıfrmSchdı16ı26ı4ı6ı1.25ı256
+4ıı29ııı8
+2ıRout*Rout*lblScrapıfrmSchdı15ı36ı4ı5ı1.25ı0
+4ıı0ıııScrap
+4ıı67ııı0
+2ıRout*Rout*txtScrapıfrmSchdı16ı44ı4ı7ı1.25ı256
+4ıı29ııı8
+2ıRout*Rout*chkFreezeıfrmSchdı20ı1ı5.5ı17ı1.25ı32
+4ıı22ıııFreeze Schedule Dates
+4ıı67ııı0
+2ıRout*Rout*frmWOıı26ı39ı.5ı31.5ı2.25ı0
+4ıı67ııı0
+4ıı9ııı0
+2ıRout*Rout*lblWOıfrmWOı15ı1ı.75ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıRout*Rout*lblWoVıfrmWOı15ı9ı.75ı21ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRout*Rout*tabDescıı30ı0ı17ı72.5ı9ı0
+4ıı10ııı0
+2ıRout*Rout*RTDESCıtabDescı31ı0ı0ı0ı0ı0
+4ıı22ıııSeq Desc
+2ıRout*Rout*txtDescıRTDESCı17ı0ı.5ı69.5ı6ı256
+4ıı10ııı1
+2ıRout*Rout*QADETıtabDescı31ı0ı0ı0ı0ı0
+4ıı22ıııQA Detail
+2ıRout*Rout*QAGRIDıQADETı28ı0ı0ı71.75ı5.5ı264224
+4ıı27ııı8
+4ıı32ıııActiveıIdıInspection CharacteristicıAQLıLocıInsp MethodıValue 1ıValue 2
+4ıı38ııı0ı2ı0ı0ı0ı0ı0ı0
+4ıı37ııı4.62ı4.75ı25.88ı3.62ı3.75ı11.5ı7.25ı7.25
+4ıı34ııı2ı1ı1ı3ı1ı3ı1ı1
+4ıı33ııı3
+4ıı0ııı0üüüüüüüıüüüüüüüıüüüüüüüıüüüüüüüıüüüüüüü
+4ıı10ııı1
+4ıı35ııı0ı0ı0ı0ı0ı0ı2ı2
+2ıRout*Rout*btnQaInsıQADETı18ı7ı6ı9ı1.25ı32
+4ıı22ıııInsert Before
+2ıRout*Rout*btnQaDelıQADETı18ı35ı6ı7.5ı1.25ı32
+4ıı22ıııDelete
+0ı-1

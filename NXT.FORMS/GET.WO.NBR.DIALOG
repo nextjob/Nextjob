@@ -1,0 +1,53 @@
+TEMPLATEı42344.69228ıGET.WO.NBRıNXT.BPüGET.WO.NBR.DIALOGü3ü0
+0ı1.4ı4
+2ıGET.WO.NBRıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııGet Work Order
+4ıı59ııı0
+4ıı41ıııPrompts for work order id
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+2ıGET.WO.NBR*GET.WO.NBRıı7ıautoıautoı40ı10.5ı1
+4ıı48ııı0
+4ıı9ııı0
+4ıı22ıııGet Work Order Number
+2ıGET.WO.NBR*GET.WO.NBR*lblWoIdıı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıGET.WO.NBR*GET.WO.NBR*cbWoNbrıı23ı10ı1ı24ı1.25ı288
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı15ı15
+4ıı32ıııWork Order IdıPart Number
+4ıı33ııı3
+4ıı39ııı1
+4ıı53ııı8
+2ıGET.WO.NBR*GET.WO.NBR*btnOKıı18ı3ı7.5ı7.5ı1.25ı32
+4ıı22ıııOK
+4ıı10ııı1
+2ıGET.WO.NBR*GET.WO.NBR*btnSearchıı18ı26ı2.5ı7.5ı1.25ı32
+4ıı22ıııSearch
+2ıGET.WO.NBR*GET.WO.NBR*lblLegIdıı15ı3ı2.5ı4.5ı1.25ı0
+4ıı0ıııLeg
+4ıı67ııı0
+2ıGET.WO.NBR*GET.WO.NBR*txtLegIdıı16ı10ı2.5ı5ı1.25ı256
+4ıı29ııı8
+2ıGET.WO.NBR*GET.WO.NBR*lblRelIdıı15ı3ı4ı6ı1.25ı0
+4ıı0ıııRelease
+4ıı67ııı0
+2ıGET.WO.NBR*GET.WO.NBR*txtRelIdıı16ı10ı4ı5ı1.25ı256
+4ıı29ııı8
+2ıGET.WO.NBR*GET.WO.NBR*lblSplitIdıı15ı3ı5.5ı6ı1.25ı0
+4ıı0ıııSplit
+4ıı67ııı0
+2ıGET.WO.NBR*GET.WO.NBR*txtSplitIdıı16ı10ı5.5ı5ı1.25ı256
+4ıı29ııı8
+2ıGET.WO.NBR*GET.WO.NBR*btnCancelıı18ı26ı7.5ı7.5ı1.25ı32
+4ıı10ııı2
+4ıı22ıııCancel
+0ı-1

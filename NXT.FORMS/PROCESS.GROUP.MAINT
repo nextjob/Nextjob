@@ -1,0 +1,69 @@
+TEMPLATEı42355.9114ıPROCESS.GROUP.MAINTıNXT.BPüPROCESS.GROUP.MAINTü3ü0
+0ı1.4ı4
+2ıPROCESS.GROUP.MAINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııPROCESS.GROUP.MAINT
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıPROCESS.GROUP.MAINT*Form1ıı7ıautoıautoı64ı21.25ı1
+4ıı22ıııProcess Group Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıPROCESS.GROUP.MAINT*Form1*lblProcessıı15ı1ı1ı5.5ı1.25ı0
+4ıı0ıııGroup Id
+2ıPROCESS.GROUP.MAINT*Form1*lstProıı24ı10ı1ı24.5ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıPROCESS.GROUP.MAINT*Form1*frmNewIdıı26ı43ı.5ı18ı5ı0
+4ıı0ıııNew Group Id
+4ıı9ııı0
+2ıPROCESS.GROUP.MAINT*Form1*txtNewIdıfrmNewIdı16ı.5ı1ı17ı1.25ı256
+2ıPROCESS.GROUP.MAINT*Form1*lblProcessDescıı15ı1ı3ı9.5ı1.25ı0
+4ıı0ıııGroup Desc
+2ıPROCESS.GROUP.MAINT*Form1*txtProcessDescıı16ı10ı3ı24.5ı1.25ı256
+4ıı8ııı0
+2ıPROCESS.GROUP.MAINT*Form1*btnFileıı18ı13ı17ı8ı1.75ı32
+4ıı22ıııFile
+4ıı8ııı0
+2ıPROCESS.GROUP.MAINT*Form1*btnCancelıı18ı23ı17ı8ı1.75ı32
+4ıı22ıııCancel
+2ıPROCESS.GROUP.MAINT*Form1*btnDeleteıı18ı43ı17ı8ı1.75ı32
+4ıı22ıııDelete
+4ıı8ııı0
+2ıPROCESS.GROUP.MAINT*Form1*btnNewıı18ı3ı17ı8.5ı1.75ı32
+4ıı22ıııNew
+2ıPROCESS.GROUP.MAINT*Form1*frmStepsıı26ı1ı5.5ı61ı10.75ı0
+4ıı0ıııGroup Process Steps
+2ıPROCESS.GROUP.MAINT*Form1*grdStepsıfrmStepsı28ı1ı1ı49ı9.25ı1056
+4ıı8ııı0
+4ıı27ııı2
+4ıı32ıııProcess Step IdıProcess Step Description
+4ıı38ııı0ı0
+4ıı37ııı15ı32.25
+4ıı34ııı3ı0
+4ıı0ıııüıüıüıüıüıüıü
+4ıı33ııı3
+4ıı11ııı2
+4ıı10ııı1
+2ıPROCESS.GROUP.MAINT*Form1*btnInsAfterıfrmStepsı18ı52ı8ı7.5ı1.75ı32
+4ıı22ıııInsert After
+4ıı49ıııClick to insert process step after selected step
+4ıı8ııı0
+2ıPROCESS.GROUP.MAINT*Form1*btnInsBeforeıfrmStepsı18ı52ı5.5ı7.5ı1.75ı32
+4ıı22ıııInsert Before
+4ıı49ıııClick to insert process step before selected step
+4ıı8ııı0
+2ıPROCESS.GROUP.MAINT*Form1*btnDelProıfrmStepsı18ı52ı3ı7.5ı1.75ı32
+4ıı22ıııDelete
+4ıı49ıııClick to delete selected process step
+4ıı8ııı0
+0ı-1

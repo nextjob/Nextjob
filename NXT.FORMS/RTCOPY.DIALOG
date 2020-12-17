@@ -1,0 +1,60 @@
+TEMPLATEı41809.70784ıRTCOPYıNXT.BPüRTCOPY.DIALOGü3ü0
+0ı1.4ı4
+2ıRTCOPYıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııROUTING COPY
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııRoutine to copy routing
+2ıRTCOPY*RTCOPYıı7ıautoıautoı56ı15.25ı1
+4ıı22ıııRouting Copy
+4ıı48ııı0
+4ıı9ııı0
+2ıRTCOPY*RTCOPY*frmFromıı26ı1ı1ı53ı7ı0
+4ıı0ıııFrom
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*txtpnıfrmFromı16ı9ı1.5ı30ı1.25ı256
+4ıı49ıııEnter part number 
+2ıRTCOPY*RTCOPY*lblFPnıfrmFromı15ı1ı1.5ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*lblDescıfrmFromı15ı1ı3ı7.5ı1.25ı0
+4ıı0ıııDescription
+2ıRTCOPY*RTCOPY*txtDescıfrmFromı16ı9ı3ı39.5ı1.25ı0
+4ıı49ıııEnter Part Description
+4ıı8ııı0
+2ıRTCOPY*RTCOPY*lstRTlistıfrmFromı24ı9ı5ı11.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.38ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı1
+4ıı32ıııEng IdıRev
+2ıRTCOPY*RTCOPY*lblRtIdıfrmFromı15ı1ı5ı5.5ı1ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*frmToıı26ı1ı8ı53ı4.25ı0
+4ıı0ıııTo
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*lblPNıfrmToı15ı1ı1ı8.5ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*lblPnVıfrmToı15ı10ı1ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRTCOPY*RTCOPY*lblEngıfrmToı15ı40ı1ı5ı1.25ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıRTCOPY*RTCOPY*lblEngVıfrmToı15ı45ı1ı7ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıRTCOPY*RTCOPY*btnCopyıı18ı1ı13ı7.5ı1.25ı32
+4ıı22ıııCopy
+0ı-1

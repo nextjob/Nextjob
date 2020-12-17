@@ -1,0 +1,196 @@
+SUBROUTINE SEND_EMAIL(TO_ADDRESS,SUBJECT,BODY,ERRORS, GUISTATE)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: SEND_EMAIL
+* AUTHOR: MAB
+* VERSION: 1.0.1
+* CREATED: 02/02/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* TO_ADDRESS - EMAIL ADDRESS OF recipient
+* SUBJECT    - SUBJECT LINE TEXT
+* BODY       - EMAIL BODY TEXT
+*
+* RETURNS
+* ERRORS     - FOR NOW NOT USED, NOTHING TO RETURN
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* USE python script located on server to send mail message
+* assumes the following script is found in QMACCOUNTS/UTILITIES:
+*
+*------------------------------------------------------------------------------------------------
+*#!/usr/bin/python
+*######################################################
+*# Module e-mails order ready to specific contact
+*# usage:
+*# pymail.py to_address subject body
+*#  where to_address is the email address to send the email to
+*#        subject - subject line for email
+*#        body - body of e-mail
+*# example
+*# pymail.py "email@someplace.com"  "subject text" "email body text"
+*#
+*#
+*# mods
+*#----------------------------------------------------
+*# 02/01/15 new script
+*#
+*######################################################
+*
+*# Import smtplib for the actual sending function
+*import smtplib, sys, time 
+*
+*debug = 0                                # debug flag, set = 1 for debug messages
+*smtpserver = "smtp.iphouse.com"	         # url of your smtp server  
+*mailuser = "ptest@nextjobsolutions.com"  # user name to used to send email via smtp server
+*mailpswd = "pyt@1035"                    # password for user name 
+*
+*fromid =  'shipping@nextjobsolutions.com' # displayed from address for e-mail sent
+*
+*def sendmesage(servername, user, mail_user, mail_passwd, subject_text, body_text):
+    *# prepend standard headers
+    *date = time.ctime(time.time())
+    *To = user
+    *From = fromid
+    *Subj = subject_text
+    *text = ('From: %s\nTo: %s\nDate: %s\nSubject: %s\n'  % (From, To, date, Subj))
+    *msg = ""
+    *for line in body_text.split('&nl'):
+*	    msg = msg + line + '\n'
+    *text = text + msg
+*
+    *if debug:
+        *print 'Sending Shipment Report to', user
+        *print msg
+        *
+    *server  = smtplib.SMTP(servername,587)              # connect, no login step
+    *server.login(mail_user,mail_passwd)
+    *estatus = server.sendmail(From, To, text)
+    *server.quit() 
+*	
+*	#  
+*# main routine
+*#
+  *
+*if __name__ == '__main__':
+*
+    *body_text = sys.argv[3]
+    *subject_text = sys.argv[2]
+    *to_address = sys.argv[1]
+*#
+*
+*
+*#
+*# email passed email address
+*#
+    *if debug:
+        *print 'sending email to: '
+        *print to_address
+*#
+    *try:
+ *
+        *sendmesage(smtpserver, to_address, mailuser, mailpswd, subject_text, body_text)
+    *except:
+*#
+*#   if email of fails, add to log file
+*#
+        *msg = "Unexpected error:" + str(sys.exc_info()[0]) + ' ' + str(sys.exc_info()[1]) 
+        *print msg
+*#                 
+   *
+    *if debug:
+        *print 'Bye.'
+*-------------------------------------------------------------------------------------------------        
+*
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+*
+$INCLUDE SYSCOM KEYS.H
+*
+*
+* FIND THE GHOSTPCL APP
+*
+READ UTILITY.REC FROM C.FILE.VAR(C.SYSTEM_FILE), "UTILITY_APPS_PATH" THEN
+   PYMAIL.PATH = UTILITY.REC<UTL_PYMAIL>
+   *
+   * DOES IT EXIST?
+   *
+   IF OSPATH(PYMAIL.PATH,OS$EXISTS) THEN
+      *
+!
+      EMAIL_CMD =  PYMAIL.PATH:' "':TO_ADDRESS:'" "':SUBJECT:'" "':BODY:'"'
+      *
+      ERRORS = ''
+      *
+      OS.EXECUTE EMAIL_CMD CAPTURING ERRORS
+      *
+      IF ERRORS # '' THEN
+         *
+         * ERROR RESPONSE
+         *
+         LOG.OPTS  = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  "PYMAIL.PY Error: ":  ERRORS
+         CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END
+      *
+   END ELSE
+      *
+      * CANNOT FIND PYMAIL.PY
+      *
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Unable to find PYMAIL.PY at: ":  PYMAIL.PATH
+      CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   END
+END ELSE
+   *
+   * CANNOT READ  UTILITY_APPS_PATH
+   *
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Unable to read UTILITY_APPS_PATH from SYSTEM_FILE "
+   CALL LOG.ERROR(LOG.OPTS,"REPRINT.FORMS", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END
+RETURN
+END

@@ -1,0 +1,188 @@
+      SUBROUTINE WRT.CALC.RT.SEQNBR(CURR_SEQ,CALLER_SEQ_INC,SEQ.LIST,NEW_SEQ_NBR,GUIERRORS,GUISTATE)
+      !
+      **************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+      **************************************************************************
+      *
+      * MODULE: WRT.CALCSEQNBR
+      * AUTHOR: MAB
+      * VERSION: 1.0.0
+      * CREATED: 04/01/2013
+      * UPDATED:
+      *
+      * MAINTENANCE RECORD:
+      *
+      * EQUATE:
+      *
+      *
+      * VARIABLES:
+      * ON ENTRY:
+      * CURR_SEQ - CURRENTLY SELECTED SEQ NUMBER (TO INSERT BEFORE OR INSERT AFTER)
+      * CALLER_SEQ_INC - SEQ INCREMENT VALUE (NEG FOR CALC PREVIOUS, POS FOR CALC NEXT
+      * SEQ.LIST - DYNAMIC ARRAY CONTAINING SEQ LIST DATA (SAME AS GRID ARRAY DATA)
+      * SEQ.LIST<1,X,1> - X = LINE NUMBER 1 = COLUMN FOR SEQ ID
+      * SEQ.LIST<1,X,2> - X = LINE NUMBER 2 = COLUMN FOR WC
+      * SEQ.LIST<1,X,3> - X = LINE NUMBER 3 = COLUMN FOR WC NAME
+      * SEQ.LIST<1,X,4> - X = LINE NUMBER 4 = COLUMN FOR SEQ FIRST LINE OF DESC
+      * ON EXIT:
+      * NEW_SEQ_NBR - CALCULATED SEQ NUMBER (RETURNED TO CALLER)
+      *
+      * FILES:
+      *
+      *
+      * DESIGN DESCRIPTION:
+      * ROUTINE IS CALLED TO CALCULATE THE SEQ NUMBER FOR AND INSERT BEFORE CURR_SEQ OR INSERT AFTER CURR_SEQ
+      *
+      !
+      ** INCLUDE STANDARD VARIABLE, EQUATES
+      *
+      $INCLUDE NXT.INCLUDES NXT.COMMON
+      $INCLUDE NXT.INCLUDES NXT.EQUATES
+      $INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+      $INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+      *
+      $INCLUDE GUIBP ATGUIEQUATES
+      *
+      PROG_ID   = "WRT.CALC.RT.SEQNBR"
+      GUIERRORS = ''
+      *
+      *
+      CURR_SEQ_IDX = 0
+      NEW_SEQ_NBR = ''
+      SEQ_INC = CALLER_SEQ_INC
+      SEQ_DIGITS = LEN(ABS(SEQ_INC))  ;* NUMBER OF DIGITS WE SHOULD RETURN (MAY NEED TO ZERO FILL)
+      *
+      * DETERMINE NUMBER OF SEQ'S ON ROUTING
+      *
+      SEQ.COUNT = DCOUNT(SEQ.LIST<1>,@VM)
+      *
+      * FIND CURRENT SEQ IN LIST
+      *
+      FOR I = 1 TO SEQ.COUNT
+         IF CURR_SEQ = SEQ.LIST<1,I,1> THEN
+            CURR_SEQ_IDX = I
+            EXIT
+         END
+      NEXT I
+      *
+      IF CURR_SEQ_IDX = 0 THEN    ;* THIS IS AN ERROR!
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG =  ERR_MESSAGE(ERR_SYS):' Current Seq Not Found in Seq List!'
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+         GOTO 9999
+      END
+      *
+      * INSERT BEFORE OR AFTER?
+      *
+      IF SEQ_INC > 0 THEN
+         *
+         * INSERT AFTER
+         *
+         IF CURR_SEQ_IDX = SEQ.COUNT THEN   ;* ADD SEQ TO END OF ROUTING?
+            NEW_SEQ_NBR = CURR_SEQ + SEQ_INC    ;* JUST ADD INC TO CURRENT TO GET NEXT SEQ NUMBER
+            NEXT_SEQ = 99999999
+         END ELSE
+            NEXT_SEQ = SEQ.LIST<1,CURR_SEQ_IDX+1,1>
+            SEQ_RANGE = NEXT_SEQ - CURR_SEQ
+            SEQ_INC = IDIV(SEQ_RANGE , 2)
+            *
+            NEW_SEQ_NBR = CURR_SEQ + SEQ_INC    ;* JUST ADD INC TO CURRENT TO GET NEXT SEQ NUMBER
+         END
+         GOSUB VALID_INSERT_AFTER
+
+      END ELSE
+         *
+         * INSERT BEFORE
+         IF CURR_SEQ_IDX = 1 THEN   ;* ADD SEQ TO BEGINNING OF ROUTING?
+            *
+            * CALC AVAILABLE RANGE FOR SEQ NUMBERS
+            *
+            SEQ_RANGE = CURR_SEQ
+            SEQ_INC = IDIV(SEQ_RANGE , 2)
+            PREV_SEQ = 0
+            *
+            NEW_SEQ_NBR = CURR_SEQ - SEQ_INC    ;* JUST ADD INC TO CURRENT TO GET NEXT SEQ NUMBER
+         END ELSE
+            PREV_SEQ = SEQ.LIST<1,CURR_SEQ_IDX-1,1>
+            SEQ_RANGE = CURR_SEQ - PREV_SEQ
+            SEQ_INC = IDIV(SEQ_RANGE , 2)
+            *
+            NEW_SEQ_NBR = CURR_SEQ - SEQ_INC    ;* JUST ADD INC TO CURRENT TO GET NEXT SEQ NUMBER
+         END
+         GOSUB VALID_INSERT_BEFORE
+
+      END
+      GOTO 9999
+      **************************************************************
+VALID_INSERT_BEFORE:
+      *
+      * VALIDATE NEW_SEQ_NBR ON INSERT BEFORE
+      *
+      IF (NEW_SEQ_NBR LT CURR_SEQ) AND (NEW_SEQ_NBR GT PREV_SEQ) THEN
+         GOSUB PAD_NEW_SEQ_NBR
+      END ELSE
+         NEW_SEQ_NBR = ''
+         PRMPT = 'Unable to calculate Sequence Number for Insert Before, Resequence Routing?'
+         CAPTION = PROG_ID
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok only
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      END
+      RETURN
+      **************************************************************
+VALID_INSERT_AFTER:
+      *
+      * VALIDATE NEW_SEQ_NBR ON INSERT AFTER
+      *
+      IF (NEW_SEQ_NBR GT CURR_SEQ) AND (NEW_SEQ_NBR LT NEXT_SEQ) THEN
+         GOSUB PAD_NEW_SEQ_NBR 
+      END ELSE
+         NEW_SEQ_NBR = ''
+         PRMPT = 'Unable to calculate Sequence Number for Insert After, Resequence Routing?'
+         CAPTION = PROG_ID
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok only
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      END
+      RETURN
+      **************************************************************
+PAD_NEW_SEQ_NBR:
+      IF LEN(NEW_SEQ_NBR) LT SEQ_DIGITS THEN
+         * NEED TO PAD NEW SEQ NUMBER
+         FMT.SPEC = SEQ_DIGITS:'"0"R'
+         NEW_SEQ_NBR = FMT(NEW_SEQ_NBR,FMT.SPEC)
+      END
+
+      RETURN
+      **************************************************************
+
+9999
+      RETURN
+      END
+

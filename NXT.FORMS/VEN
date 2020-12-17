@@ -1,0 +1,209 @@
+TEMPLATEı42627.86308ıVENıNXT.BPüVEN.DIALOGü3ü0
+0ı1.4ı4
+2ıVENıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı41ıııVendor Maintenance
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııVendor Maintenance
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıVEN*VENıı7ıautoıautoı76ı30.75ı1
+4ıı22ıııVendor Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıVEN*VEN*lblCustIdıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııVendor Nbr
+4ıı67ııı0
+2ıVEN*VEN*lblCustIdValıı15ı10ı1ı7.5ı1.25ı0
+4ıı11ııı2
+2ıVEN*VEN*lbl1BillNameıı15ı1ı2.5ı4ı1.25ı0
+4ıı0ıııName
+2ıVEN*VEN*txt1BillNameıı16ı6ı2.5ı29ı1.25ı256
+4ıı49ıııEnter customer bill to name
+4ıı8ııı0
+2ıVEN*VEN*lbl1BilllAddr1ıı15ı1ı4ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıVEN*VEN*txt1BillAddr1ıı16ı6ı4ı29ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter customer bill to street address
+2ıVEN*VEN*lbl1BillAddr2ıı15ı1ı5.5ı4.5ı1.25ı0
+4ıı0ıııAddr2
+2ıVEN*VEN*txt1BillAddr2ıı16ı6ı5.5ı29ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter customer bill to street address 2
+2ıVEN*VEN*lbl1BillCSıı15ı1ı7ı5ı1.25ı0
+4ıı0ıııCity, St. 
+2ıVEN*VEN*txt1BillCityıı16ı6ı7ı20.5ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter customer bill to city
+2ıVEN*VEN*lst1BillStıı24ı27ı7ı8ı1.25ı32
+4ıı8ııı0
+4ıı54ııı1
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı15
+4ıı39ııı1
+4ıı49ıııSelect state from drop down list
+4ıı53ııı8
+2ıVEN*VEN*lbl1BillZipıı15ı1ı8.5ı6ı1.25ı0
+4ıı0ıııZip, Co
+2ıVEN*VEN*txt1BillZipıı16ı6ı8.5ı12.5ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter customer bill to zip code
+4ıı29ııı14
+2ıVEN*VEN*txt1Countryıı16ı19ı8.5ı15.5ı1.25ı256
+4ıı49ıııEnter customer bill to country
+4ıı29ııı4
+4ıı8ııı0
+2ıVEN*VEN*lblArLimitıı15ı1ı10ı6ı1.25ı0
+4ıı0ıııAR Limit
+2ıVEN*VEN*txt1ARLimitıı16ı7ı10ı11ı1.25ı256
+4ıı49ıııEnter Customer AR Limit
+4ıı29ııı5
+4ıı8ııı0
+2ıVEN*VEN*lbl1Termsıı15ı19ı10ı4ı1.25ı0
+4ıı0ıııTerms
+2ıVEN*VEN*lst1Termsıı24ı23ı10ı10.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5.25ı8.38
+4ıı49ıııSelect payment terms from drop down list
+4ıı39ııı2
+4ıı8ııı0
+4ıı53ııı8
+2ıVEN*VEN*lbl1Phoneıı15ı1ı11.5ı5.5ı1.25ı0
+4ıı0ıııPhone
+2ıVEN*VEN*txt1Phoneıı16ı7ı11.5ı11ı1.25ı256
+4ıı29ııı10
+4ıı8ııı0
+2ıVEN*VEN*lbl1Faxıı15ı19ı11.5ı3ı1.25ı0
+4ıı0ıııFax
+2ıVEN*VEN*txt1Faxıı16ı22.5ı11.5ı11ı1.25ı256
+4ıı8ııı0
+2ıVEN*VEN*lblWebıı15ı1ı13ı6ı1.25ı0
+4ıı0ıııWeb Site
+2ıVEN*VEN*txtWebıı16ı7ı13ı18.5ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter Customer Web Site 
+2ıVEN*VEN*lblRepıı15ı1ı14.5ı4ı1.25ı0
+4ıı0ıııRep
+2ıVEN*VEN*txtRepıı16ı7ı14.5ı18.5ı1.25ı256
+4ıı49ıııEnter name of customer representative
+4ıı8ııı0
+2ıVEN*VEN*lbl1Statusıı15ı1ı16ı5ı1.25ı0
+4ıı0ıııStatus
+2ıVEN*VEN*lstStatusıı24ı7ı16ı18.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı4.75ı15
+4ıı39ııı2
+4ıı49ıııSelect Status
+4ıı53ııı4
+4ıı8ııı0
+2ıVEN*VEN*lblQbıı15ı46ı16.5ı5ı1.25ı0
+4ıı0ıııQB Ref
+2ıVEN*VEN*BTNDEFAULTıı18ı29ı14ı7ı2ı32
+4ıı22ıııCreate Ship To
+4ıı8ııı0
+4ıı9ııı0
+4ıı49ıııClick to copy customer address to shipto address
+2ıVEN*VEN*lblContactsıı15ı6ı17.5ı12ı1.25ı0
+4ıı0ıııVendor Contacts
+4ıı67ııı0
+2ıVEN*VEN*grdContactıı28ı6ı19ı63ı7.25ı2048
+4ıı27ııı4
+4ıı32ıııVendor NameıContact PhoneıContact EmailıContact Fax
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı15ı15ı15ı15
+4ıı34ııı1ı1ı1ı1
+4ıı35ııı0ı10ı0ı0
+4ıı0ıııüüüıüüüıüüüıüüüıüüüıüüü
+4ıı33ııı3
+4ıı8ııı0
+4ıı10ııı1
+2ıVEN*VEN*btnFileıı18ı6ı27ı7.5ı1.75ı32
+4ıı22ıııFile
+4ıı49ıııClick to save changes to customer record
+4ıı8ııı0
+2ıVEN*VEN*btnCancelıı18ı21ı27ı7.5ı1.75ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel changes to customer record
+4ıı8ııı0
+2ıVEN*VEN*btnDeleteıı18ı37ı27ı7.5ı1.75ı32
+4ıı22ıııDelete
+4ıı49ıııClick to delete customer record
+4ıı8ııı0
+2ıVEN*VEN*frmShipToıı26ı38ı.5ı36ı15.5ı0
+4ıı0ıııShip To
+2ıVEN*VEN*lbl1ShipNameıfrmShipToı15ı1ı2ı4ı1.25ı0
+4ıı0ıııName
+2ıVEN*VEN*txt1ShipNameıfrmShipToı16ı5ı2ı30ı1.25ı256
+4ıı49ıııCustomer Ship to Name
+4ıı8ııı0
+2ıVEN*VEN*lbl1ShipAddr1ıfrmShipToı15ı1ı3.5ı4ı1.25ı0
+4ıı0ıııAddr1
+2ıVEN*VEN*txt1ShipAddr1ıfrmShipToı16ı5ı3.5ı30ı1.25ı256
+4ıı49ıııCustomer Ship To Address 1
+4ıı8ııı0
+2ıVEN*VEN*lbl1ShipAddr2ıfrmShipToı15ı1ı5ı4ı1.25ı0
+4ıı0ıııAddr2
+2ıVEN*VEN*txt1ShipAddr2ıfrmShipToı16ı5ı5ı30ı1.25ı256
+4ıı49ıııCustomer Ship To Address 2
+4ıı8ııı0
+2ıVEN*VEN*lbl1ShipCSıfrmShipToı15ı1ı6.5ı5ı1.25ı0
+4ıı0ıııCity, St.
+2ıVEN*VEN*txt1ShipCityıfrmShipToı16ı6ı6.5ı20.5ı1.25ı256
+4ıı49ıııCustomer Ship To City
+4ıı8ııı0
+2ıVEN*VEN*lst1ShipStıfrmShipToı24ı27ı6.5ı8ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı8ııı0
+4ıı49ıııClick shipto state from drop down list
+2ıVEN*VEN*lbl1ShipZipıfrmShipToı15ı1ı8ı4.5ı1.25ı0
+4ıı0ıııZip, Co
+2ıVEN*VEN*txt1ShipZipıfrmShipToı16ı6ı8ı12ı1.25ı256
+4ıı49ıııCustomer Ship To Zip
+4ıı8ııı0
+4ıı29ııı14
+2ıVEN*VEN*txt1ShipCountryıfrmShipToı16ı19ı8ı14.5ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter customer ship to country
+4ıı29ııı4
+2ıVEN*VEN*lbl1ShipPhoneıfrmShipToı15ı1ı9.5ı5ı1.25ı0
+4ıı0ıııPhone
+2ıVEN*VEN*txt1ShipPhoneıfrmShipToı16ı6ı9.5ı11ı1.25ı256
+4ıı49ıııEnter ship to phone 
+4ıı8ııı0
+2ıVEN*VEN*lbl1ShipFaxıfrmShipToı15ı17.5ı9.5ı3ı1.25ı0
+4ıı0ıııFax
+2ıVEN*VEN*txt1ShipFaxıfrmShipToı16ı20ı9.5ı11ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter ship to fax
+2ıVEN*VEN*lbl1ShipDaysıfrmShipToı15ı1ı11ı6.5ı1.25ı0
+4ıı0ıııShip Days
+2ıVEN*VEN*txt1ShipDaysıfrmShipToı16ı8ı11ı4ı1.25ı256
+4ıı49ıııEnter number of days customer allows to ship early.
+4ıı8ııı0
+4ıı29ııı8
+2ıVEN*VEN*chkDefaultıfrmShipToı20ı2ı13ı8ı2ı32
+4ıı8ııı0
+4ıı22ıııDefault Ship To
+2ıVEN*VEN*btnDelShipıfrmShipToı18ı18ı13.5ı7.5ı1.25ı32
+4ıı22ıııDelete
+4ıı49ıııClick to delete ship to record
+4ıı8ııı0
+2ıVEN*VEN*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıVEN*VEN*txtQBRefıı16ı53ı16.5ı21ı1.25ı256
+4ıı8ııı0
+0ı-1

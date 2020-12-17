@@ -1,0 +1,85 @@
+TEMPLATEı41837.56398ıCOMPANYıNXT.BPüCOMP.MAINTü3ü0
+0ı1.4ı4
+2ıCOMPANYıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııCOMPANY MAINTENANCE
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı43ıııMaintain Company Record
+4ıı42ıııMAB
+2ıCOMPANY*COMPANYıı7ıautoıautoı43.5ı29.5ı1
+4ıı22ıııCOMPANY MAINT
+4ıı48ııı0
+4ıı9ııı0
+2ıCOMPANY*COMPANY*lblNameıı15ı1ı1ı10.5ı1.25ı0
+4ıı0ıııCompany Name
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtNameıı16ı13ı1ı26.5ı1.25ı256
+2ıCOMPANY*COMPANY*lblAddrıı15ı1ı2.5ı10.5ı1.25ı0
+4ıı0ıııAddress   
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtAddrıı16ı13ı2.5ı24ı1.25ı256
+2ıCOMPANY*COMPANY*lblAddr2ıı15ı1ı4ı10.5ı1.25ı0
+4ıı0ıııAddress 2
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtAddr2ıı16ı13ı4ı24ı1.25ı256
+2ıCOMPANY*COMPANY*lblCityıı15ı1ı5.5ı10.5ı1.25ı0
+4ıı0ıııCity
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtCityıı16ı13ı5.5ı15ı1.25ı256
+2ıCOMPANY*COMPANY*lblStateıı15ı1ı7ı10.5ı1.25ı0
+4ıı0ıııState
+4ıı25ııı1
+2ıCOMPANY*COMPANY*lstStateıı24ı13ı7ı8ı1.25ı32
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıCOMPANY*COMPANY*lblZipıı15ı1ı8.5ı10.5ı1.25ı0
+4ıı0ıııZip
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtZipıı16ı13ı8.5ı13ı1.25ı256
+4ıı29ııı14
+2ıCOMPANY*COMPANY*lblCoıı15ı1ı10ı10.5ı1.25ı0
+4ıı0ıııCountry
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtCoıı16ı13ı10ı13ı1.25ı256
+2ıCOMPANY*COMPANY*lblPhoneıı15ı1ı11.5ı10.5ı1.25ı0
+4ıı0ıııPhone
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtPhoneıı16ı13ı11.5ı15ı1.25ı256
+4ıı29ııı10
+2ıCOMPANY*COMPANY*lblFaxıı15ı1ı13ı10.5ı1.25ı0
+4ıı0ıııFax
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtFaxıı16ı13ı13ı15ı1.25ı256
+4ıı29ııı10
+2ıCOMPANY*COMPANY*lblWebıı15ı1ı14.5ı10.5ı1.25ı0
+4ıı0ıııWeb
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtWebıı16ı13ı14.5ı20.5ı1.25ı256
+2ıCOMPANY*COMPANY*lblemailıı15ı1ı16ı10.5ı1.25ı0
+4ıı0ıııE Mail
+4ıı25ııı1
+2ıCOMPANY*COMPANY*txtEmailıı16ı13ı16ı20.5ı1.25ı256
+2ıCOMPANY*COMPANY*btnFileıı18ı5ı27.5ı9ı1.5ı32
+4ıı22ıııFile
+2ıCOMPANY*COMPANY*btnCancelıı18ı27ı27.5ı9ı1.5ı32
+4ıı22ıııCancel
+2ıCOMPANY*COMPANY*txtAPCutOffıı16ı26ı18.5ı8ı1.25ı256
+4ıı29ııı6
+2ıCOMPANY*COMPANY*lblAPCutOffıı15ı14ı18.5ı10.5ı1.25ı0
+4ıı0ıııAP Cutoff Date
+4ıı67ııı0
+2ıCOMPANY*COMPANY*LblLaborCutoofıı15ı14ı20.5ı9ı1.25ı0
+4ıı0ıııLabor Cutoff
+4ıı67ııı0
+2ıCOMPANY*COMPANY*TxtLaborCutoffıı16ı26ı20.5ı8ı1.25ı256
+4ıı29ııı6
+0ı-1

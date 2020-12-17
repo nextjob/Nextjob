@@ -1,0 +1,45 @@
+TEMPLATEı42432.6312ıDISPATCHıNXT.BPüDISPATCH.DIALOGü3ü0
+0ı1.4ı4
+2ıDISPATCHıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııDISPATCH REPORT
+4ıı59ııı0
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııDispatch Report Generator
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıDISPATCH*DISPATCHıı7ıautoıautoı36.25ı18.25ı1
+4ıı22ıııDISPATCH
+4ıı48ııı0
+4ıı9ııı0
+2ıDISPATCH*DISPATCH*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıDISPATCH*DISPATCH*Grid1ıı28ı1ı1ı34ı9.25ı0
+4ıı27ııı3
+4ıı32ıııWc IdıWc NameıGenerate
+4ıı38ııı0ı0ı0
+4ıı37ııı8ı15ı5
+4ıı34ııı1ı1ı2
+4ıı33ııı3
+4ıı0ıııüüıüüıüü
+2ıDISPATCH*DISPATCH*btnSelectıı18ı26ı10.5ı7.5ı1.25ı32
+4ıı22ıııSelect All
+2ıDISPATCH*DISPATCH*btnDeSelectıı18ı26ı12ı7.5ı1.25ı32
+4ıı22ıııClear All
+2ıDISPATCH*DISPATCH*btnCancelıı18ı2ı14ı9.5ı2.5ı32
+4ıı22ıııCancel
+4ıı49ıııClick to cancel invocing of this order
+2ıDISPATCH*DISPATCH*btnCreateıı18ı25ı14ı9.5ı2.5ı32
+4ıı22ıııCreate
+2ıDISPATCH*DISPATCH*btnSSıı18ı6ı12ı11ı1.5ı32
+4ıı22ıııShop Schedule
+2ıDISPATCH*DISPATCH*lblLastSSıı15ı2ı10.5ı19.5ı1.25ı0
+4ıı0ıııLast Shop Schedule: mm/dd/yy
+4ıı67ııı0
+4ıı11ııı2
+0ı-1

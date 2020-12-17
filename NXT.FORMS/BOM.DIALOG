@@ -1,0 +1,40 @@
+TEMPLATEı41913.50395ıBOMıNXT.BPüBOM.DIALOGü3ü0
+0ı1.4ı4
+2ıBOMıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııBOM.DIALOG
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııProvides dialog to enter BOM componet information
+4ıı42ıııMAB
+4ıı43ıııCopyright (c) 2006 - 2014 Nextjob Solutions, LLC All  rights reserved
+2ıBOM*BOMıı7ıautoıautoı49.25ı9ı1
+4ıı22ıııBOM Componet Entry
+4ıı48ııı0
+4ıı9ııı0
+2ıBOM*BOM*lblPartıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıBOM*BOM*txtPNıı16ı10ı1ı33ı1.25ı256
+2ıBOM*BOM*lblQtyıı15ı1ı3.5ı10.5ı1.25ı0
+4ıı0ıııQty / Assembly
+4ıı67ııı0
+2ıBOM*BOM*txtQtyıı16ı12ı3.5ı7.5ı1.25ı256
+4ıı29ııı7
+2ıBOM*BOM*lblLeadtimeıı15ı1ı5.5ı10ı1.25ı0
+4ıı0ıııLeatime In Days
+4ıı67ııı0
+2ıBOM*BOM*txtLeadtimeıı16ı12ı5.5ı7.5ı1.25ı256
+4ıı29ııı8
+2ıBOM*BOM*cHKrEMOVEıı20ı32ı3.5ı11.5ı1.25ı32
+4ıı22ıııRemove Item
+4ıı67ııı0
+2ıBOM*BOM*BtnOKıı18ı34ı5.5ı8ı2ı32
+4ıı22ıııOK
+2ıBOM*BOM*btnCancelıı18ı22ı5.5ı7.5ı2ı32
+4ıı22ıııCancel
+0ı-1

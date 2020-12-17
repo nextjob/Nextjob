@@ -1,0 +1,89 @@
+TEMPLATEı41844.62097ıWOIıNXT.BPüWOI.DIALOGü3ü0
+0ı1.4ı4
+2ıWOIıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııWork Order Issue
+4ıı59ııı0
+4ıı41ıııIssue product to work order
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıWOI*WOIıı7ıautoıautoı83.25ı35.5ı1
+4ıı22ıııWork Order Issue
+4ıı48ııı0
+4ıı9ııı0
+2ıWOI*WOI*lblWoOrderıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııWO Number
+4ıı67ııı0
+2ıWOI*WOI*txtWorkOrderlıı16ı10ı1ı16.5ı1.25ı256
+4ıı49ıııEnter order number to ship
+2ıWOI*WOI*lblPnıı15ı33ı1ı9.5ı1.25ı0
+4ıı0ıııPart Number
+2ıWOI*WOI*lblPnValıı15ı45ı1ı35ı1.25ı0
+4ıı11ııı2
+2ıWOI*WOI*lblDescıı15ı33ı3ı9.5ı1.25ı0
+4ıı0ıııDescription
+2ıWOI*WOI*lblDescValıı15ı45ı3ı35ı1.25ı0
+4ıı11ııı2
+2ıWOI*WOI*btnCancelıı18ı66ı31ı9.5ı2.5ı32
+4ıı22ıııCancel
+2ıWOI*WOI*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıWOI*WOI*FrmPartıı26ı2ı12.5ı79.5ı3.5ı0
+4ıı0ıııPart To Issue
+4ıı67ııı0
+2ıWOI*WOI*txtpnıFrmPartı16ı9ı1ı24ı1.25ı256
+4ıı8ııı0
+4ıı49ıııEnter part number 
+2ıWOI*WOI*lblPnIıFrmPartı15ı1ı1ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıWOI*WOI*lblIDescValıFrmPartı15ı43ı1ı35ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıWOI*WOI*lblDescIıFrmPartı15ı34ı1ı8.5ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıWOI*WOI*frmProcessıı26ı2ı16ı79.5ı14ı0
+4ıı0ıııIssue Information
+4ıı67ııı0
+2ıWOI*WOI*txtItemDescıfrmProcessı17ı1ı9.5ı77.5ı3ı256
+4ıı10ııı1
+4ıı0ıııDo we want to add lot Id to grid and track issues by lot #??? Would require qty issued to be tracked on lot record which could allow qty on hand values to not match lot unissued values
+2ıWOI*WOI*lblCommentıfrmProcessı15ı1ı8ı8ı1.25ı0
+4ıı0ıııComment
+4ıı67ııı0
+2ıWOI*WOI*Grid1ıfrmProcessı27ı1ı1ı56.5ı6.5ı3072
+4ıı27ııı5
+4ıı32ıııSelectıLocationıLot IdıQty On HandıValue Ea
+4ıı38ııı0ı0ı0ı1ı1
+4ıı37ııı6.38ı12ı12ı9ı12
+4ıı35ııı0ı0ı0ı0ı5
+4ıı34ııı2ı0ı0ı0ı0
+4ıı33ııı3
+4ıı0ıııüüüüıüüüüıüüüü
+2ıWOI*WOI*txtQtyıfrmProcessı16ı64.5ı3ı7ı2.5ı256
+4ıı16ıııArial
+4ıı17ııı12
+2ıWOI*WOI*btnIssueıfrmProcessı18ı63.5ı6ı9.5ı2.5ı32
+4ıı22ıııIssue  Item
+2ıWOI*WOI*lblqtyıfrmProcessı15ı64ı1.5ı8ı1.25ı0
+4ıı0ıııQty To Issue
+4ıı67ııı0
+2ıWOI*WOI*grdCurrentıı27ı2ı5ı79ı7.25ı256
+4ıı27ııı5
+4ıı32ıııPart NumberıQtyıLot IdıValueıDate
+4ıı38ııı0ı0ı0ı0ı0
+4ıı37ııı19.25ı15ı15ı15ı10
+4ıı34ııı1ı1ı1ı1ı1
+4ıı33ııı3
+4ıı0ıııüüüüıüüüüıüüüü
+2ıWOI*WOI*lblIssuesıı15ı2ı3.5ı20.5ı1.25ı0
+4ıı0ıııCurrently  Issued to Work Order
+4ıı67ııı0
+0ı-1

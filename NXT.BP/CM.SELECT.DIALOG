@@ -1,0 +1,607 @@
+SUBROUTINE CM.SELECT.DIALOG(GUIERRORS,GUISTATE)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: CM.SELECT.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 03/20/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* FRONT END TO CM.DIALOG ROUTINE
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES CUSTOMERS.H
+$INCLUDE NXT.INCLUDES SHIP_TO.H
+*
+*-->BEGIN GUI HEADER<--*
+$INCLUDE GUIBP ATGUIEQUATES
+*
+PROG_ID   = "CM.SELECT.DIALOG"
+GUIERRORS = ''
+GUIAPP = "CUST.MAINT"  ;* SEED GUIAPP AND GUIFRM PRIOR TO ACTUAL EVENT WAIT LOOP
+GUIFRM = "CUST.MAINT"
+CM_ID = ''   
+CM_REC = ''
+SHIPTO_ID = ''
+SHIPTO_REC = ''
+*
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+  CALL ATGUIERROR(3,'CM.SELECT.DIALOG','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+  RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'CM.SELECT.DIALOG' ELSE
+  CALL ATGUIERROR(3,'CM.SELECT.DIALOG','',0,GRFATAL,"'CM.SELECT.DIALOG' is not on file.",GUIERRORS)
+  RETURN
+END
+* Add your equates and code to open files here...
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+  CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* Add your code to load initial values here...
+CALL ATGUISHOW('CUST.MAINT','CUST.MAINT','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*-->END GUI STARTUP<--*
+*
+GOSUB LOAD.CM.NAME.LIST         ;* ADD CUSTOMER NAMES TO LST1CUSTNAME
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+  CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= 2 THEN RETURN
+  IF GUIEVT EQ GEQUIT THEN
+    GUI.DLG.EXIT = 1
+  END ELSE
+    GUIAPP=OCONV(GUIAPP,'MCU')
+    GUIFRM=OCONV(GUIFRM,'MCU')
+    GUICTL=OCONV(GUICTL,'MCU')
+    GOSUB GUI.DECODE.EVENT
+  END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+  GUI.APP.LIST = ''
+  CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+  IF GUI.APP.LIST EQ '' THEN
+    * Quit event fired after last GUI object is deleted - discard it
+    CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+    * We could call ATGUISHUTDOWN here if we wanted, but there's no
+    * harm just leaving the GUI environment initialized, in case we
+    * want to use it again...
+  END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+  * Add your code here...
+END ELSE
+  * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+  BEGIN CASE
+    CASE GUIAPP='CUST.MAINT'
+      BEGIN CASE
+        CASE GUIFRM='CUST.MAINT'
+          BEGIN CASE
+            CASE GUICTL=''
+              BEGIN CASE
+                CASE GUIEVT=GECLOSE
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.CLOSE;GUIEVT=0
+              END CASE
+            CASE GUICTL='BTN1EDITBILL'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.BTN1EDITBILL.CLICK;GUIEVT=0
+              END CASE
+            CASE GUICTL='BTN1EDITSHIP'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.BTN1EDITSHIP.CLICK;GUIEVT=0
+              END CASE
+            CASE GUICTL='BTN1NEWBILL'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.BTN1NEWBILL.CLICK;GUIEVT=0
+              END CASE
+            CASE GUICTL='BTN1NEWSHIP'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.BTN1NEWSHIP.CLICK;GUIEVT=0
+              END CASE
+            CASE GUICTL='LST1CUSTNAME'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.LST1CUSTNAME.CLICK;GUIEVT=0
+              END CASE
+            CASE GUICTL='LST1SHIPTO'
+              BEGIN CASE
+                CASE GUIEVT=GECLICK
+                  GOSUB GUI.CUST.MAINT.CUST.MAINT.LST1SHIPTO.CLICK;GUIEVT=0
+              END CASE
+          END CASE
+      END CASE
+  END CASE
+  IF GUIEVT THEN
+    * Unhandled event - may be dynamic
+    GOSUB GUI.DYNAMIC.EVENTS
+  END
+END ELSE
+  GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.CLOSE: *
+* Default form close event handler
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+  GOSUB GUI.DIALOG.RETURN
+  CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+  GUI.DLG.EXIT = 1
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.BTN1EDITBILL.CLICK: *
+IF CM_ID # '' THEN
+  ECM_ID = CM_ID
+  NSHIPTO_ID = ''
+  ERROR_STATUS = ''
+  CALL CM.DIALOG(CM_EDIT,ECM_ID,NSHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+  GOSUB LOAD.CM.NAME.LIST
+  GOSUB CM.RELOAD  ;* DISPLAY UPDATES TO CM / SHIPTO RECORD (IF ANY)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.BTN1EDITSHIP.CLICK: *
+IF CM_ID # '' AND SHIPTO_ID # '' THEN
+  ECM_ID = CM_ID
+  ESHIPTO_ID = SHIPTO_ID
+  ERROR_STATUS = ''
+  CALL CM.DIALOG(CM_SHIP_EDIT,ECM_ID,ESHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+  GOSUB CM.RELOAD  ;* DISPLAY UPDATES TO CM / SHIPTO RECORD (IF ANY)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.BTN1NEWBILL.CLICK: *
+CM_ID = ''
+SHIPTO_ID = ''
+ERROR_STATUS = ''
+CALL CM.DIALOG(CM_NEW,CM_ID,SHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+GOSUB LOAD.CM.NAME.LIST
+GOSUB CM.RELOAD
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.BTN1NEWSHIP.CLICK: *
+IF CM_ID # '' THEN
+  ECM_ID = CM_ID
+  NSHIPTO_ID = ''
+  ERROR_STATUS = ''
+  CALL CM.DIALOG(CM_SHIP_NEW,ECM_ID,NSHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+  IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+  CALL LOAD.CM.SHIPTO.LIST(CM_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD NEW SHIPTO TO DROPDOWN LIST
+  IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+  GOSUB CM.RELOAD
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.LST1CUSTNAME.CLICK: *
+*
+IF GUIARGS<1> GT 0 THEN       ;* CLICKED EMPTY LIST TEST
+  CM_ID  = CUSTOMER.LIST<1,GUIARGS<1>,1>
+  IF CM_ID # '' THEN
+    BEGIN CASE
+      CASE CM_ID = "$MORE$"      ;* USER NEEDS TO SEE MORE OF SEARCH LIST
+        *        CUSTOMER.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+        CUSTOMER.LIST = ''
+        LST.IDS = ''
+        EMSG = ''
+        CALL GUI.SEARCH2 ("CUSTOMERS","","*","CM_NAME","CM_NAME CM_ADDR CM_CITY",CUSTOMER.MAX.LIST,CUSTOMER.START.LIST,CUSTOMER.LIST,LST.IDS,LIST.CT,EMSG)
+        *        REPOPULATE THE LIST BOX
+        CTRLIDS = "LST1CUSTNAME"
+        PROPS   = GPITEMS
+        VALUES  = CUSTOMER.LIST
+        *
+        CTRLIDS<2> = "LST1CUSTNAME"
+        PROPS<2>   = GPVALUE
+        VALUES<2>  = ""
+        *
+        CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+        IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+      CASE CM_ID = "$TOP$"      ;* USER NEEDS TO GO BACK TO THE COP OF SEARCH LIST
+        *        CUSTOMER.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+        CUSTOMER.LIST = ''
+        LST.IDS = ''
+        EMSG = ''
+        CALL GUI.SEARCH2 ("CUSTOMERS","","*","CM_NAME","CM_NAME CM_ADDR CM_CITY",CUSTOMER.MAX.LIST,CUSTOMER.START.LIST,CUSTOMER.LIST,LST.IDS,LIST.CT,EMSG)
+        *        REPOPULATE THE LIST BOX
+        CTRLIDS = "LST1CUSTNAME"
+        PROPS   = GPITEMS
+        VALUES  = CUSTOMER.LIST
+        *
+        CTRLIDS<2> = "LST1CUSTNAME"
+        PROPS<2>   = GPVALUE
+        VALUES<2>  = ""
+        *
+        CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+        IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+      CASE 1                     ;* SHOULD BE A CUSTOMER ID, GET CUSTOMER REC
+        CALL GET.CUSTOMER(CM_ID,CM_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+        *
+        IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH CUST
+          LOG.OPTS = "DISPLAY"
+          ERROR_NBR = ERR_SYS
+          ERROR_MSG = 'Selection of non-existent customer from list'
+          CALL LOG.ERROR(LOG.OPTS,"GUISUB.CUST", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+        END ELSE
+          CALL LOAD.CM.SHIPTO.LIST(CM_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD SHIP TO LIST BOX
+          IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN
+            GOSUB GUI.ERROR
+          END ELSE
+            *
+            SHIPTO_ID = CM_REC<CM_DEFAULT_SHIPTO>
+            CALL GET.SHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+            *
+            IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+              LOG.OPTS = "DISPLAY"
+              ERROR_NBR = ERR_SYS
+              ERROR_MSG = CM_ID:' Customer has non-existent default ship to ':SHIPTO_ID
+              CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+            END ELSE
+              GOSUB LOAD.CM.CTRLS
+              GOSUB LOAD.SHIPTO.CTRLS
+              IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+            END
+          END
+        END
+    END CASE
+  END
+END
+CNC999: *
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.CUST.MAINT.CUST.MAINT.LST1SHIPTO.CLICK: *
+*
+* user selected new ship to
+*
+IF GUIARGS<1> GT 0 THEN       ;* CLICKED EMPTY LIST TEST
+  SHIPTO_ID  = CM_ID:'*':SHIPTO.LIST<1,GUIARGS<1>,1>
+  IF SHIPTO_ID # '' THEN
+
+    CALL GET.SHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+    *
+    IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG = CM_ID:'Selection of non-existent customer ship to ':SHIPTO_ID
+      CALL LOG.ERROR(LOG.OPTS,"GUISUB.CUST", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+    END ELSE
+      GOSUB LOAD.SHIPTO.CTRLS
+    END
+
+  END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+*
+*
+************************************************************
+* $PAGE$
+************************************************************
+CM.RELOAD:
+*
+* CALLED AFTER EDIT OF CUSTOMER AND OR SHIPTO RECORD TO REDISPLAY CHANGES
+* ON OE FORM
+* ASSUMES CM_ID AND SHIPTO_ID SET AND VALID !
+*
+*CALL GET.CUSTOMER(CM_ID,CM_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+**
+*IF ERROR_STATUS = ERR_NOF  THEN
+*CM_ID = ''  ;* SENT A NO EXISTANT CM, CLEAR
+*CM_REC = ''
+*SHIPTO_ID = ''
+*SHIPTO_REC = ''
+*
+*END ELSE
+*
+*CALL LOAD.CM.SHIPTO.LIST(CM_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD SHIP TO LIST BOX
+*IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN
+*GOSUB GUI.ERROR
+*END ELSE
+**
+*CALL GET.SHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+**
+*IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+*SHIPTO_ID = ''
+*SHIPTO_REC = ''
+*END
+*END
+*END
+CM_ID = ''  ;* do not perform reload, simply clear the form.
+CM_REC = ''
+SHIPTO_ID = ''
+SHIPTO_REC = ''
+GOSUB LOAD.CM.CTRLS
+GOSUB LOAD.SHIPTO.CTRLS
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LST1SHIPTO",GPITEMS,0,0,"",GUIERRORS,GUISTATE)
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LST1CUSTNAME",GPVALUE,0,0,"",GUIERRORS,GUISTATE)
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.CM.CTRLS:
+*
+* routine LOADS controls for customer *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<-1> = "LBLCUSTNAME"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_NAME>
+*
+CTRLIDS<-1> = "LBL1BILLADDR1VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_ADDR>
+*
+CTRLIDS<-1> = "LBL1BILLADDR2VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_ADDR2>
+*
+CTRLIDS<-1> = "LBL1BILLCITYVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_CITY>
+*
+CTRLIDS<-1> = "LBL1BILLZIPVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_ZIP>
+*
+CTRLIDS<-1> = "LBL1BILLSTVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_STATE>
+*
+CTRLIDS<-1> = "LBL1SHIPCOVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = CM_REC<CM_COUNTRY>
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+**
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.CM.NAME.LIST: *
+*
+* LOADS THE LST1CUSTNAME LIST
+*
+CUSTOMER.MAX.LIST = 300
+CUSTOMER.START.LIST = 1
+CALL GUI.SEARCH2 ("CUSTOMERS","","*","CM_NAME","CM_NAME CM_ADDR CM_CITY",CUSTOMER.MAX.LIST,CUSTOMER.START.LIST,CUSTOMER.LIST,LST.IDS,LIST.CT,EMSG)
+*
+*
+IF EMSG<1> = 'No Items Found' THEN  ;* NO ITEMS FOUND
+  VALUE = ''
+END ELSE
+  VALUE = CUSTOMER.LIST
+END
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LST1CUSTNAME",GPITEMS,0,0,VALUE,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.SHIPTO.CTRLS:
+*
+* routine LOADS AND ENABLES controls for SHIPTO *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<-1> = "LBL1SHIPNAMEVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_NAME>
+*
+CTRLIDS<-1> = "LBL1SHIPADDR1VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_ADDR>
+*
+CTRLIDS<-1> = "LBL1SHIPADDR2VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_ADDR2>
+*
+CTRLIDS<-1> = "LBL1SHIPCITYVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_CITY>
+*
+CTRLIDS<-1> = "LBL1SHIPZIPVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_ZIP>
+*
+CTRLIDS<-1> = "LBL1SHIPSTVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_STATE>
+*
+CTRLIDS<-1> = "LBL1SHIPCOVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<CS_COUNTRY>
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+**
+RETURN
+
+END
+

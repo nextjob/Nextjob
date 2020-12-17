@@ -1,0 +1,31 @@
+TEMPLATEı42374.46537ıPPH.PROMPTıNXT.BPüPPH.DIALOGü3ü0
+0ı1.4ı4
+2ıPPH.PROMPTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııPN.PROMPT
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııProvides simple dialog to prompt for part PER HOUR
+4ıı42ıııMAB
+2ıPPH.PROMPT*PPHıı7ıautoıautoı22ı9ı1
+4ıı22ıııPart Rate Converter
+4ıı48ııı0
+4ıı9ııı0
+2ıPPH.PROMPT*PPH*lblPPHıı15ı1ı1ı9.5ı1.25ı0
+4ıı0ıııParts Per Hour
+4ıı67ııı0
+2ıPPH.PROMPT*PPH*txtPPHıı16ı11ı1ı7ı1.25ı256
+4ıı29ııı7
+2ıPPH.PROMPT*PPH*lblHPPıı15ı1ı3ı10ı1.25ı0
+4ıı0ıııHours Per Part
+4ıı67ııı0
+2ıPPH.PROMPT*PPH*txtHPPıı16ı11ı3ı7ı1.25ı256
+4ıı29ııı7
+2ıPPH.PROMPT*PPH*btnOKıı18ı7ı5.5ı7.5ı2ı32
+4ıı10ııı1
+4ıı22ıııOK
+0ı-1

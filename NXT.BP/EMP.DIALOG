@@ -1,0 +1,894 @@
+SUBROUTINE EMP.DIALOG(GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: EMP.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 03/00/2015
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* MAINTAINS EMPLOYEES FILE
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES EMPLOYEES.H
+*
+$INCLUDE GUIBP ATGUIEQUATES
+*
+PROG_ID   = "EMP.DIALOG"
+GUIERRORS = ''
+GUIAPP = "EMPLOYEE"  ;* SEED GUIAPP AND GUIFRM PRIOR TO ACTUAL EVENT WAIT LOOP
+GUIFRM = "EMPLOYEE"
+*
+GUIERRORS = ''
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+   CALL ATGUIERROR(3,'EMP.DIALOG','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+   RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'EMP.DIALOG' ELSE
+   CALL ATGUIERROR(3,'EMP.DIALOG','',0,GRFATAL,"'EMP.DIALOG' is not on file.",GUIERRORS)
+   RETURN
+END
+* Add your equates and code to open files here...
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+   CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* Add your code to load initial values here...
+CALL ATGUISHOW('EMPLOYEE','EMPLOYEE','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*-->END GUI STARTUP<--*
+*
+GET_REC_MSG_LIST = ''  ;* GET RECORD MESSAGE OVERRIDE
+GOSUB CLEAR.BUFFERS
+CALL LIST.LOAD(C.VALIDATION_FILE,"SHIFTS","3,4",'MT,MT',SHIFT.LIST,SHIFT.IDX,SHIFT.COUNT,EMSG)
+CALL LIST.LOAD(C.VALIDATION_FILE,"DEPARTMENTS","2","",DEPT.LIST,DEPT.IDX,DEPT.COUNT,EMSG)
+GOSUB LOAD.LSTEMPID
+GOSUB LOAD.LISTS
+GOSUB LOAD.CONTROLS
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN RETURN
+   IF GUIEVT EQ GEQUIT THEN
+      GUI.DLG.EXIT = 1
+   END ELSE
+      GUIAPP=OCONV(GUIAPP,'MCU')
+      GUIFRM=OCONV(GUIFRM,'MCU')
+      GUICTL=OCONV(GUICTL,'MCU')
+      GOSUB GUI.DECODE.EVENT
+   END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+   GUI.APP.LIST = ''
+   CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+   IF GUI.APP.LIST EQ '' THEN
+      * Quit event fired after last GUI object is deleted - discard it
+      CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+      * We could call ATGUISHUTDOWN here if we wanted, but there's no
+      * harm just leaving the GUI environment initialized, in case we
+      * want to use it again...
+   END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+   * Add your code here...
+END ELSE
+   * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+   BEGIN CASE
+      CASE GUIAPP='EMPLOYEE'
+         BEGIN CASE
+            CASE GUIFRM='EMPLOYEE'
+               BEGIN CASE
+                  CASE GUICTL=''
+                     BEGIN CASE
+                        CASE GUIEVT=GECLOSE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.CLOSE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCANCEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.BTNCANCEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNFILE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.BTNFILE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNNEW'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.BTNNEW.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKINACTIVE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.CHKINACTIVE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTDEPT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTDEPT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTEMPID'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTEMPID.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTFRI'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTFRI.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTMON'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTMON.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSAT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTSAT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSUN'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTSUN.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTTHUR'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTTHUR.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTTUE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTTUE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTWED'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.LSTWED.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTFIRSTNAME'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTFIRSTNAME.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTHIRE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTHIRE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTLASTNAME'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTLASTNAME.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTMIDDLENAME'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTMIDDLENAME.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTNEWEMPID'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTNEWEMPID.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTTERM'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.EMPLOYEE.EMPLOYEE.TXTTERM.VALIDATE;GUIEVT=0
+                     END CASE
+               END CASE
+         END CASE
+   END CASE
+   IF GUIEVT THEN
+      * Unhandled event - may be dynamic
+      GOSUB GUI.DYNAMIC.EVENTS
+   END
+END ELSE
+   GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.CLOSE: *
+* Default form close event handler
+IF EMP_ID # '' THEN RELEASE C.FILE.VAR(C.EMPLOYEES), EMP_ID
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+   GOSUB GUI.DIALOG.RETURN
+   CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+   GUI.DLG.EXIT = 1
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.BTNCANCEL.CLICK: *
+IF EMP_ID # '' THEN RELEASE C.FILE.VAR(C.EMPLOYEES), EMP_ID
+GOSUB CLEAR.BUFFERS
+GOSUB LOAD.CONTROLS
+GOSUB LOAD.LSTEMPID
+GOSUB RESET.FORM
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.BTNFILE.CLICK: *
+*
+* VALIDATE EMPLOYEE RECORD
+*
+REC.OK = @TRUE
+*
+BEGIN CASE
+   CASE EMP_ID = ''
+      EMSG = 'Employee Id not Specified'
+      REC.OK = @FALSE
+   CASE EMP_REC<EMP_LAST_NAME> = ''
+      EMSG = 'Last Name Required, Please correct'
+      REC.OK = @FALSE
+   CASE EMP_REC<EMP_FIRST_NAME> = ''
+      EMSG = 'First Name Required, Please correct'
+      REC.OK = @FALSE
+      *  need to figure out what we want to do about shift data!
+      *CASE EMP_REC<EMP_SHIFT_MON> = ''
+      *EMSG = 'Shift Data Required, Please correct'
+      *REC.OK = @FALSE
+END CASE
+*
+IF REC.OK THEN
+   CALL WRITE.RECORD(EMP_ID,EMP_REC,C.EMPLOYEES,@FALSE,ERROR_STATUS)
+   GOSUB CLEAR.BUFFERS
+   GOSUB LOAD.CONTROLS
+   GOSUB LOAD.LSTEMPID
+   GOSUB RESET.FORM
+   *
+END ELSE
+   PRMPT = EMSG
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.BTNNEW.CLICK: *
+* user click new button, must want to add EMP
+* if there is not an active edit going on,
+* make text window visable and active.
+*
+GOSUB SAVE.EMP.CHECK
+IF SAVE.EMP.CHECK.OK THEN
+   GOSUB CLEAR.BUFFERS
+   GOSUB LOAD.CONTROLS
+   *
+   CTRLIDS = "LSTEMPID"
+   PROPS   = GPVISIBLE
+   VALUES  = 0
+   *
+   CTRLIDS<-1> = "LSTEMPID"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = 0
+   *
+   CTRLIDS<-1> = "TXTNEWEMPID"
+   PROPS<-1>   = GPVISIBLE
+   VALUES<-1>  = 1
+   *
+   *
+   CALL ATGUISETPROPS(GUIAPP, GUIFRM, CTRLIDS,PROPS, VALUES, GUIERRORS, GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+   CALL ATGUIACTIVATE(GUIAPP, GUIFRM, "TXTNEWEMPID", GUIERRORS, GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.CHKINACTIVE.CLICK: *
+EMP_REC<EMP_INACTIVE> = GUIARGS<1,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTDEPT.CLICK: *
+EMP_REC<EMP_DEPT> =  DEPT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTEMPID.CLICK: *
+NEW_ID  =  EMP.LIST<1,GUIARGS<1>,1>
+IF NEW_ID # '' THEN
+   *
+   * IF WE SELECTED A NEW EMP, DO WE NEED TO SAVE THE OLD ONE?
+   IF NEW_ID # EMP_ID THEN
+      GOSUB SAVE.EMP.CHECK
+      IF SAVE.EMP.CHECK.OK THEN
+         IF EMP_ID # '' THEN RELEASE C.FILE.VAR(C.EMPLOYEES), EMP_ID
+         GOSUB CLEAR.BUFFERS
+         EMP_ID = NEW_ID
+         *
+         CALL GET.RECORD("EMPLOYEES",C.EMPLOYEES,EMP_ID,EMP_REC,@TRUE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+         BEGIN CASE
+            CASE ERROR_STATUS = ERR_NOF  ;* USER ENTERED NON - EXISTENT EMP id #
+               *
+               * UNLOCK, REPORT AND EXIT
+               RELEASE C.FILE.VAR(C.EMPLOYEES), EMP_ID
+               LOG.OPTS = "DISPLAY"
+               ERROR_NBR = ERR_SYS
+               ERROR_MSG =  "Missing Employee record: ":EMP_ID
+               CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+
+            CASE ERROR_STATUS = ERR_BUSY  ;* USER ENTERED ORDER IS LOCKED BY SOMEONE ELSE
+               PRMPT = "Employee: ":EMP_ID:" in use, try later"
+               STYLE   = 2  ;* !
+               BUTTONS = 0  ;* ok
+               HELPID = ""
+               CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+            CASE 1
+               GOSUB LOAD.CONTROLS
+               SAVE_EMP_REC = EMP_REC
+         END CASE
+      END
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTFRI.CLICK: *
+EMP_REC<EMP_SHIFT_FRI> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTMON.CLICK: *
+EMP_REC<EMP_SHIFT_MON> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTSAT.CLICK: *
+EMP_REC<EMP_SHIFT_SAT> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTSUN.CLICK: *
+EMP_REC<EMP_SHIFT_SUN> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTTHUR.CLICK: *
+EMP_REC<EMP_SHIFT_THUR> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTTUE.CLICK: *
+EMP_REC<EMP_SHIFT_TUE> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.LSTWED.CLICK: *
+EMP_REC<EMP_SHIFT_WED> =  SHIFT.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTFIRSTNAME.VALIDATE: *
+EMP_REC<EMP_FIRST_NAME> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTHIRE.VALIDATE: *
+DATE.VAL = ICONV(GUIARGS<2>,EMP_HIRE_DATE.CNV)
+EMSG = ''
+BEGIN CASE
+   CASE DATE.VAL > DATE()
+      EMSG = 'Cannot Enter a Future Date'
+END CASE
+IF EMSG = '' THEN
+   EMP_REC<EMP_HIRE_DATE> = DATE.VAL
+END ELSE
+   PRMPT = EMSG:', Please Correct'
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTLASTNAME.VALIDATE: *
+EMP_REC<EMP_LAST_NAME> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTMIDDLENAME.VALIDATE: *
+EMP_REC<EMP_MIDDLE_NAME> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTNEWEMPID.VALIDATE: *
+EMP_ID = GUIARGS<2>
+CALL GET.RECORD("EMPLOYEES",C.EMPLOYEES,EMP_ID,TEST_REC,@TRUE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+BEGIN CASE
+   CASE ERROR_STATUS = ERR_NOF  ;* USER ENTERED NON - EXISTENT WC id #
+      *
+      EMP_REC = ""
+      *
+      CALL ATGUIACTIVATE(GUIAPP, GUIFRM, "TXTLASTNAME", GUIERRORS, GUISTATE)
+      IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+
+   CASE 1  ;* OTHERWISE WE HAVE ISSUES
+      PRMPT = "Employee: ":EMP_ID:" Already on file"
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      RELEASE C.FILE.VAR(C.EMPLOYEES), EMP_ID
+      *
+      GOSUB CLEAR.BUFFERS
+      GOSUB LOAD.CONTROLS
+      GOSUB LOAD.LSTEMPID
+      GOSUB RESET.FORM
+END CASE
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.EMPLOYEE.EMPLOYEE.TXTTERM.VALIDATE: *
+IF GUIARGS<2> = '' THEN   ;* Allow term date to be cleared
+   EMP_REC<EMP_TERM_DATE> = ''
+END ELSE
+   DATE.VAL = ICONV(GUIARGS<2>,EMP_TERM_DATE.CNV)
+   EMSG = ''
+   BEGIN CASE
+      CASE DATE.VAL > DATE()
+         EMSG = 'Cannot Enter a Future Date'
+      CASE EMP_REC<EMP_HIRE_DATE> = ''
+         EMSG = 'Cannot Have a Term Date with No Hire Date'
+      CASE EMP_REC<EMP_HIRE_DATE> GT DATE.VAL
+         EMSG = 'Cannot Have a Term Date Prior to Hire Date'
+   END CASE
+   IF EMSG = '' THEN
+      EMP_REC<EMP_TERM_DATE> = DATE.VAL
+   END ELSE
+      PRMPT = EMSG:', Please Correct'
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,"EMP.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+*
+*
+************************************************************
+LOAD.CONTROLS:
+*
+CTRLIDS = "TXTLASTNAME"
+PROPS   = GPVALUE
+VALUES  = EMP_REC<EMP_LAST_NAME>
+*
+CTRLIDS<2> = "TXTFIRSTNAME"
+PROPS<2>   = GPVALUE
+VALUES<2>  = EMP_REC<EMP_FIRST_NAME>
+*
+CTRLIDS<3> = "TXTMIDDLENAME"
+PROPS<3>   = GPVALUE
+VALUES<3>  = EMP_REC<EMP_MIDDLE_NAME>
+*
+CTRLIDS<4> = "CHKINACTIVE"
+PROPS<4>   = GPVALUE
+VALUES<4>  = EMP_REC<EMP_INACTIVE>
+*
+CTRLIDS<5> = "TXTHIRE"
+PROPS<5>   = GPVALUE
+IF EMP_REC<EMP_HIRE_DATE> # '' THEN
+   VALUES<5>  = OCONV(EMP_REC<EMP_HIRE_DATE>,EMP_HIRE_DATE.CNV)
+END ELSE
+   VALUES<5> = ''
+END
+*
+CTRLIDS<6> = "TXTTERM"
+PROPS<6>   = GPVALUE
+IF EMP_REC<EMP_TERM_DATE> # '' THEN
+   VALUES<6>  = OCONV(EMP_REC<EMP_TERM_DATE>,EMP_TERM_DATE.CNV)
+END ELSE
+   VALUES<6> = ''
+END
+*
+CTRLIDS<7> = "LSTMON"
+PROPS<7>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_MON> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<7>  = IDX
+END ELSE
+   VALUES<7>  = 0
+END
+*
+CTRLIDS<8> = "LSTTUE"
+PROPS<8>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_TUE> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<8>  = IDX
+END ELSE
+   VALUES<8>  = 0
+END
+*
+CTRLIDS<9> = "LSTWED"
+PROPS<9>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_WED> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<9>  = IDX
+END ELSE
+   VALUES<9>  = 0
+END
+*
+CTRLIDS<10> = "LSTTHUR"
+PROPS<10>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_THUR> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<10>  = IDX
+END ELSE
+   VALUES<10>  = 0
+END
+*
+CTRLIDS<11> = "LSTFRI"
+PROPS<11>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_FRI> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<11>  = IDX
+END ELSE
+   VALUES<11>  = 0
+END
+*
+CTRLIDS<12> = "LSTSAT"
+PROPS<12>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_SAT> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<12>  = IDX
+END ELSE
+   VALUES<12>  = 0
+END
+*
+CTRLIDS<13> = "LSTSUN"
+PROPS<13>   = GPVALUE
+LOCATE EMP_REC<EMP_SHIFT_SUN> IN SHIFT.IDX<1> SETTING IDX THEN
+   VALUES<13>  = IDX
+END ELSE
+   VALUES<13>  = 0
+END
+*
+CTRLIDS<14> = "LSTDEPT"
+PROPS<14>   = GPVALUE
+LOCATE EMP_REC<EMP_DEPT> IN DEPT.IDX<1> SETTING IDX THEN
+   VALUES<14>  = IDX
+END ELSE
+   VALUES<14>  = 0
+END
+* 
+CALL ATGUISETPROPS(GUIAPP, GUIFRM, CTRLIDS,PROPS, VALUES, GUIERRORS, GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+************************************************************
+LOAD.LISTS:
+*
+CTRLIDS = "LSTMON"
+PROPS   = GPITEMS
+VALUES  = SHIFT.LIST
+*
+CTRLIDS<2>  = "LSTTUE"
+PROPS<2>    = GPITEMS
+VALUES<2>   = SHIFT.LIST
+*
+CTRLIDS<3>  = "LSTWED"
+PROPS<3>    = GPITEMS
+VALUES<3>   = SHIFT.LIST
+*
+CTRLIDS<4>  = "LSTTHUR"
+PROPS<4>    = GPITEMS
+VALUES<4>   = SHIFT.LIST
+*
+CTRLIDS<5>  = "LSTFRI"
+PROPS<5>    = GPITEMS
+VALUES<5>   = SHIFT.LIST
+*
+CTRLIDS<6>  = "LSTSAT"
+PROPS<6>    = GPITEMS
+VALUES<6>   = SHIFT.LIST
+*
+CTRLIDS<7>  = "LSTSUN"
+PROPS<7>    = GPITEMS
+VALUES<7>   = SHIFT.LIST
+*
+CTRLIDS<8>  = "LSTDEPT"
+PROPS<8>    = GPITEMS
+VALUES<8>   = DEPT.LIST
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+************************************************************
+LOAD.LSTEMPID: *
+*
+* LOADS LOADS EMP IDS INTO DROPDOWN LIST LSTEMPID
+*
+MAX.LIST = 500
+START.LIST = 1
+CALL GUI.SEARCH2 ("EMPLOYEES","","*","EMP_LAST_NAME","EMP_LAST_NAME EMP_FIRST_NAME EMP_MIDDLE_NAME",MAX.LIST,START.LIST,EMP.LIST,LST.IDS,LIST.CT,EMSG)
+*
+IF LIST.CT = 0 THEN  ;* NO ITEMS FOUND
+   VALUE = ''
+END ELSE
+   VALUE = EMP.LIST
+END
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LSTEMPID",GPITEMS,0,0,VALUE,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+SAVE.EMP.CHECK: *
+*
+* TEST TO SEE IF WE NEED TO UPDATE FILES:
+* PREOCESS_STEP
+SAVE.EMP.CHECK.OK = @TRUE
+IF SAVE_EMP_REC # EMP_REC THEN
+   PRMPT = "Employee Record has changed but not saved.":@SVM:"Select Cancel, then File to save changes ":@SVM:"or Ok to proceed without saving changes to item"
+   STYLE   = 2  ;* ?
+   BUTTONS = 1  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT,PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   IF RESPONSE = 2 THEN  ;* CANCEL THE CANCEL OR CLOSE REQUEST
+      SAVE.EMP.CHECK.OK = @FALSE
+   END
+END
+RETURN
+************************************************************
+CLEAR.BUFFERS:
+*
+*  INIT VARIBALES
+*
+EMP_ID  = ''
+EMP_REC = ''        ;* EMPLOYEE RECORD
+SAVE_EMP_REC = ''   ;* RECORD AS READ IN (USE FOR CHANGED TEST)
+*
+RETURN
+************************************************************
+************************************************************
+RESET.FORM:
+*
+* SETUP FORM FOR NEXT employee
+*
+CTRLIDS = "LSTEMPID"
+PROPS   = GPVISIBLE
+VALUES  = 1
+*
+CTRLIDS<-1> = "TXTNEWEMPID"
+PROPS<-1>   = GPVISIBLE
+VALUES<-1>  = 0
+*
+CALL ATGUISETPROPS(GUIAPP, GUIFRM, CTRLIDS,PROPS, VALUES, GUIERRORS, GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+END

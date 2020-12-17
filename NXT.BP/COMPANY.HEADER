@@ -1,0 +1,103 @@
+SUBROUTINE COMPANY.HEADER(COMPANY_REC,FD)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: COMPANY.HEADER
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2007
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* RETURNS:
+* COMPANY_REC - COMPANY RECORD
+* FD - FORM TEMPLATE RETURNED TO CALLER
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CREATE PCL COMPANY HEADER TEMPLATE
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+*
+YINC = 65   ;* VERTICAL (Y) SPACING (DOTS PER INCH)
+FD = ''
+*
+GET_REC_MSG_LIST = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC # '' THEN
+   *
+   FD = FD: HPHPOS:'60x0Y':CG20
+   FD = FD: COMPANY_REC<COMP_NAME>"L#25"
+   FD = FD: CG12
+   YPOS = 75
+   FD = FD: HPHPOS:'60x':YPOS:'Y'
+   FD = FD: COMPANY_REC<COMP_ADDR>"L#25"
+   *
+   IF COMPANY_REC<COMP_ADDR2> # "" THEN
+      YPOS += YINC
+      FD = FD: HPHPOS:'60x':YPOS:'Y'
+      FD = FD: COMPANY_REC<COMP_ADDR2>"L#25"
+   END
+   *
+   YPOS += YINC
+   FD = FD: HPHPOS:'60x':YPOS:'Y'
+   CSZ = COMPANY_REC<COMP_CITY>:', ':COMPANY_REC<COMP_STATE>:' ':COMPANY_REC<COMP_ZIP>
+   FD = FD:CSZ"L#45"
+   *
+   YPOS += YINC
+   FD = FD: HPHPOS:'60x':YPOS:'Y'
+   FD = FD: 'phone: (':COMPANY_REC<COMP_PHONE>[1,3]:') ':COMPANY_REC<COMP_PHONE>[4,3]:'-':COMPANY_REC<COMP_PHONE>[7,4]
+   *
+   IF COMPANY_REC<COMP_FAX> # '' THEN
+      YPOS += YINC
+      FD = FD: HPHPOS:'60x':YPOS:'Y'
+      FD = FD: 'fax:   (':COMPANY_REC<COMP_FAX>[1,3]:') ':COMPANY_REC<COMP_FAX>[4,3]:'-':COMPANY_REC<COMP_FAX>[7,4]
+   END
+   *
+END ELSE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing COMPANY_RECORD from SYSTEM_FILE"
+   CALL LOG.ERROR(LOG.OPTS,"COMPANY.HEADER", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END
+*
+RETURN
+END
+

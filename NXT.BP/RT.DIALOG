@@ -1,0 +1,1919 @@
+SUBROUTINE RT.DIALOG(CALLER_PROG_ID,WRT_ID,CALLER_WRT_REC,PN_ID,PNWO_DESC,PNWO_DRAWING,PNWO_ENG_ID,WRT.FILEID,ACTION,GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: RT.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 03/11/2013
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+* 11/19/14 - STANDARDIZE SHARE FILE NAMES, NOW USE SHARE.FILE.PATH.CALC
+* 03/03/15 - ADDED QA TAB AND LOGIC, OPERATION.TO.WR ROUTINE (CONTROLS WHAT IS COPIED FROM OPERATION RECORD TO WR / RT RECORD
+* 01/05/16 - DISPLAY RATES IN HPP AND ADD HPP.DIALOG
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* CALLER_PROG_ID - WHO CALLED RT.DIALOG (PN.DIALOG OR WO.DIALOG)
+* WRT_ID - RT /WR ID
+* WRT_REC - RT WR RECORD PASSED OR NULL IF CREATING NEW
+*         note: CALLER IS RESPONSIBLE FOR LOCK STATUS OF RT/WR RECORD!
+* PN_ID - PART NUMBER ID OF PART REC OR WORK ORDER
+* PNWO_DESC,PNWO_DRAWING,PNWO_ENG_ID - PART DESCRIPTION / PART DRAWING AND ENGINEERING ID FROM PART RECORD OR WO RECORD
+* WRT.FILEID - INDEX INTO C.FILE.VAR ARRAY OF OPEN FILE BUFFERS
+* ACTION - ON EXIT  - STATUS (FILE, CANCEL / CLOSE, COPY, COPY AS OP)
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* ROUTINE is called to maintain Routing Sequences (Caller PN.DIALOG) or Work Order Sequences (Caller WO.DIALOG)
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES PARTS.H
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES WRT.H
+$INCLUDE NXT.INCLUDES WC.H
+$INCLUDE NXT.INCLUDES QAD_PARENT.H
+$INCLUDE NXT.INCLUDES AQL.C0.TABLE
+*
+
+$INCLUDE GUIBP ATGUIEQUATES
+*
+PROG_ID = "RT.DIALOG"
+*
+GUIERRORS = ''
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+   CALL ATGUIERROR(3,'RT.DIALOG','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+   RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'RT.DIALOG' ELSE
+   CALL ATGUIERROR(3,'RT.DIALOG','',0,GRFATAL,"'RT.DIALOG' is not on file.",GUIERRORS)
+   RETURN
+END
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+   CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* Add your code to load initial values here...
+* INIT
+MSG_LIST = ''    ;* GET.RECORD CANNED MESSAGE
+GET_REC_MSG_LIST = ''  ;* OTHER GET.RECORD CANNED MESSAGE
+WRT_REC = CALLER_WRT_REC  ;* CREATE THE LOCAL COPY
+SELECTED.TOOL = 0   ;* SELECTED TOOL FIXTURE DOCUMENT ROW
+SELECTED.QA = 0   ;* SELECTED QA DETAIL
+* SEED GUI APPLICATION AND GUI FORM VARIABLES AT START UP
+GUIAPP = 'ROUT'
+GUIFRM = 'ROUT'
+*
+* BASED ON CALLER, MAKE FIELD VISABLE / ENABLED
+*
+*
+QAD_PARENT_FOUND = @FALSE  ;* IS THERE A QAD_PARENT RECORD (OLD POSSIBLE FOR ALREADY CREATED WR RECORD)
+BEGIN CASE
+   CASE CALLER_PROG_ID = "PN.DIALOG"
+      CTRLIDS = "FRMOP"
+      PROPS   = GPVISIBLE
+      VALUES  = 1
+      **
+      CTRLIDS<2> = "FRMWO"
+      PROPS<2>   = GPVISIBLE
+      VALUES<2>  = 0
+      **
+      CTRLIDS<3> = "SCHD"
+      PROPS<3>   = GPVISIBLE
+      VALUES<3>  = 0
+
+
+   CASE 1 ;* ASSUMES WO.DIALOG
+      CTRLIDS = "FRMOP"
+      PROPS   = GPVISIBLE
+      VALUES  = 0
+      **
+      CTRLIDS<2> = "FRMWO"
+      PROPS<2>   = GPVISIBLE
+      VALUES<2>  = 1
+      **
+      CTRLIDS<3> = "SCHD"
+      PROPS<3>   = GPVISIBLE
+      VALUES<3>  = 1
+      *
+      IF WRT_REC # '' THEN  ;* NEW WORK ORDER SEQ (WR RECORD)
+         * EXISTING WR RECORD, WE COULD HAVE A QAD_PARENT RECORD, SEE IF IT EXISTS.
+         CALL GET.RECORD("QAD_PARENT",C.QAD_PARENT,WRT_ID,QAP_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+         IF QAP_REC # '' THEN
+            QAD_PARENT_FOUND = @TRUE   ;* WE HAVE ALREADY STARTED DATA COLLECTION FOR THIS WO SEQ, DO NOT ALLOW DELETES OF QA DATA !
+         END
+      END
+
+END CASE
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+GOSUB LOAD.QA.METHODS  ;* LOAD METHODS INTO QAGRID DROPDOWN LIST
+GOSUB LOAD.QA.AQL      ;* LOAD AQL VALUES IN QAGRID DROPDOWN LIST
+*
+CALL ATGUISHOW('ROUT','ROUT','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*-->END GUI STARTUP<--*
+*
+
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"NETWORK_PATH",NETWORK_PATH_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+
+*
+CALL LIST.LOAD(C.VALIDATION_FILE,"SIGNOFF","2",'',SOFF.LIST,SOFF.IDX,LIST.COUNT,EMSG)
+CALL ATGUISETPROP('ROUT','ROUT',"LSTSIGNOFF",GPITEMS,0,0,SOFF.LIST,GUIERRORS,GUISTATE)
+CALL LIST.LOAD(C.VALIDATION_FILE,"SEQ.STATUS","2",'',STAT.LIST,STAT.IDX,LIST.COUNT,EMSG)
+CALL ATGUISETPROP('ROUT','ROUT',"LSTSEQSTAT",GPITEMS,0,0,STAT.LIST,GUIERRORS,GUISTATE)
+*
+* load Work Center drop down list
+*
+WC.LIST = '' ;* list of  WORK CENTERS
+GOSUB LOAD.LSTWC
+*
+*
+IF WRT_REC = '' THEN
+   GOSUB INIT.WRT_REC
+   GOSUB LOAD.RT.CTRLS
+END ELSE
+   GOSUB LOAD.RT.CTRLS
+END
+*
+ACTION = RT_CANCEL
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN RETURN
+   IF GUIEVT EQ GEQUIT THEN
+      GUI.DLG.EXIT = 1
+   END ELSE
+      GUIAPP=OCONV(GUIAPP,'MCU')
+      GUIFRM=OCONV(GUIFRM,'MCU')
+      GUICTL=OCONV(GUICTL,'MCU')
+      GOSUB GUI.DECODE.EVENT
+   END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+   GUI.APP.LIST = ''
+   CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+   IF GUI.APP.LIST EQ '' THEN
+      * Quit event fired after last GUI object is deleted - discard it
+      CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+      * We could call ATGUISHUTDOWN here if we wanted, but there's no
+      * harm just leaving the GUI environment initialized, in case we
+      * want to use it again...
+   END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+   * Add your code here...
+END ELSE
+   * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+   BEGIN CASE
+      CASE GUIAPP='ROUT'
+         BEGIN CASE
+            CASE GUIFRM='ROUT'
+               BEGIN CASE
+                  CASE GUICTL=''
+                     BEGIN CASE
+                        CASE GUIEVT=GECLOSE
+                           GOSUB GUI.ROUT.ROUT.CLOSE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCAN'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNCAN.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCOPY'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNCOPY.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDELDOC'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNDELDOC.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDISPLAY'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNDISPLAY.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNFILE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNFILE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNINSDOC'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNINSDOC.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNPPH'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNPPH.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNPPH2'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNPPH2.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNQADEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNQADEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNQAINS'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNQAINS.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNSAVEOP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.BTNSAVEOP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKFREEZE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.CHKFREEZE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKLABMACH'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.CHKLABMACH.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKSCHDCONCURRENT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.CHKSCHDCONCURRENT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='GRDTOOL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.GRDTOOL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTOPCODE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.LSTOPCODE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSEQSTAT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.LSTSEQSTAT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTSIGNOFF'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.LSTSIGNOFF.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTWC'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.LSTWC.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='QAGRID'
+                     BEGIN CASE
+                        CASE GUIEVT=GEACTIVATEROW
+                           GOSUB GUI.ROUT.ROUT.QAGRID.ACTIVATEROW;GUIEVT=0
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.QAGRID.CLICK;GUIEVT=0
+                        CASE GUIEVT=GEVALIDATEROW
+                           GOSUB GUI.ROUT.ROUT.QAGRID.VALIDATEROW;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTACTEND'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTACTEND.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTACTSTART'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTACTSTART.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTDESC'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTDESC.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTERUNRATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTERUNRATE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTESURATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTESURATE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTMRUNRATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTMRUNRATE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTMSURATE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTMSURATE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTMULT'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTMULT.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQTYCMP'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTQTYCMP.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQTYTOMFG'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTQTYTOMFG.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQUOTE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.ROUT.ROUT.TXTQUOTE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTSCHEND'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTSCHEND.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTSCHSTART'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTSCHSTART.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTSCRAP'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTSCRAP.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU1'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU1.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU2'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU2.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU3'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU3.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU4'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU4.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU5'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU5.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTU6'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.ROUT.ROUT.TXTU6.VALIDATE;GUIEVT=0
+                     END CASE
+               END CASE
+         END CASE
+   END CASE
+   IF GUIEVT THEN
+      * Unhandled event - may be dynamic
+      GOSUB GUI.DYNAMIC.EVENTS
+   END
+END ELSE
+   GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNDISPLAY.CLICK: *
+*
+* "EXECUTE" THE DOCUMENT (PROGRAM ASSOCIATED WITH FILE VIA WINDOWS WILL OPEN DOCUMENT)
+IF SELECTED.TOOL > 0 THEN
+   IF WRT_REC<WRT_TFD_REF,SELECTED.TOOL> # '' THEN
+      *
+      * RESOLVE TO SERVER WHERE FILES ARE STORED
+      *
+      CALL SHARE.FILE.PATH.CALC( WRT_REC<WRT_TFD_REF,SELECTED.TOOL>,NETWORK_PATH_REC,SHARE.FILE.PATH,'EXPAND')
+      IF SHARE.FILE.PATH # "" THEN
+         CMD = SHARE.FILE.PATH
+         PRINT ESC:STX:'<':CMD:CR:
+      END
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNPPH.CLICK: *
+*
+HPP = WRT_REC<WRT_EMPHPP>
+CALL PPH.DIALOG(HPP,GUIERRORS,GUISTATE)
+WRT_REC<WRT_EMPHPP> = HPP
+GOSUB LOAD.RATES
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNPPH2.CLICK: *
+HPP = WRT_REC<WRT_MACHHPP>
+CALL PPH.DIALOG(HPP,GUIERRORS,GUISTATE)
+WRT_REC<WRT_MACHHPP> = HPP
+GOSUB LOAD.RATES
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNQADEL.CLICK: *
+IF SELECTED.QA > 0 THEN
+   DEL WRT_REC<WRT_QA_ACTIVE,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_CHAR_ID,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_CHAR,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_AQL,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_LOC,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_METHOD,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_VAL1,SELECTED.QA>
+   DEL WRT_REC<WRT_QA_VAL2,SELECTED.QA>
+   GOSUB LOAD.QA.GRID
+
+END ELSE
+   PRMPT = 'No Row Selected for Delete Operation'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNQAINS.CLICK: *
+IF SELECTED.QA > 0 THEN
+   *
+   * IS THERE ALREADY A BLANK SLOT?
+   *
+   FOR I = 1 TO DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM)
+      IF WRT_REC<WRT_QA_CHAR_ID,I> = '' THEN
+         PRMPT = 'Complete or Remove Existing Empy Row Before Adding Additional'
+         CAPTION = "RT.DIALOG"
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok only
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         GOTO BTNQAINS.999
+      END
+   NEXT I
+   *RESET BACKGOUND COLOR TO DELFAULT
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPBACKCOLOR,"",SELECTED.QA,CLRWINDOWBACKGROUND,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+   * ADD IN A SLOT FOR THE CHARACTERISTIC
+   INS "1" BEFORE  WRT_REC<WRT_QA_ACTIVE,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_CHAR_ID,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_CHAR,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_AQL,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_LOC,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_METHOD,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_VAL1,SELECTED.QA>
+   INS "" BEFORE  WRT_REC<WRT_QA_VAL2,SELECTED.QA>
+   *
+   *  RESET SELECTED HIGHLIGHT
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPBACKCOLOR,"",SELECTED.QA,CLRWINDOWBACKGROUND,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   GOSUB LOAD.QA.GRID
+   SELECTED.QA = 0
+END ELSE
+   PRMPT = 'No Row Selected for Insert Operation'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+BTNQAINS.999:
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNSAVEOP.CLICK: *
+** NEED TO GET OPERATION ID
+*
+CALL ATGUIGETPROP(GUIAPP,GUIFRM, "TXTOPID", GPVALUE, 0, 0,NEW_OP_ID, GUIERRORS, GUISTATE)
+IF NEW_OP_ID # '' THEN
+   CALL WRITE.RECORD(NEW_OP_ID,WRT_REC,C.OPERATIONS,@FALSE,ERROR_STATUS)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.CHKFREEZE.CLICK: *
+WRT_REC<WR_FREEZE_SCHD> =  GUIARGS<1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.CHKSCHDCONCURRENT.CLICK: *
+WRT_REC<WRT_SCHDCONCURRENT> =  GUIARGS<1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.ROUT.ROUT.CLOSE: *
+* Default form close event handler
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+   GOSUB GUI.DIALOG.RETURN
+   CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+   GUI.DLG.EXIT = 1
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNCAN.CLICK: *
+GOSUB SAVE.RT.CHECK
+IF SAVE.RT.CHECK.OK THEN
+   ACTION = RT_CANCEL
+   GOSUB GUI.ROUT.ROUT.CLOSE;GUIEVT=0
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNCOPY.CLICK: *
+PRMPT = 'Need to add Copy Rt Code'
+CAPTION = "RT.DIALOG"
+STYLE   = 2  ;* !
+BUTTONS = 0  ;* ok only
+HELPID = ""
+CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNDELDOC.CLICK: *
+IF SELECTED.TOOL > 0 THEN
+   DEL WRT_REC<WRT_TFD_REF,SELECTED.TOOL>
+   DEL WRT_REC<WRT_TFD_TYPE,SELECTED.TOOL>
+   DEL WRT_REC<WRT_TFD_DESC,SELECTED.TOOL>
+   *
+   *
+   * POPULATE TOOL/FIXTURE/DOCUMENT GRID
+   *
+   TOOL.LIST = ''
+   FOR I = 1 TO DCOUNT(WRT_REC<WRT_TFD_TYPE>,@VM)
+      TOOL.LIST<1,I,1> = WRT_REC<WRT_TFD_TYPE,I>
+      TOOL.LIST<1,I,2> = WRT_REC<WRT_TFD_DESC,I>
+      TOOL.LIST<1,I,3> = WRT_REC<WRT_TFD_REF,I>
+   NEXT I
+   *
+   CTRLIDS = "GRDTOOL"
+   PROPS   = GPVALUE
+   VALUES  = TOOL.LIST
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+
+END
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNFILE.CLICK: *
+GOSUB SEQ.VALID.CHECK
+IF SEQ.VALID THEN
+   ACTION = RT_FILE
+   CALLER_WRT_REC = WRT_REC
+   GOSUB GUI.ROUT.ROUT.CLOSE;GUIEVT=0
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.BTNINSDOC.CLICK: *
+CALL TFD.DIALOG(SEL.REF,SEL.TYPE,SEL.DESC,NETWORK_PATH_REC,GUIERRORS,GUISTATE)
+*
+IF SEL.TYPE # '' AND SEL.DESC # '' THEN
+   NXTIDX =  DCOUNT(WRT_REC<WRT_TFD_TYPE>,@VM) + 1
+   WRT_REC<WRT_TFD_REF,NXTIDX> = SEL.REF
+   WRT_REC<WRT_TFD_TYPE,NXTIDX>= SEL.TYPE
+   WRT_REC<WRT_TFD_DESC,NXTIDX>= SEL.DESC
+   *
+   TOOL.LIST<1,NXTIDX,1> = SEL.TYPE
+   TOOL.LIST<1,NXTIDX,2> = SEL.DESC
+   TOOL.LIST<1,NXTIDX,3> = SEL.REF
+   *
+   CTRLIDS = "GRDTOOL"
+   PROPS   = GPVALUE
+   VALUES  = TOOL.LIST
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END ELSE
+   PRMPT = 'Type and Description Required for Supporting Information Entry'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.CHKLABMACH.CLICK: *
+WRT_REC<WRT_EMPMACH> =  GUIARGS<1>
+*
+CTRLIDS = "FRMMACHRATES"
+PROPS   = GPENABLED
+IF WRT_REC<WRT_EMPMACH> THEN     ;* ENABLE OR DISABLE MACHINE RATES BASED ON EMPMACH FLAG (TRACK BOTH IF SET)
+   VALUES  = 1
+END ELSE
+   VALUES  = 0
+END
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.GRDTOOL.CLICK: *
+* RESET PREVIOUS SELECTED STEP COLOR
+IF SELECTED.TOOL > 0 THEN
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"GRDTOOL",GPBACKCOLOR,"",SELECTED.TOOL,CLRWINDOWBACKGROUND,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+SELECTED.TOOL = GUIARGS<1,2> ;* ROW NUMBER
+* ENSURE THAT STEP SELECTED IS NEXT OPEN STEP (WE DID NOT SKIP A ROW)
+IF SELECTED.TOOL > DCOUNT(WRT_REC<WRT_TFD_TYPE>,@VM) THEN
+   SELECTED.TOOL =  DCOUNT(WRT_REC<WRT_TFD_TYPE>,@VM) + 1
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"GRDTOOL",GPROW,"","",SELECTED.TOOL,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"GRDTOOL",GPBACKCOLOR,"",SELECTED.TOOL,CLRGRAY,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.LSTOPCODE.CLICK: *
+*
+IF GUIARGS<1> GT 0 THEN       ;* CLICKED EMPTY LIST TEST
+   OP_ID  = OP.LIST<1,GUIARGS<1>,1>
+   IF OP_ID # '' THEN
+      BEGIN CASE
+         CASE OP_ID = "$MORE$"      ;* USER NEEDS TO SEE MORE OF SEARCH LIST
+            *       OP.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+            OP.LIST = ''
+            LST.IDS = ''
+            EMSG = ''
+            CALL GUI.SEARCH2 ("OPAERATIONS","","*","@ID","@ID WRT_DESC1",OP.MAX.LIST,OP.START.LIST,OP.LIST,LST.IDS,LIST.CT,EMSG)
+
+            *        REPOPULATE THE LIST BOX
+            CTRLIDS = "LSTOPCODE"
+            PROPS   = GPITEMS
+            VALUES  = OP.LIST
+            *
+            CTRLIDS<2> = "LST1CUSTNAME"
+            PROPS<2>   = GPVALUE
+            VALUES<2>  = ""
+            *
+            CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+            IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+         CASE OP_ID = "$TOP$"      ;* USER NEEDS TO GO BACK TO THE TOP OF SEARCH LIST
+            *        OP.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+            OP.LIST = ''
+            LST.IDS = ''
+            EMSG = ''
+            CALL GUI.SEARCH2 ("OPAERATIONS","","*","@ID","@ID WRT_DESC1",OP.MAX.LIST,OP.START.LIST,OP.LIST,LST.IDS,LIST.CT,EMSG)
+            *        REPOPULATE THE LIST BOX
+            CTRLIDS = "LSTOPCODE"
+            PROPS   = GPITEMS
+            VALUES  = OP.LIST
+            *
+            CTRLIDS<2> = "LST1CUSTNAME"
+            PROPS<2>   = GPVALUE
+            VALUES<2>  = ""
+            *
+            CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+            IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+         CASE 1                     ;* SHOULD BE A OP ID, GET OP REC
+            CALL GET.RECORD("OPERATIONS",C.OP,OP_ID,OP_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+            *
+            IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH CUST
+               LOG.OPTS = "DISPLAY"
+               ERROR_NBR = ERR_SYS
+               ERROR_MSG = 'Selection of non-existent operation from list'
+               CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+            END ELSE
+               *
+               * COPY OP CODE TO RECORD
+               *
+               IF WRT_REC # '' THEN
+                  PRMPT = "Warning Routing Record will be over written with Operation Record":@SVM:"Select OK to continue, Cancel to cancel action"
+                  CAPTION = "Routings"
+                  STYLE   = 2  ;* !
+                  BUTTONS = 1  ;* ok / cancel
+                  HELPID = ""
+                  CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+                  IF RESPONSE = 2 THEN  ;* CANCEL
+                     NULL
+                  END ELSE
+                     GOSUB OPERATION.TO.WR
+                     GOSUB LOAD.RT.CTRLS
+                  END
+               END
+            END
+      END CASE
+   END
+END
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.LSTSEQSTAT.CLICK: *
+STAT.IDX = GUIARGS<1>
+WRT_REC<WR_STATUS> = STAT.LIST<1,STAT.IDX,1>   ;*
+WRT_REC<WR_STAT_DATE> = DATE()
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"TXTSTATDATE",GPVALUE,0,0,OCONV(WRT_REC<WR_STAT_DATE>,WR_STAT_DATE.CNV),GUIERRORS,GUISTATE)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.LSTSIGNOFF.CLICK: *
+SIGNOFF.IDX = GUIARGS<1>
+WRT_REC<WRT_SIGNOFF> = SOFF.LIST<1,SIGNOFF.IDX,1>   ;* REM COMBO BOX CLICK RETURNS ACTUAL VALUE CLICK ON
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.LSTWC.CLICK: *
+WRT_REC<WRT_WCID> = WC.LIST<1,GUIARGS<1>,1>
+WCDESC = WC.LIST<1,GUIARGS<1>,2>
+CALL ATGUISETPROP('ROUT','ROUT',"LBLNAMEV",GPVALUE,0,0,WCDESC,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.QAGRID.ACTIVATEROW: *
+*
+* USER MOVED OFF A ROW, LETS JUST MAKE SURE WE ARE NOT LEAVING A BLANK ROW SOMEWHERE
+*
+PREV.ROW = GUIARGS<1,2>
+CURR.ROW = GUIARGS<1,1>
+ROWS.OF.DATA = DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM)
+* IF THE CURRENT ROW THE USER IS ON IS EMPTY AND THE ROW IS LEAVING MORE THAN ONE BLACK ROW ABOVE IT, MOVE TO THE LAST BLANK ROW
+IF (WRT_REC<WRT_QA_ACTIVE,CURR.ROW> = "") AND (CURR.ROW >  ROWS.OF.DATA + 1) THEN
+   CURR.ROW = ROWS.OF.DATA + 1
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPROW,"","",CURR.ROW,GUIERRORS,GUISTATE)
+END
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.QAGRID.CLICK: *
+* RESET PREVIOUS SELECTED STEP COLOR
+IF SELECTED.QA > 0 THEN
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPBACKCOLOR,"",SELECTED.QA,CLRWINDOWBACKGROUND,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+SELECTED.QA = GUIARGS<1,2> ;* ROW NUMBER
+* ENSURE THAT STEP SELECTED IS NEXT OPEN STEP (WE DID NOT SKIP A ROW)
+IF SELECTED.QA > DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM) THEN
+   SELECTED.QA =  DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM) + 1
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPROW,"","",SELECTED.QA,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPBACKCOLOR,"",SELECTED.QA,CLRGRAY,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.QAGRID.VALIDATEROW: *
+*the user has changed data in at least one cell of the previously active row
+*and moved to a different row (or activated a different control).
+*GUIARGS<1,1> = row number being validated
+*GUIARGS<2> = values of all of the row's cells separated by subvalue
+*marks.
+*
+* SOME HANDY DEBUG INFO, REMOVE "*"
+*********************************************
+*PRMPT = "QAGRID.VALIDATEROW "
+*PRMPT := " 1: ": GUIARGS<2,1,1> + 0
+*PRMPT := " 2: ": GUIARGS<2,1,2>
+*PRMPT := " 3: ": GUIARGS<2,1,3>
+*PRMPT := " 4: ": GUIARGS<2,1,4>
+*PRMPT := " 5: ": GUIARGS<2,1,5>
+*PRMPT := " 6: ": GUIARGS<2,1,6>
+*PRMPT := " 7: ": GUIARGS<2,1,7>
+*PRMPT := " 8: ": GUIARGS<2,1,8>
+*PRMPT := " QA.CNT: ": GUIARGS<1,1>
+*STYLE   = 2  ;* !
+*BUTTONS = 0  ;* ok
+*HELPID = ""
+*CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+************************************************
+QA.ROW = GUIARGS<1,1>
+CHAR_ID = TRIM(GUIARGS<2,1,2>)
+IF CHAR_ID = '' OR CHAR_ID = " " THEN  ;* CHARACTERISTIC REQD!
+   PRMPT = "Characteristic Cannot Be Null "
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   GOSUB LOAD.QA.GRID
+END ELSE
+   *
+   * AND MUST BE UNIQUE!
+   UNIQUE.ID = @TRUE
+   FOR I = 1 TO DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM)
+      IF I = QA.ROW THEN
+         NULL ;* SKIP COMPARE TO ITSELF
+      END ELSE
+         IF CHAR_ID = WRT_REC<WRT_QA_CHAR_ID,I> THEN
+            PRMPT = "Characteristic Id Must be Unique"
+            STYLE   = 2  ;* !
+            BUTTONS = 0  ;* ok
+            HELPID = ""
+            CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+            UNIQUE.ID = @FALSE
+            GOSUB LOAD.QA.GRID
+            EXIT
+         END
+      END
+   NEXT I
+   IF UNIQUE.ID THEN
+      *
+      * IF THERE IS A QAD_PARENT WARN USER ABOUT CHANGING THE CHARACTERISTIC ID
+      IF QAD_PARENT_FOUND AND (WRT_REC<WRT_QA_CHAR_ID,QA.ROW>  # '') AND (WRT_REC<WRT_QA_CHAR_ID,QA.ROW>  # CHAR_ID) THEN
+         PRMPT = "Warning: You Are Changing the Characteristic Id and QA Data Has Been Saved, This Action Could Result in the QA Data Saved To Date Becoming Meaningless"
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      END
+      *
+      WRT_REC<WRT_QA_ACTIVE,QA.ROW>  = GUIARGS<2,1,1> + 0
+      WRT_REC<WRT_QA_CHAR_ID,QA.ROW>  = CHAR_ID
+      WRT_REC<WRT_QA_CHAR,QA.ROW>  = GUIARGS<2,1,3>
+      WRT_REC<WRT_QA_AQL,QA.ROW>  = GUIARGS<2,1,4>
+      WRT_REC<WRT_QA_LOC,QA.ROW>   = GUIARGS<2,1,5>
+      WRT_REC<WRT_QA_METHOD,QA.ROW>= GUIARGS<2,1,6>
+      WRT_REC<WRT_QA_VAL1,QA.ROW>  = GUIARGS<2,1,7>
+      WRT_REC<WRT_QA_VAL2,QA.ROW>  = GUIARGS<2,1,8>
+      *
+      GOSUB LOAD.QA.GRID
+      QA.VAL.ROW = QA.ROW
+      GOSUB QA.VALIDATE   ;* THIS IS NOT THE BEST WAY TO DO THIS, BUT VLAIDATE WHAT USER ENTERED AFTER ADDING
+      ;* NOTE WE DO THIS AGAIN ON FILE CLICK, SO IF THE USER CHOOSES NOT TO CORRECT DATA
+      ;* THEY WILL NOT BE ABLE TO SAVE THE CHANGES
+      * QA.VAL.ROW VM OF QA DATA TO VALIDATE WITHIN WRT_REC
+      * QA.VALID RETURNED FLAG T/F
+      * QA.VALID.MSG IF QA.VALID = FALSE, RETURNED ERROR MSG
+      IF NOT(QA.VALID) THEN
+         PRMPT = QA.VALID.MSG
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, PROG_ID, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      END
+   END
+END
+
+QAGRID.VALIDATEROW.999: *
+*
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTACTEND.VALIDATE: *
+WRT_REC<WR_ACT_END> =  ICONV(GUIARGS<2>,WR_ACT_END.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTACTSTART.VALIDATE: *
+WRT_REC<WR_ACT_START> =  ICONV(GUIARGS<2>,WR_ACT_START.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTDESC.VALIDATE: *
+WRT_REC<WRT_DESC> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTERUNRATE.VALIDATE: *
+RATE =  GUIARGS<2>
+GOSUB RATE.VALIDATE
+IF RATE.VALID THEN WRT_REC<WRT_EMPHPP> = ICONV(RATE,WRT_EMPHPP.CNV)
+GOSUB LOAD.RATES
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTESURATE.VALIDATE: *
+RATE =  GUIARGS<2>
+GOSUB RATE.VALIDATE
+IF RATE.VALID THEN WRT_REC<WRT_SUEMP> = ICONV(RATE,WRT_SUEMP.CNV)
+GOSUB LOAD.RATES
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTMRUNRATE.VALIDATE: *
+RATE =  GUIARGS<2>
+*RATE = INT((1/RATE) * 100000) ;* CONVERT TO PPH
+GOSUB RATE.VALIDATE
+IF RATE.VALID THEN WRT_REC<WRT_MACHHPP> = ICONV(RATE,WRT_MACHHPP.CNV)
+GOSUB LOAD.RATES
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTMSURATE.VALIDATE: *
+RATE =  GUIARGS<2>
+GOSUB RATE.VALIDATE
+IF RATE.VALID THEN WRT_REC<WRT_SUMACH> = ICONV(RATE,WRT_SUEMP.CNV)
+GOSUB LOAD.RATES
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTMULT.VALIDATE: *
+RATE =  GUIARGS<2>
+RATE = ICONV(RATE,WRT_QTY_MULT.CNV)
+WRT_REC<WRT_QTY_MULT> = RATE
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTQTYCMP.VALIDATE: *
+IF GUIARGS<2> > 0 THEN
+   WRT_REC<WR_QTY_COMP> =  GUIARGS<2>
+END ELSE
+   PRMPT = 'Qty Complete must be gt 0!'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTQTYTOMFG.VALIDATE: *
+IF GUIARGS<2> > 0 THEN
+   WRT_REC<WR_QTY_TO_MFG> =  GUIARGS<2>
+END ELSE
+   PRMPT = 'Qty to MFG must be gt 0!'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTQUOTE.CLICK: *
+PRMPT = 'Need to add Quote Link Code'
+CAPTION = "RT.DIALOG"
+STYLE   = 2  ;* !
+BUTTONS = 0  ;* ok only
+HELPID = ""
+CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTSCHEND.VALIDATE: *
+WRT_REC<WR_SCHD_END> =  ICONV(GUIARGS<2>,WR_SCHD_END.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTSCHSTART.VALIDATE: *
+WRT_REC<WR_SCHD_START> =  ICONV(GUIARGS<2>,WR_SCHD_START.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTSCRAP.VALIDATE: *
+IF GUIARGS<2> > 0 THEN
+   WRT_REC<WR_SCRAP> =  GUIARGS<2>
+END ELSE
+   PRMPT = 'Scrap Qty must be gt 0!'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU1.VALIDATE: *
+WRT_REC<WRT_USER1> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU2.VALIDATE: *
+WRT_REC<WRT_USER2> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU3.VALIDATE: *
+WRT_REC<WRT_USER3> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU4.VALIDATE: *
+WRT_REC<WRT_USER4> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU5.VALIDATE: *
+WRT_REC<WRT_USER5> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.ROUT.ROUT.TXTU6.VALIDATE: *
+WRT_REC<WRT_USER6> =  GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,"RT.DIALOG", ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+*
+************************************************************
+RATE.VALIDATE: *
+IF RATE GE 0 THEN
+   RATE.VALID = @TRUE
+END ELSE
+   RATE.VALID = @FALSE
+   PRMPT = 'Entered Rate Must Be >= 0!'
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+*
+RETURN
+************************************************************
+INIT.WRT_REC:
+
+WRT_REC<WRT_SUEMP> = 0
+*
+WRT_REC<WRT_EMPHPP> = 0
+*
+WRT_REC<WRT_SUMACH> = 0
+*
+WRT_REC<WRT_MACHHPP> = 0
+*
+WRT_REC<WRT_QTY_MULT> = 100000
+*
+WRT_REC<WRT_SCHDCONCURRENT> = 1
+*
+RETURN
+************************************************************
+LOAD.OP.LIST: *
+*
+* LOADS THE LSTOPCODE LIST
+*
+OP.MAX.LIST = 300
+OP.START.LIST = 1
+CALL GUI.SEARCH2 ("OPAERATIONS","","*","@ID","@ID WRT_DESC1",OP.MAX.LIST,OP.START.LIST,OP.LIST,LST.IDS,LIST.CT,EMSG)
+*
+*
+IF EMSG<1> = 'No Items Found' THEN  ;* NO ITEMS FOUND
+   VALUE = ''
+END ELSE
+   VALUE = OP.LIST
+END
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LSTOPCODE",GPITEMS,0,0,VALUE,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+
+******************************************************************************************
+LOAD.RT.CTRLS:
+*
+* routine LOADS controls
+*
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+CTRLIDS<1> = "LBLPNV"
+PROPS<1>   = GPVALUE
+VALUES<1>  = PN_ID
+*
+CTRLIDS<2> = "LBLDESCV"
+PROPS<2>   = GPVALUE
+VALUES<2>  = PNWO_DESC
+*
+CTRLIDS<3> = "LBLDRAWV"
+PROPS<3>   = GPVALUE
+VALUES<3>  = PNWO_DRAWING
+*
+* NEXT TWO VALUES DEPEND ON CALLER !!!
+*
+CTRLIDS<4> = "LBLSEQV"
+PROPS<4>   = GPVALUE
+
+*
+IF CALLER_PROG_ID = "PN.DIALOG" THEN
+   *
+   VALUES<4>  = FIELD(WRT_ID,'*',3)
+   *
+END ELSE
+   *
+   VALUES<4>  = FIELD(WRT_ID,'*',2)
+   *
+END
+*
+CTRLIDS<5> = "LBLENGV"
+PROPS<5>   = GPVALUE
+VALUES<5>  = PNWO_ENG_ID
+*
+CTRLIDS<6> = "TXTQUOTE"
+PROPS<6>   = GPVALUE
+VALUES<6>  = WRT_REC<WRT_OPQUOTE>
+*
+LC = 7
+CTRLIDS<LC> = "LBLNAMEV"
+PROPS<LC>   = GPVALUE
+VALUES<LC>  = WRT_REC<WRT_WCID>
+*
+LC = 8
+LOCATE WRT_REC<WRT_WCID> IN WC.IDS<1,1> SETTING IDX THEN
+   CTRLIDS<LC> = "LSTWC"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = IDX
+END ELSE
+   CTRLIDS<LC> = "LSTWC"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = 0
+END
+
+*
+LC = 9
+LOCATE WRT_REC<WRT_SIGNOFF> IN SOFF.IDX<1> SETTING IDX THEN
+   CTRLIDS<LC> = "LSTSIGNOFF"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = IDX
+END ELSE
+   CTRLIDS<LC> = "LSTSIGNOFF"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = 0
+END
+*
+LC = 10
+CTRLIDS<LC> = "CHKLABMACH"
+PROPS<LC>   = GPVALUE
+VALUES<LC>  = WRT_REC<WRT_EMPMACH>
+*
+CTRLIDS<11> = "TXTESURATE"
+PROPS<11>   = GPVALUE
+VALUES<11>  = OCONV(WRT_REC<WRT_SUEMP>,WRT_SUEMP.CNV)
+*
+CTRLIDS<12> = "TXTERUNRATE"
+PROPS<12>   = GPVALUE
+*IF WRT_REC<WRT_EMPHPP> > 0 THEN
+*VALUES<12>  = 1/(WRT_REC<WRT_EMPHPP>/100000)  ;* CONVERT TO PART PER HOUR
+*END ELSE
+*VALUES<12> = 0
+*END
+VALUES<12> = OCONV(WRT_REC<WRT_EMPHPP>,WRT_EMPHPP.CNV)
+*
+CTRLIDS<13> = "TXTMSURATE"
+PROPS<13>   = GPVALUE
+VALUES<13>  = OCONV(WRT_REC<WRT_SUMACH>,WRT_SUMACH.CNV)
+*
+CTRLIDS<14> = "TXTMRUNRATE"
+PROPS<14>   = GPVALUE
+*IF WRT_REC<WRT_MACHHPP> > 0 THEN
+*VALUES<14>  = 1/(WRT_REC<WRT_MACHHPP>/100000) ;* CONVERT TO PART PER HOUR
+*END ELSE
+*VALUES<14> = 0
+*END
+VALUES<14> = OCONV(WRT_REC<WRT_MACHHPP>,WRT_MACHHPP.CNV)
+*
+LC=15
+CTRLIDS<LC> = "TXTDESC"
+PROPS<LC>   = GPVALUE
+VALUES<LC>  = WRT_REC<WRT_DESC>
+*
+* POPULATE TOOL/FIXTURE/DOCUMENT GRID
+*
+TOOL.LIST = ''
+FOR I = 1 TO DCOUNT(WRT_REC<WRT_TFD_TYPE>,@VM)
+   TOOL.LIST<1,I,1> = WRT_REC<WRT_TFD_TYPE,I>
+   TOOL.LIST<1,I,2> = WRT_REC<WRT_TFD_DESC,I>
+   TOOL.LIST<1,I,3> = WRT_REC<WRT_TFD_REF,I>
+NEXT I
+*
+LC=16
+CTRLIDS<LC> = "GRDTOOL"
+PROPS<LC>   = GPVALUE
+VALUES<LC>  = TOOL.LIST
+*
+CTRLIDS<17> = "TXTU1"
+PROPS<17>   = GPVALUE
+VALUES<17>  = WRT_REC<WRT_USER1>
+*
+CTRLIDS<18> = "TXTU2"
+PROPS<18>   = GPVALUE
+VALUES<18>  = WRT_REC<WRT_USER2>
+*
+CTRLIDS<19> = "TXTU3"
+PROPS<19>   = GPVALUE
+VALUES<19>  = WRT_REC<WRT_USER3>
+*
+CTRLIDS<20> = "TXTU4"
+PROPS<20>   = GPVALUE
+VALUES<20>  = WRT_REC<WRT_USER4>
+*
+CTRLIDS<21> = "TXTU5"
+PROPS<21>   = GPVALUE
+VALUES<21>  = WRT_REC<WRT_USER5>
+*
+CTRLIDS<22> = "TXTU6"
+PROPS<22>   = GPVALUE
+VALUES<22>  = WRT_REC<WRT_USER6>
+*
+LC=23
+CTRLIDS<LC> = "FRMMACHRATES"
+PROPS<LC>   = GPENABLED
+IF WRT_REC<WRT_EMPMACH> THEN     ;* ENABLE OR DISABLE MACHINE RATES BASED ON EMPMACH FLAG (TRACK BOTH IF SET)
+   VALUES<LC>  = 1
+END ELSE
+   VALUES<LC>  = 0
+END
+*
+CTRLIDS<24> = "TXTMULT"
+PROPS<24>   = GPVALUE
+VALUES<24>  = OCONV(WRT_REC<WRT_QTY_MULT>,WRT_QTY_MULT.CNV)
+*
+LC = 25
+CTRLIDS<LC> = "CHKSCHDCONCURRENT"
+PROPS<LC>   = GPVALUE
+VALUES<LC>  = WRT_REC<WRT_SCHDCONCURRENT>
+*
+LC = 26
+CTRLIDS<LC> = "BTNQADEL"
+PROPS<LC>   = GPENABLED
+VALUES<LC>  = NOT(QAD_PARENT_FOUND)   ;* IF QAD_PARENT ON FILE FOR WR RECORD DO NOT ALLOW DELETES!
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+*
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+GOSUB LOAD.QA.GRID
+*
+IF  CALLER_PROG_ID = "WO.DIALOG" THEN
+   GOSUB LOAD.WO.CTRLS
+END
+RETURN
+******************************************************************************************
+LOAD.RATES: *
+CTRLIDS = "TXTESURATE"
+PROPS   = GPVALUE
+VALUES  = OCONV(WRT_REC<WRT_SUEMP>,WRT_SUEMP.CNV)
+*
+CTRLIDS<2> = "TXTERUNRATE"
+PROPS<2>   = GPVALUE
+VALUES<2> = OCONV(WRT_REC<WRT_EMPHPP>,WRT_EMPHPP.CNV)
+*
+CTRLIDS<3> = "TXTMSURATE"
+PROPS<3>   = GPVALUE
+VALUES<3>  = OCONV(WRT_REC<WRT_SUMACH>,WRT_SUMACH.CNV)
+*
+CTRLIDS<4> = "TXTMRUNRATE"
+PROPS<4>   = GPVALUE
+VALUES<4> = OCONV(WRT_REC<WRT_MACHHPP>,WRT_MACHHPP.CNV)
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+******************************************************************************************
+LOAD.QA.GRID: *
+*
+*
+* POPULATE QA GRID
+*
+QA.LIST = ''
+QA.CNT = DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM)
+FOR I = 1 TO QA.CNT
+   QA.LIST<1,I,1> = WRT_REC<WRT_QA_ACTIVE,I>  + 0  ;* CHARACTERISTIC ACTIVE
+   QA.LIST<1,I,2> = WRT_REC<WRT_QA_CHAR_ID,I>    ;* CHARACTERISTIC ID
+   QA.LIST<1,I,3> = WRT_REC<WRT_QA_CHAR,I>    ;* CHARACTERISTIC
+   QA.LIST<1,I,4> = WRT_REC<WRT_QA_AQL,I>    ;* FREQUENCY
+   QA.LIST<1,I,5> = WRT_REC<WRT_QA_LOC,I>     ;* LOCATION ON PRINT
+   QA.LIST<1,I,6> = WRT_REC<WRT_QA_METHOD,I>  ;* INSPECTION METHOD
+   QA.LIST<1,I,7> = WRT_REC<WRT_QA_VAL1,I>    ;* ACCEPT VALUE (OR LOW LIMIT)
+   QA.LIST<1,I,8> = WRT_REC<WRT_QA_VAL2,I>    ;* REJECT VALUE (OR HIGH LIMIT)
+NEXT I
+*
+CTRLIDS = "QAGRID"
+PROPS   = GPVALUE
+VALUES  = QA.LIST
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+******************************************************************************************
+LOAD.WO.CTRLS:
+*
+* routine LOADS WORK ORDER controls
+*
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CI = 1
+CTRLIDS<CI> = "TXTSCHSTART"
+PROPS<CI>   = GPVALUE
+IF WRT_REC<WR_SCHD_START> THEN
+   VALUES<CI>  = OCONV(WRT_REC<WR_SCHD_START>,WR_SCHD_START.CNV)
+END ELSE
+   VALUES<CI>  = ''
+END
+*
+CI = 2
+CTRLIDS<CI> = "TXTSCHEND"
+PROPS<CI>   = GPVALUE
+IF WRT_REC<WR_SCHD_END> THEN
+   VALUES<CI>  = OCONV(WRT_REC<WR_SCHD_END>,WR_SCHD_END.CNV)
+END ELSE
+   VALUES<CI>  = ''
+END
+*
+CI = 3
+CTRLIDS<CI> = "TXTACTSTART"
+PROPS<CI>   = GPVALUE
+IF WRT_REC<WR_ACT_START> THEN
+   VALUES<CI>  = OCONV(WRT_REC<WR_ACT_START>,WR_ACT_START.CNV)
+END ELSE
+   VALUES<CI>  = ''
+END
+*
+CI = 4
+CTRLIDS<CI> = "TXTACTEND"
+PROPS<CI>   = GPVALUE
+IF WRT_REC<WR_ACT_END> THEN
+   VALUES<CI>  = OCONV(WRT_REC<WR_ACT_END>,WR_ACT_END.CNV)
+END ELSE
+   VALUES<CI>  = ''
+END
+*
+LC = 5
+LOCATE WRT_REC<WR_STATUS> IN STAT.IDX<1> SETTING IDX THEN
+   CTRLIDS<LC> = "LSTSEQSTAT"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = IDX
+END ELSE
+   CTRLIDS<LC> = "LSTSEQSTAT"
+   PROPS<LC>   = GPVALUE
+   VALUES<LC>  = 0
+END
+*
+CI = 6
+CTRLIDS<CI> = "TXTSTATDATE"
+PROPS<CI>   = GPVALUE
+IF WRT_REC<WR_STAT_DATE> THEN
+   VALUES<CI>  = OCONV(WRT_REC<WR_STAT_DATE>,WR_STAT_DATE.CNV)
+END ELSE
+   VALUES<CI>  = ''
+END
+*
+CI = 7
+CTRLIDS<CI> = "TXTQTYTOMFG"
+PROPS<CI>   = GPVALUE
+VALUES<CI>  = WRT_REC<WR_QTY_TO_MFG>
+*
+CI = 8
+CTRLIDS<CI> = "TXTQTYCMP"
+PROPS<CI>   = GPVALUE
+VALUES<CI>  = WRT_REC<WR_QTY_COMP>
+*
+CI = 9
+CTRLIDS<CI> = "TXTSCRAP"
+PROPS<CI>   = GPVALUE
+VALUES<CI>  = WRT_REC<WR_SCRAP>
+*
+CI = 10
+CTRLIDS<CI> = "CHKFREEZE"
+PROPS<CI>   = GPVALUE
+VALUES<CI>  = WRT_REC<WR_FREEZE_SCHD>
+*
+CI = 11
+CTRLIDS<CI> = "LBLWOV"
+PROPS<CI>   = GPVALUE
+VALUES<CI>  = FIELD(WRT_ID,"*",1)
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+*
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+*
+************************************************************
+LOAD.LSTWC: *
+*
+* LOADS LSTWC THE WORK CENTER LIST DROP DOWN LIST
+*
+MAX.LIST = 500
+START.LIST = 1
+CALL GUI.SEARCH2 ("WC","","*","@ID","WC_DESC",MAX.LIST,START.LIST,WC.LIST,WC.IDS,LIST.CT,EMSG)
+
+*
+IF EMSG<1> = 'No Items Found' THEN  ;* NO ITEMS FOUND
+   VALUE = ''
+END ELSE
+   VALUE = WC.LIST
+END
+*
+CALL ATGUISETPROP('ROUT','ROUT',"LSTWC",GPITEMS,0,0,VALUE,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+SAVE.RT.CHECK: *
+*
+* TEST TO SEE IF WE NEED TO UPDATE FILES:
+*
+SAVE.RT.CHECK.OK = @TRUE
+IF CALLER_WRT_REC # WRT_REC THEN
+   PRMPT = "Routing Record has changed but not saved.":@SVM:"Select Cancel, then File to save changes ":@SVM:"or Ok to proceed without saving changes to item"
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* ?
+   BUTTONS = 1  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   IF RESPONSE = 2 THEN  ;* CANCEL THE CANCEL OR CLOSE REQUEST
+      SAVE.RT.CHECK.OK = @FALSE
+   END
+END
+RETURN
+************************************************************
+SEQ.VALID.CHECK:
+SEQ.VALID = @TRUE
+SEQ.VALID.MSG = ''
+*
+* CHECK COMMON VALIDATIONS
+*
+* QA INFO
+*
+FOR QA.VAL.ROW = 1 TO DCOUNT(WRT_REC<WRT_QA_ACTIVE>,@VM)
+   GOSUB QA.VALIDATE
+   IF NOT(QA.VALID) THEN
+      SEQ.VALID.MSG = QA.VALID.MSG
+      EXIT
+   END
+NEXT QA.VAL.ROW
+IF SEQ.VALID.MSG = '' THEN
+   BEGIN CASE
+         *
+         * COMMON (PN.DIALOG AND WO.DIALOG VALIDAION)
+         *
+         *
+         * NEED WORK CENTER
+         *
+      CASE WRT_REC<WRT_WCID> = ''
+         SEQ.VALID.MSG = 'Work Center Required'
+      CASE WRT_REC<WRT_QTY_MULT> + 0 LE 0
+         SEQ.VALID.MSG = 'Quantity Multiplier must be > 0'
+         *
+         * WO.DIALOG VALIDATION
+         *
+      CASE CALLER_PROG_ID = "WO.DIALOG"
+         BEGIN CASE
+            CASE WRT_REC<WR_QTY_TO_MFG> = ''
+               SEQ.VALID.MSG = 'Qty to Manufacture Required'
+            CASE WRT_REC<WR_SCHD_START> = ''
+               SEQ.VALID.MSG = 'Schedule Start Date Required'
+            CASE WRT_REC<WR_SCHD_END> = ''
+               SEQ.VALID.MSG = 'Schedule End Date Required'
+            CASE WRT_REC<WR_STATUS> = ''
+               SEQ.VALID.MSG = 'Status Code Required'
+         END CASE
+   END CASE
+END
+*
+IF SEQ.VALID.MSG # '' THEN
+   SEQ.VALID = @FALSE
+   CAPTION = "RT.DIALOG"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(SEQ.VALID.MSG, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+************************************************************
+LOAD.QA.METHODS:
+CALL LIST.LOAD(C.VALIDATION_FILE,"QA.METHODS","2",'',METHOD.LIST,METHOD.IDX,METHOD.COUNT,EMSG)
+
+*
+IF METHOD.COUNT > 0 THEN ;* NO ITEMS FOUND
+   VALUE = METHOD.LIST
+   CONVERT @SVM TO '|' IN VALUE
+   CONVERT @VM TO @SVM IN VALUE
+   *
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPCOLITEMS,6,0,VALUE,GUIERRORS,GUISTATE)
+END
+
+RETURN
+*
+************************************************************
+LOAD.QA.AQL:
+* AQL.C0.IDX DEFINED IN AQL.C0.TABLE INCUDE FILE
+*
+VALUE = AQL.C0.IDX
+CONVERT @AM TO @SVM IN VALUE
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"QAGRID",GPCOLITEMS,4,0,VALUE,GUIERRORS,GUISTATE)
+*
+
+RETURN
+************************************************************
+QA.VALIDATE: *
+* QA.VAL.ROW VM OF QA DATA TO VALIDATE WITHIN WRT_REC
+* QA.VALID RETURNED FLAG T/F
+* QA.VALID.MSG IF QA.VALID = FALSE, RETURNED ERROR MSG
+QA.VALID = @TRUE
+QA.VALID.MSG = ''
+BEGIN CASE
+   CASE WRT_REC<WRT_QA_CHAR_ID,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing Characteristic ID"
+   CASE WRT_REC<WRT_QA_CHAR,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing Characteristic Desc"
+   CASE WRT_REC<WRT_QA_METHOD,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing Method"
+   CASE WRT_REC<WRT_QA_AQL,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing AQL Table Value"
+   CASE WRT_REC<WRT_QA_VAL1,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing Value 1"
+   CASE WRT_REC<WRT_QA_VAL2,QA.VAL.ROW> = ''
+      QA.VALID.MSG = "Missing Value 2"
+   CASE NUM(WRT_REC<WRT_QA_VAL1,QA.VAL.ROW>)
+      IF NOT(NUM(WRT_REC<WRT_QA_VAL2,QA.VAL.ROW>)) THEN
+         QA.VALID.MSG = "Value 1 and Value 2 Must be of the Same Type"
+      END ELSE
+         IF WRT_REC<WRT_QA_VAL1,QA.VAL.ROW> GE WRT_REC<WRT_QA_VAL2,QA.VAL.ROW> THEN
+            QA.VALID.MSG = "Value 1 - Lower Limit, Value 2 - Upper Limit"
+         END
+      END
+   CASE NOT(NUM(WRT_REC<WRT_QA_VAL1,QA.VAL.ROW>))
+      IF (WRT_REC<WRT_QA_VAL1,QA.VAL.ROW> # QA.CHAR.ACCEPT.TEXT) OR (WRT_REC<WRT_QA_VAL2,QA.VAL.ROW> # QA.CHAR.REJECT.TEXT) THEN
+         QA.VALID.MSG = "Non Numeric Type Must be of: ":QA.CHAR.ACCEPT.TEXT: " " :QA.CHAR.REJECT.TEXT
+      END
+END CASE
+*
+IF QA.VALID.MSG # '' THEN
+   QA.VALID.MSG = "QA Characteristic Row: ":QA.VAL.ROW:" ":QA.VALID.MSG:" Please Correct"
+   QA.VALID = @FALSE
+END
+RETURN
+**********************************************************************
+OPERATION.TO.WR:
+*
+* COPIES OPERATION REC OP_REC TO WR_REC, OVERWRITTING EXISTING WR RECORD VALUES
+*
+WRT_REC<WRT_WCID> = OP_REC<WRT_WCID>
+WRT_REC<WRT_OPCODE> = OP_REC<WRT_OPCODE>
+WRT_REC<WRT_EMPMACH > = OP_REC<WRT_EMPMACH >
+WRT_REC<WRT_SUMACH > = OP_REC<WRT_SUMACH >
+WRT_REC<WRT_SUEMP > = OP_REC<WRT_SUEMP >
+WRT_REC<WRT_MACHHPP > = OP_REC<WRT_MACHHPP >
+WRT_REC<WRT_EMPHPP > = OP_REC<WRT_EMPHPP >
+WRT_REC<WRT_DESC > = OP_REC<WRT_DESC >
+WRT_REC<WRT_TFD_REF > = OP_REC<WRT_TFD_REF >
+WRT_REC<WRT_TFD_TYPE > = OP_REC<WRT_TFD_TYPE >
+WRT_REC<WRT_TFD_DESC > = OP_REC<WRT_TFD_DESC >
+WRT_REC<WRT_SIGNOFF > = OP_REC<WRT_SIGNOFF >
+WRT_REC<WRT_OPQUOTE > = OP_REC<WRT_OPQUOTE >
+WRT_REC<WRT_QTY_MULT > = OP_REC<WRT_QTY_MULT >
+WRT_REC<WRT_SCHDCONCURRENT > = OP_REC<WRT_SCHDCONCURRENT>
+RETURN
+END

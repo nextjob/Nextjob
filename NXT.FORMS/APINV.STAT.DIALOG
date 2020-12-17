@@ -1,0 +1,79 @@
+TEMPLATEı41843.73914ıAPINVıNXT.BPüAPINV.STAT.DIALOGü3ü0
+0ı1.4ı4
+2ıAPINVıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııAP Invoice Status
+4ıı59ııı0
+4ıı42ııımab
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııAP Invoice Status
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıAPINV*APINVıı7ıautoıautoı61ı19.12ı1
+4ıı22ıııAP Invoice Status
+4ıı48ııı0
+4ıı9ııı0
+2ıAPINV*APINV*lst1VenNameıı24ı14ı.5ı9.5ı1.25ı32
+4ıı27ııı4
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı6ı15ı15ı10
+4ıı39ııı1
+4ıı49ıııSelect vendor name
+4ıı53ııı8
+4ıı16ıııCourier
+4ıı17ııı9.75
+4ıı32ıııCM NbrıNameıAddressıCity
+4ıı33ııı3
+2ıAPINV*APINV*txtInvoiceıı16ı9ı2.5ı11ı1.25ı256
+2ıAPINV*APINV*LBLVENDNAMEıı15ı37ı.5ı22ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıAPINV*APINV*chkHoldıı20ı46ı3ı12ı1.25ı32
+4ıı22ıııHold Payment
+4ıı67ııı0
+2ıAPINV*APINV*LBLVendorıı15ı28ı.5ı8ı1.25ı0
+4ıı0ıııVendor
+4ıı67ııı0
+2ıAPINV*APINV*btnCloseıı18ı33ı15ı8ı2ı32
+4ıı22ıııClose
+4ıı49ıııClick to cancel AR entry
+2ıAPINV*APINV*btnVoidıı18ı50ı15ı8ı2ı32
+4ıı22ıııVoid Invoice
+2ıAPINV*APINV*grdInvItemsıı28ı6ı5ı47ı8ı0
+4ıı27ııı4
+4ıı32ıııPack List IdıDate RecvdıQty RecvdıLine Total
+4ıı38ııı0ı0ı0ı1
+4ıı37ııı15ı8ı8ı13.5
+4ıı34ııı1ı1ı0ı1
+4ıı35ııı0ı0ı0ı5
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ıııüüüıüüüıüüü
+2ıAPINV*APINV*lbl1Venıı15ı2ı.5ı11.5ı1.25ı0
+4ıı0ıııVendor Number
+4ıı67ııı0
+2ıAPINV*APINV*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıAPINV*APINV*btnPrintıı18ı3ı15ı8ı2ı32
+4ıı22ıııPrint
+2ıAPINV*APINV*lblInvıı15ı2ı2.5ı7ı1.25ı0
+4ıı0ıııInvoice
+4ıı67ııı0
+2ıAPINV*APINV*lblInvAmtıı15ı22ı13ı13.5ı1.25ı0
+4ıı0ıııInvoice Balance Due
+4ıı67ııı0
+2ıAPINV*APINV*lblInvAmtVıı15ı37ı13ı16ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı1
+2ıAPINV*APINV*lblChkıı15ı22ı2.5ı7ı1.25ı0
+4ıı0ıııAP Check
+4ıı67ııı0
+2ıAPINV*APINV*lblchkvıı15ı29ı2.5ı10ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+0ı-1

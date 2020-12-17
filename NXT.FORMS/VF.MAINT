@@ -1,0 +1,56 @@
+TEMPLATEı41802.97947ıVF.MAINTıNXT.BPüVF.DIALOGü3ü0
+0ı1.4ı4
+2ıVF.MAINTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı22ıııVF.MAINT
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıVF.MAINT*Form1ıı7ıautoıautoı63ı21.5ı1
+4ıı48ııı0
+4ıı9ııı0
+4ıı22ıııValidation File Maintenance
+2ıVF.MAINT*Form1*Frame1ıı26ı1ı.5ı61ı9.75ı0
+4ıı0ıııval desc
+2ıVF.MAINT*Form1*lblIDNameıFrame1ı15ı22ı1.5ı16ı1.25ı0
+4ıı0ıııid name
+4ıı25ııı1
+2ıVF.MAINT*Form1*lblIdDescıFrame1ı15ı1ı3ı25ı1.25ı0
+4ıı0ıııid desc
+2ıVF.MAINT*Form1*CBIDıFrame1ı23ı39ı1.5ı20ı1.25ı288
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıVF.MAINT*Form1*txtIdDescıFrame1ı16ı1ı4.5ı58.5ı1.25ı256
+2ıVF.MAINT*Form1*txtNotesıFrame1ı17ı1ı6.5ı58ı2.5ı0
+4ıı12ııı1
+2ıVF.MAINT*Form1*Frame2ıı26ı1ı10.5ı61ı4ı0
+4ıı0ıııVal1
+4ıı9ııı0
+2ıVF.MAINT*Form1*txtVal1ıFrame2ı16ı18ı2ı35ı1.25ı256
+2ıVF.MAINT*Form1*lblVal1ıFrame2ı15ı1ı2ı15.5ı1.25ı0
+4ıı0ıııval1 desc
+4ıı25ııı1
+2ıVF.MAINT*Form1*Frame3ıı26ı1ı15ı61ı4ı0
+4ıı0ıııval 2
+4ıı9ııı0
+2ıVF.MAINT*Form1*txtVal2ıFrame3ı16ı18ı2ı35.5ı1.25ı256
+2ıVF.MAINT*Form1*lblVal2ıFrame3ı15ı2ı2ı15ı1.25ı0
+4ıı0ıııval2 desc
+4ıı25ııı1
+2ıVF.MAINT*Form1*btnFileıı18ı1ı19.5ı7.5ı1.5ı32
+4ıı22ıııSave
+2ıVF.MAINT*Form1*btnDeleteıı18ı36ı19.5ı8ı1.5ı32
+4ıı22ıııDelete
+2ıVF.MAINT*Form1*btnCancelıı18ı18ı19.5ı8ı1.5ı32
+4ıı22ıııCancel
+2ıVF.MAINT*Form1*btnReportıı18ı54ı19.5ı8ı1.5ı32
+4ıı22ıııReport
+0ı-1

@@ -1,0 +1,188 @@
+TEMPLATEı42486.52343ıUSERıNXT.BPüUSER.MAINTü3ü0
+0ı1.4ı4
+2ıUSERıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııUSER MAINTENANCE
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı43ıııMaintains User Records
+4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved
+4ıı42ıııMAB
+2ıUSER*USERıı7ıautoıautoı76ı41.62ı1
+4ıı22ıııUser Maintenance
+4ıı48ııı0
+4ıı9ııı0
+2ıUSER*USER*lbluserıı15ı1ı1ı8ı1.25ı0
+4ıı0ıııUser Name
+2ıUSER*USER*cbUserıı23ı9ı1ı26ı1.25ı288
+4ıı27ııı1
+4ıı38ııı0
+4ıı37ııı15
+4ıı39ııı1
+4ıı53ııı8
+2ıUSER*USER*CHKLOGOUTıı20ı37ı1ı8ı1.25ı32
+4ıı22ıııLogout
+4ıı67ııı0
+2ıUSER*USER*frmMenuıı26ı0ı3ı74ı11.25ı0
+4ıı0ıııMenu Access
+4ıı8ııı0
+2ıUSER*USER*lblOEıfrmMenuı15ı1ı1.5ı15ı1.25ı0
+4ıı0ıııOrder Processing
+2ıUSER*USER*chkOEıfrmMenuı20ı17ı1.5ı2.5ı1.25ı32
+4ıı49ıııIf checked user has access to Order Process module
+2ıUSER*USER*lblShipıfrmMenuı15ı1ı3ı15ı1.25ı0
+4ıı0ıııShipping
+2ıUSER*USER*chkShipıfrmMenuı20ı17ı3ı3ı1.25ı32
+4ıı49ıııIf checked user has access to Shipping module
+2ıUSER*USER*lblInvoiceıfrmMenuı15ı1ı4.5ı15ı1.25ı0
+4ıı0ıııInvoicing
+2ıUSER*USER*chkInvoiceıfrmMenuı20ı17ı4.5ı2.5ı1.25ı32
+4ıı49ıııIf checked user has access to Invoicing module.
+2ıUSER*USER*lblARıfrmMenuı15ı1ı6ı15ı1.25ı0
+4ıı0ıııAccounts Receivable
+4ıı67ııı0
+2ıUSER*USER*chkARıfrmMenuı20ı17ı6ı3ı1.25ı32
+4ıı49ıııIf checked user has access to AR module
+2ıUSER*USER*lblPURıfrmMenuı15ı1ı7.5ı14.5ı1.25ı0
+4ıı67ııı0
+4ıı0ıııPurchase Order Entry
+2ıUSER*USER*chkPURıfrmMenuı20ı17ı7.5ı4ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblPORıfrmMenuı15ı1ı9ı15.5ı1.25ı0
+4ıı0ıııPurchase Order Receipts
+4ıı67ııı0
+2ıUSER*USER*chkPORıfrmMenuı20ı17ı9ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblAPıfrmMenuı15ı26ı1.5ı12.5ı1.25ı0
+4ıı0ıııAccounts Payable
+4ıı67ııı0
+2ıUSER*USER*chkAPıfrmMenuı20ı44ı1.5ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblWCıfrmMenuı15ı26ı3ı8ı1.25ı0
+4ıı0ıııWork Centers
+4ıı67ııı0
+2ıUSER*USER*chkWCıfrmMenuı20ı44ı3ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblWOıfrmMenuı15ı26ı4.5ı10ı1.25ı0
+4ıı0ıııWork Orders
+4ıı67ııı0
+2ıUSER*USER*chkWOıfrmMenuı20ı44ı4.5ı3.5ı1.5ı32
+4ıı67ııı0
+2ıUSER*USER*lblLABıfrmMenuı15ı26ı6ı8ı1.25ı0
+4ıı0ıııLabor
+4ıı67ııı0
+2ıUSER*USER*chkLabıfrmMenuı20ı44ı6ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblWORıfrmMenuı15ı26ı7.5ı16.5ı1.25ı0
+4ıı0ıııWork Order Receipts
+4ıı67ııı0
+2ıUSER*USER*chkWORıfrmMenuı20ı44ı7.5ı3.5ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblPMıfrmMenuı15ı54ı1.5ı15ı1.25ı0
+4ıı0ıııPart Maintenance
+4ıı67ııı0
+2ıUSER*USER*chkPMıfrmMenuı20ı69ı1.5ı3ı1.25ı32
+4ıı49ıııIf check user has access to Part Maintenance module
+4ıı67ııı0
+2ıUSER*USER*lblCMıfrmMenuı15ı54ı3ı15ı1.25ı0
+4ıı0ıııCustomer Maintenance
+4ıı67ııı0
+2ıUSER*USER*chkCMıfrmMenuı20ı69ı3ı3ı1.25ı32
+4ıı49ıııIf checked user has access to Customer Maintenance module
+4ıı67ııı0
+2ıUSER*USER*lblVenıfrmMenuı15ı54ı4.5ı15ı1.25ı0
+4ıı0ıııVendor Maintenance
+4ıı67ııı0
+2ıUSER*USER*chkVENıfrmMenuı20ı69ı4.5ı3.5ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblSMıfrmMenuı15ı54ı6ı15ı1.25ı0
+4ıı0ıııSystem Maintenance
+4ıı67ııı0
+2ıUSER*USER*chkSMıfrmMenuı20ı69ı6ı2.5ı1.25ı32
+4ıı49ıııIf checked user has access to System Maintenance module.
+4ıı67ııı0
+2ıUSER*USER*lblReportsıfrmMenuı15ı54ı7.5ı15ı1.25ı0
+4ıı0ıııReports
+2ıUSER*USER*chkReportsıfrmMenuı20ı69ı7.5ı3ı1.25ı32
+4ıı49ıııIf checked user has access to Reports module
+2ıUSER*USER*lblWOIıfrmMenuı15ı26ı9ı13ı1.25ı0
+4ıı0ıııWork Order Issues
+4ıı67ııı0
+2ıUSER*USER*chkWOIıfrmMenuı20ı44ı9ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*lblShopSchdıfrmMenuı15ı54ı9ı13ı1.25ı0
+4ıı0ıııShop Schedule
+4ıı67ııı0
+2ıUSER*USER*chkSSCHDıfrmMenuı20ı69ı9ı3ı1.25ı32
+4ıı67ııı0
+2ıUSER*USER*frmRestrictionsıı26ı0ı14.5ı74ı3.25ı0
+4ıı0ıııUser Restrictions
+4ıı8ııı0
+2ıUSER*USER*lblPriceıfrmRestrictionsı15ı1ı1.5ı15ı1.25ı0
+4ıı0ıııPrice Restricted
+2ıUSER*USER*chkPriceıfrmRestrictionsı20ı17ı1.5ı3ı1.25ı32
+4ıı49ıııIf checked user cannot see pricing data
+2ıUSER*USER*lblOEPSıfrmRestrictionsı15ı24ı1.5ı15ı1.25ı0
+4ıı0ıııProcess / Routing Edit
+4ıı67ııı0
+2ıUSER*USER*chkOEPSıfrmRestrictionsı20ı46ı1.5ı2.5ı1.25ı32
+4ıı49ıııIf checked user cannot edit process steps from Order Processing module
+2ıUSER*USER*lblOECustAddıfrmRestrictionsı15ı56ı1.5ı11.5ı1.25ı0
+4ıı0ıııOE Customer Add
+2ıUSER*USER*chkOeCmAddıfrmRestrictionsı20ı69ı1.5ı3.5ı1.25ı32
+2ıUSER*USER*btnSaveıı18ı1ı39.5ı10ı1.25ı32
+4ıı22ıııSave
+4ıı8ııı0
+2ıUSER*USER*btnCancelıı18ı20ı39.5ı10ı1.25ı32
+4ıı22ıııClose
+2ıUSER*USER*btnDeleteıı18ı40ı39.5ı9.5ı1.25ı32
+4ıı22ıııDelete
+4ıı8ııı0
+2ıUSER*USER*frmPathsıı26ı0ı34ı73.5ı5ı0
+4ıı0ıııPaths
+4ıı8ııı0
+2ıUSER*USER*btnSSpathıfrmPathsı18ı1ı1ı10.5ı1.25ı32
+4ıı22ıııReport Folder
+4ıı8ııı0
+2ıUSER*USER*txtSSpathıfrmPathsı16ı12ı1ı60.5ı1.25ı0
+4ıı12ııı1
+4ıı8ııı0
+2ıUSER*USER*frmPrinterıı26ı0ı18ı74ı15.75ı0
+4ıı0ıııPrinter Assignments
+4ıı8ııı0
+2ıUSER*USER*lblInvAssignıfrmPrinterı15ı1ı1.5ı15ı1.25ı0
+4ıı0ıııInvoice Printer Unit *
+4ıı67ııı0
+2ıUSER*USER*lblPckAssignıfrmPrinterı15ı1ı3.5ı15ı1.25ı0
+4ıı0ıııPackslip Printer Unit *
+4ıı67ııı0
+2ıUSER*USER*lblReportPrtıfrmPrinterı15ı1ı5.5ı13ı1.25ı0
+4ıı0ıııReports Printer Unit
+2ıUSER*USER*lblProAssignıfrmPrinterı15ı28ı1.5ı14ı1.25ı0
+4ıı0ıııProcess Sheet Printer
+2ıUSER*USER*lblLblAssignıfrmPrinterı15ı28ı3.5ı14ı1.25ı0
+4ıı0ıııLabel Printer Unit
+2ıUSER*USER*txtInvoiceıfrmPrinterı16ı16ı1ı3ı1.25ı256
+4ıı29ııı8
+4ıı25ııı1
+2ıUSER*USER*txtPackıfrmPrinterı16ı16ı3ı3ı1.25ı256
+4ıı29ııı8
+4ıı25ııı1
+2ıUSER*USER*txtReportıfrmPrinterı16ı16ı5ı3ı1.25ı256
+4ıı25ııı1
+2ıUSER*USER*txtProcessıfrmPrinterı16ı46ı1ı3ı1.25ı256
+4ıı29ııı8
+4ıı25ııı1
+2ıUSER*USER*txtLabelıfrmPrinterı16ı46ı3ı3ı1.25ı256
+4ıı29ııı8
+4ıı25ııı1
+2ıUSER*USER*txtSetptrıfrmPrinterı17ı1ı8ı71ı7.25ı0
+4ıı12ııı1
+2ıUSER*USER*LBLPDFıfrmPrinterı15ı28ı5.5ı18ı1.25ı0
+4ıı0ııı* Set to -1 for PDF Printing
+4ıı67ııı0
+0ı-1

@@ -1,0 +1,192 @@
+** TEST.DATE.PICKER
+** Alan Gruskoff - Performant Systems
+** Example to show use of the Date Picker popup window
+$INCLUDE NXT.INCLUDES NXT.COMMON
+APP.TITLE = "Test Date Picker"
+GUIAPP = "TEST.DATE.PICKER"
+GUIFRM = "FORM1"
+* AccuTerm GUI Application Skeleton
+*
+* Add your equates and code to open files here...
+ERR.MSG = ""
+SVM = CHAR(252); VM = CHAR(253); AM = CHAR(254)
+ESC = CHAR(27); STX = CHAR(2)
+**
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE ERR.MSG = "NO ": 'GUIAPPS' :" FILE"
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'TEST.DATE.PICKER' ELSE ERR.MSG = 'CANNOT READ GUIAPPS TEMPLATE FILE ': 'TEST.DATE.PICKER'
+**
+IF ERR.MSG NE "" THEN CRT ERR.MSG:" <Enter>: ":; INPUT OK; STOP
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+$INCLUDE GUIBP ATGUIEQUATES
+CALL ATGUIINIT(GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+CALL ATGUISHOW('TEST.DATE.PICKER','FORM1','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CRT CHAR(27):CHAR(2):'PAccuTerm.WindowState = 1':CHAR(13): ;* minimize AccuTerm Session
+*-->END GUI STARTUP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUIEVT = ""
+LOOP UNTIL GUIEVT EQ GEQUIT DO
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+   GUIAPP=OCONV(GUIAPP,'MCU')
+   GUIFRM=OCONV(GUIFRM,'MCU')
+   GUICTL=OCONV(GUICTL,'MCU')
+   GOSUB GUI.DECODE.EVENT
+REPEAT
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+CALL ATGUISHUTDOWN
+CRT CHAR(27):CHAR(2):'PAccuTerm.WindowState = 0':CHAR(13): ;* restore AccuTerm Session
+STOP
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+ BEGIN CASE
+ CASE GUIAPP='TEST.DATE.PICKER'
+ BEGIN CASE
+  CASE GUIFRM='FORM1'
+  BEGIN CASE
+   CASE GUICTL=''
+   BEGIN CASE
+    CASE GUIEVT=GECLOSE
+    GOSUB GUI.TEST.DATE.PICKER.FORM1.CLOSE;GUIEVT=0
+    END CASE
+   CASE GUICTL='COMMAND1'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.TEST.DATE.PICKER.FORM1.COMMAND1.CLICK;GUIEVT=0
+    END CASE
+   END CASE
+  END CASE
+ END CASE
+ IF GUIEVT THEN
+  * Unhandled event - may be dynamic
+  GOSUB GUI.DYNAMIC.EVENTS
+ END
+END ELSE
+ GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.TEST.DATE.PICKER.FORM1.CLOSE: *
+* Default form close event handler
+CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+IF NUM.FORMS = 0 THEN
+   CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+END
+GUIEVT = GEQUIT
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.TEST.DATE.PICKER.FORM1.COMMAND1.CLICK: *
+CALL DATE.PICKER(PASS.DATE,GUISTATE,GUI.PROJECT.FILE)
+IF PASS.DATE NE "" THEN
+   THIS.DATE = OCONV(PASS.DATE,"D4-")
+   CALL ATGUILOADVALUES(GUIAPP,GUIFRM,"RESULT",THIS.DATE,GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+CALL ATGUISHUTDOWN
+CRT CHAR(27):CHAR(2):'PAccuTerm.WindowState = 0':CHAR(13): ;* restore AccuTerm Session
+**
+PRINT 'The following errors have been reported by the GUI system:'
+NUMERRS=DCOUNT(GUIERRORS,CHAR(254))
+FOR EACHERR=2 TO NUMERRS
+   PRINT GUIERRORS<EACHERR,6>
+NEXT EACHERR
+STOP
+*-->END ERROR HANDLER<--*
+*
+*
+SHOW.ERR.MSG: *
+CAPTION = APP.TITLE
+STYLE   = 2 ; ** 0=none 1="X"  2="!"  3="?"  4="i"
+BUTTONS = 0 ; ** 0 = OK only
+**               1 = OK /Cancel
+**               2 = Abort / Retry / Ignore
+**               3 = Yes / No / Cancel
+**               4 = Yes / No
+**               5 = Retry / Cancel
+HELPID  = ""
+CALL ATGUIMSGBOX(ERR.MSG, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS, GUISTATE)
+RETURN
+*
+*
+************************************************************
+END

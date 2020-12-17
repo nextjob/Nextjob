@@ -1,0 +1,147 @@
+SUBROUTINE APD.TEMPLATE(FD)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: APD.TEMPLATE
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* FD - FORM TEMPLATE RETURNED TO CALLER
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* CREATE PCL PO FORM TEMPLATE
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+********** PROGRAM EQUATES
+**
+*
+FD = ''
+*
+CALL COMPANY.HEADER(COMPANY_REC,FD)
+*
+**
+*********** START OF PROGRAM
+**
+*
+!
+* FORM.CREATE
+!
+FORM.CREATE:   *
+*
+FD =  FD:HPHPOS:'1465x0Y'
+FD =  FD:CG25:'Debit Memo'
+*
+* build the boxes
+* note assume 300 dot per inch
+* *p___x___y   move to x,y dot coordinates
+* *c___a___b   make a box a wide dots and b high dots
+*  OP          solid black fill (we are actually creating lines)
+*
+FD = FD:ESC:'*p1465x50Y':ESC:'*c900a3b0P'        ;* pack slip data
+FD = FD:ESC:'*p1465x225Y':ESC:'*c900a3b0P'        ;* ship date vt line
+
+FD = FD:ESC:'*p1465x50Y':ESC:'*c3a180b0P'         ;* lf vt
+FD = FD:ESC:'*p2365x53Y':ESC:'*c3a180b0P'         ;* rt vt
+FD = FD:ESC:'*p1468x53Y':ESC:'*c300a175b5g2P'      ;* label box
+FD = FD:ESC:'*p1765x50Y':ESC:'*c3a180b0P'         ;* label vt
+*
+* text for this box
+*
+FD = FD:CG10:ESC:'*p1500x100Y':'Debit Number'
+FD = FD:ESC:'*p1500x150Y':'Date'
+FD = FD:ESC:'*p1500x200Y':'Print Date'
+
+*
+FD = FD:ESC:'*p0x435Y':ESC:'*c1095a3b0P'        ;* sold to box
+FD = FD:ESC:'*p0x780Y':ESC:'*c1095a3b0P'        ;* lw line
+FD = FD:ESC:'*p0x435Y':ESC:'*c3a345b0P'         ;* lf vt
+FD = FD:ESC:'*p1095x438Y':ESC:'*c3a345b0P'      ;* rt vt
+FD = FD:ESC:'*p3x438Y':ESC:'*c60a339b5g2P'      ;* label box
+FD = FD:ESC:'*p60x435Y':ESC:'*c3a345b0P'         ;* lf vt
+*
+FD = FD:ESC:'*p22x500Y':'V'
+FD = FD:ESC:'*p20x540Y':'E'
+FD = FD:ESC:'*p20x580Y':'N'
+FD = FD:ESC:'*p20x620Y':'D'
+FD = FD:ESC:'*p20x660Y':'O'
+FD = FD:ESC:'*p20x700Y':'R'
+*
+FD = FD:ESC:'*p0x815Y':ESC:'*c2395a3b0P'     ;* MAIN BOX
+FD = FD:ESC:'*p0x870Y':ESC:'*c2395a3b0P'     
+FD = FD:ESC:'*p0x975Y':ESC:'*c2395a3b0P'     
+FD = FD:ESC:'*p0x1000Y':ESC:'*c2395a3b0P'    
+FD = FD:ESC:'*p0x1055Y':ESC:'*c2395a3b0P'    
+FD = FD:ESC:'*p0x2815Y':ESC:'*c2395a3b0P'     ;* lw hz line
+FD = FD:ESC:'*p0x815Y':ESC:'*c3a2000b0P'     ;* lf vt
+FD = FD:ESC:'*p2395x818Y':ESC:'*c3a2000b0P'  ;* rt vt
+*
+FD = FD:ESC:'*p750x815Y':ESC:'*c3a160b0P'     ;* po box
+FD = FD:ESC:'*p1500x815Y':ESC:'*c3a160b0P'     ;* buyer box
+FD = FD:ESC:'*p1800x815Y':ESC:'*c3a160b0P'     ;* cust id box
+*FD = FD:ESC:'*p2110x815Y':ESC:'*c3a160b0P'     ;* ship via box
+FD = FD:ESC:'*p0x815Y':ESC:'*c2395a55b5g2P'    ;* shade this box
+*
+*FD = FD:ESC:'*p20x855Y':'Purchase Order Number'
+*FD = FD:ESC:'*p770x855Y':'Buyer'
+FD = FD:ESC:'*p1520x855Y':'Vendor Id'
+*FD = FD:ESC:'*p1820x855Y':'Ship Via'
+*FD = FD:ESC:'*p2120x855Y':'Terms'
+*
+FD = FD:ESC:'*p200x1000Y':ESC:'*c3a1815b0P'     ;* qty vt line
+FD = FD:ESC:'*p320x1000Y':ESC:'*c3a1815b0P'     ;* Item vt line
+FD = FD:ESC:'*p1770x1000Y':ESC:'*c3a1815b0P'     ;* UNIT vt line
+FD = FD:ESC:'*p2040x1000Y':ESC:'*c3a1815b0P'     ;* UNIT vt line
+FD = FD:ESC:'*p0x1000Y':ESC:'*c2395a55b5g2P'    ;* shade this box
+
+*
+*FD = FD:ESC:'*p40x1040Y':'Quantity'
+*FD = FD:ESC:'*p220x1040Y':'Item'
+FD = FD:ESC:'*p340x1040Y':'Description'
+FD = FD:ESC:'*p1880x1040Y':'Amount'
+FD = FD:ESC:'*p2210x1040Y':'Due Date'
+*
+*
+FD = FD:ESC:'*p0x0Y'                             ;* BACK TO TOP
+RETURN
+END
+

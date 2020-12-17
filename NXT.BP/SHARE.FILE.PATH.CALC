@@ -1,0 +1,96 @@
+SUBROUTINE SHARE.FILE.PATH.CALC(FILE.LOC,NETWORK.REC,SHARE.FILE.PATH,OPTION)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: SHARE.FILE.PATH.CALC
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 11/19/14
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+**
+* EQUATE:
+*
+*
+* VARIABLES:
+* FILE.LOC - FILE LOCATION AS SAVE IN DATA BASE (LESS NETWORK SERVER PATH)
+* NETWORK.REC - NETWORK PATH RECORD
+*
+* equate SYS_NETWORK_PATH  to 1   ;* WINDOWS NETWORK PATH NAME TO FILE SYSTEM (ie \\NEXTJOB)
+*
+* SHARE.FILE.PATH - FULLY RESOLVED PATH TO FILE
+*
+* OPTION - EXPAND - CONVERT FILE.LOC TO FULLY RESOLVED PATH TO FILE ON SHARE
+*          EXTRACT - REMOVE NETWORK PATH NAME FROM SHARE.FILE.PATH RETURING FILE.LOC
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* OPTION = 'EXPAND'
+* ROUTINE RETURNS THE SHARE FILE PATH LOCATION NEED FOR ACTION ON THE FILE
+* ASSUMES THAT FILE.LOC CONTAINS THE FILE PATH LESS THE NETWORK PATH (IE //computername)
+* IF THERE IS NO NETWORK PATH DEFINE (NETWORK.REC<SYS_NETWORK_PATH> = '') USE THE SERVER NAME FOUND VIA: SYSTEM(1015)
+* OPTION = 'EXTRACT'
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE SYSCOM KEYS.H
+*
+* IS AN ALTERNATE FILE SERVER LISTED IN THE NETWORK RECORD?
+
+IF NETWORK.REC<SYS_NETWORK_PATH> = '' THEN
+   SERVER.PATH = "\\": SYSTEM(1015)  ;* NO USE THE SERVER WE ARE RUNNING ON
+END ELSE
+   SERVER.PATH = NETWORK.REC<SYS_NETWORK_PATH>
+END
+*
+IF OPTION = 'EXPAND' THEN
+   *
+   SHARE.FILE.PATH = SERVER.PATH:FILE.LOC
+   *
+   IF OSPATH(SHARE.FILE.PATH,OS$EXISTS) THEN
+      NULL
+   END ELSE
+      SHARE.FILE.PATH = ''    ;* NO VALID FILE WAS FOUND AT THIS PATH, RETURN EMPTY
+   END
+END ELSE
+   IF SHARE.FILE.PATH[1,2] =  '\\' THEN   ;* ARE WE STARTING OUT WITH A SHARE ?
+      FILE.LOC = "\":FIELD(SHARE.FILE.PATH,"\",4,*)
+   END ELSE
+      FILE.LOC = ''
+   END
+END
+RETURN
+END

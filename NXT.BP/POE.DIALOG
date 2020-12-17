@@ -1,0 +1,2850 @@
+SUBROUTINE POE.DIALOG(GUIERRORS,GUISTATE)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: POE.DIALOG
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 05/15/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+* 2/12/15  ADD PO.TOT.VAL (LBLPOVAL) AND PO.ITEM.VAL (LBLITEMVAL)
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* DIALOG IS CALLED TO MAINTAIN PURCHASE ORDERS
+*
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES NXT.WO.STATUS.DEF
+$INCLUDE NXT.INCLUDES AP_INVOICE.H
+$INCLUDE NXT.INCLUDES PARTS.H
+$INCLUDE NXT.INCLUDES PO_PARENT.H
+$INCLUDE NXT.INCLUDES PO_CHILD.H
+$INCLUDE NXT.INCLUDES RECEIPTS.H
+$INCLUDE NXT.INCLUDES VENDORS.H
+$INCLUDE NXT.INCLUDES VSHIP_TO.H
+$INCLUDE NXT.INCLUDES WO.H
+$INCLUDE NXT.INCLUDES WR.H
+$INCLUDE NXT.INCLUDES WC.H
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+*
+*
+$INCLUDE GUIBP ATGUIEQUATES
+GUIERRORS = ''
+PROG_ID   = "POE.DIALOG"
+GUIERRORS = ''
+GUIAPP = "POE"  ;* SEED GUIAPP AND GUIFRM PRIOR TO ACTUAL EVENT WAIT LOOP
+GUIFRM = "POE"  ;* crease dialog startup time.
+*
+
+* Open the GUI project file
+OPEN 'NXT.FORMS' TO GUI.PROJECT.FILE ELSE
+   CALL ATGUIERROR(3,'POE','',0,GRFATAL,"'NXT.FORMS' is not a file name.",GUIERRORS)
+   RETURN
+END
+* Read the GUI template into TEMPLATE
+READ TEMPLATE FROM GUI.PROJECT.FILE,'POE' ELSE
+   CALL ATGUIERROR(3,'POE','',0,GRFATAL,"'POE' is not on file.",GUIERRORS)
+   RETURN
+END
+* Add your equates and code to open files here...
+*
+GET_REC_MSG_LIST = ''     ;* GENERIC GET RECORD ERROR MESSAGE LIST
+SAVE_OP_REC = ''          ;* ORDER PARENT AND CHILD RECORDS NEED TO BE INITIALIZED
+OP_REC = ''               ;* FOR CLOSE EVENT TO HANDLE RECORDS NOT SAVED CHECK
+SAVE_OC_REC = ''
+OC_REC = ''
+OC_ID  = ''
+OP_ID  = ''
+*
+
+*
+************************************************************
+*
+*
+*-->BEGIN GUI HEADER<--*
+* If GUISTATE is not NULL, assume GUI has been initialized
+IF GUISTATE EQ '' THEN
+   CALL ATGUIINIT2(TEMPLATE<2,2>,'',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 3 THEN RETURN
+END
+* Load the dialog project template
+CALL ATGUIRUNMACRO(TEMPLATE,'',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 3 THEN RETURN
+*-->END GUI HEADER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI STARTUP<--*
+ACCEPT = 0 ;* Assume dialog cancelled (update in your OK button Click handler)
+* Add your code to load initial values here...
+CALL ATGUISHOW('POE','POE','','',GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= 2 THEN RETURN
+*-->END GUI STARTUP<--*
+*
+*
+*
+* CREATE LISTS FOR  DROP DOWN CONTROLS
+*
+TERMS.LIST  = ''  ;* LIST FOR PAYMENT TERMS SELECTION
+TERMS.IDX   = ''
+VIA.LIST  = ''  ;* LIST FOR SHIP VIA
+VIA.IDX   = ''
+GL.CODES.LIST  = ''  ;* LIST FOR GL TRANS CODES
+GL.CODES.IDX   = ''
+*
+CALL LIST.LOAD(C.VALIDATION_FILE,"TERMS","2",'',TERMS.LIST,TERMS.IDX,LIST.COUNT,EMSG)
+CALL LIST.LOAD(C.VALIDATION_FILE,"SHIP.VIA","",'',VIA.LIST,VIA.IDX,LIST.COUNT,EMSG)
+CALL LIST.LOAD(C.VALIDATION_FILE,"GL.TRANS.CODES","2",'',GL.CODES.LIST,GL.CODES.IDX,LIST.COUNT,EMSG)
+*
+*
+* COMPANY RECORD
+*
+GET_REC_MSG_LIST = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC = '' THEN
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing COMPANY_RECORD from SYSTEM_FILE"
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOSUB GUI.POE.POE.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+* LOAD IN LOT CHARGES DESCRIPTIONS INTO QUOTE GRID, PRICE COLUMN
+*
+CALL GET.RECORD("VALIDTAION_FILE",C.VALIDATION_FILE,"LOT.CHARGES",LOT.CHARGES,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF LOT.CHARGES = '' THEN
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "LOT.CHARGES not found in VALIDATION_FILE"
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOSUB GUI.POE.POE.CLOSE;GUIEVT=0
+   RETURN
+END ELSE
+   DMMY.LIST = ''
+   TEMP.LIST = ''
+   LOT.CHARGE.LIST  = ''
+   CALL LIST.LOAD(C.VALIDATION_FILE,"LOT.CHARGES","2",'',DMMY.LIST,TEMP.LIST,LIST.COUNT,EMSG)
+   FOR I = 1 TO LIST.COUNT
+      TEMP.ID = LOT.CHARGE.LIST<1,I,1>
+      LOT.CHARGE.LIST<1,I,1> = LOT.CHARGE.LIST<1,I,2>
+      LOT.CHARGE.LIST<1,I,2> = TEMP.ID
+   NEXT I
+   *
+END
+*
+* NETWORK RECORD
+NETWORK_PATH_REC = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"NETWORK_PATH",NETWORK_PATH_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+
+*
+*
+* SYSTEM DEFAULTS RECORD
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"DEFAULTS",DEFAULTS_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+*
+* USER RECORD
+*
+USER_RECORD_ID = "USER*":@LOGNAME
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,USER_RECORD_ID,USER_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF USER_REC # '' THEN
+   IF USER_REC<USER_PRICE_RESTRICTED> THEN
+      USER.IS.RESTRICTED = @TRUE
+   END ELSE
+      USER.IS.RESTRICTED = @FALSE
+   END
+   *
+   CALL NXT.PRINTER.SET(PACKSLIP.PRINTER,INVOICE.PRINTER,PROCESS.PRINTER,REPORTS.PRINTER,LABEL.PRINTER, USER_REC, GUIERRORS, GUISTATE)
+   *
+   GOSUB LOAD.VN.NAME.LIST         ;* ADD VENDOR NAMES TO LST1VENNAME
+   GOSUB LOAD.ORDER.LISTS          ;* LOAD DROP DOWN LISTS
+   GOSUB CLEAR.BUFFERS
+END ELSE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Unknow User: ":@LOGNAME
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOSUB GUI.POE.POE.CLOSE;GUIEVT=0
+   RETURN
+END
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT LOOP<--*
+GUI.DLG.EXIT = 0
+LOOP
+   CALL ATGUIWAITEVENT(GUIAPP,GUIFRM,GUICTL,GUIEVT,GUIARGS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN RETURN
+   IF GUIEVT EQ GEQUIT THEN
+      GUI.DLG.EXIT = 1
+   END ELSE
+      GUIAPP=OCONV(GUIAPP,'MCU')
+      GUIFRM=OCONV(GUIFRM,'MCU')
+      GUICTL=OCONV(GUICTL,'MCU')
+      GOSUB GUI.DECODE.EVENT
+   END
+UNTIL GUI.DLG.EXIT DO REPEAT
+* Eat final Quit event
+IF GUIEVT <> GEQUIT THEN
+   GUI.APP.LIST = ''
+   CALL ATGUIGETPROP('','','',GPSTATUS,2,0,GUI.APP.LIST,'',GUISTATE)
+   IF GUI.APP.LIST EQ '' THEN
+      * Quit event fired after last GUI object is deleted - discard it
+      CALL ATGUIWAITEVENT('','','','','','',GUISTATE)
+      * We could call ATGUISHUTDOWN here if we wanted, but there's no
+      * harm just leaving the GUI environment initialized, in case we
+      * want to use it again...
+   END
+END
+*-->END EVENT LOOP<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN GUI TRAILER<--*
+RETURN
+*
+GUI.DIALOG.RETURN: *
+* This subroutine is called just before the GUI Dialog app
+* is deleted. Check the state of the ACCEPT variable, and
+* retrieve values from GUI controls and assign to appropriate
+* arguments for return to calling program here...
+IF ACCEPT THEN
+   * Add your code here...
+END ELSE
+   * Add your code here...
+END
+RETURN
+*-->END GUI TRAILER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT DECODER<--*
+GUI.DECODE.EVENT: *
+IF NUM(GUIEVT) THEN
+   BEGIN CASE
+      CASE GUIAPP='POE'
+         BEGIN CASE
+            CASE GUIFRM='POE'
+               BEGIN CASE
+                  CASE GUICTL=''
+                     BEGIN CASE
+                        CASE GUIEVT=GECLOSE
+                           GOSUB GUI.POE.POE.CLOSE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN1EDITBILL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN1EDITBILL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN1EDITSHIP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN1EDITSHIP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN1FIND'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN1FIND.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN1NEWBILL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN1NEWBILL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN1NEWSHIP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN1NEWSHIP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN2CANCEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN2CANCEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN2FILE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN2FILE.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTN2NEW'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTN2NEW.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNACT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNACT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNCANCEL'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNCANCEL.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDELETEORDER'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNDELETEORDER.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNDISPLAY'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNDISPLAY.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNFILEORDER'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNFILEORDER.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNLABEL2'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNLABEL2.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNNEWORDER'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNNEWORDER.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNNSP'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNNSP.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNPARTMASTER'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNPARTMASTER.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='BTNPRINT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.BTNPRINT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CB1BUYER'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.CB1BUYER.CLICK;GUIEVT=0
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.CB1BUYER.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CB1SHIPVIA'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.CB1SHIPVIA.CLICK;GUIEVT=0
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.CB1SHIPVIA.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CB2PRICE'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.CB2PRICE.CLICK;GUIEVT=0
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.CB2PRICE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='CHKLOT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.CHKLOT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='GRDLINES'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATEROW
+                           GOSUB GUI.POE.POE.GRDLINES.VALIDATEROW;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LST1SHIPTO'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.LST1SHIPTO.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LST1TERMS'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.LST1TERMS.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LST1VENNAME'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.LST1VENNAME.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTGLTRANS'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.LSTGLTRANS.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='LSTITEM'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.LSTITEM.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='MENU'
+                     GUIMNU=OCONV(GUIARGS<1,1>,'MCU')
+                     BEGIN CASE
+                        CASE GUIMNU='CLOSE'
+                           GOSUB GUI.POE.POE.MENU.CLOSE;GUIEVT=0
+                        CASE GUIMNU='PRINT'
+                           GOSUB GUI.POE.POE.MENU.PRINT;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TABIT'
+                     BEGIN CASE
+                        CASE GUIEVT=GECLICK
+                           GOSUB GUI.POE.POE.TABIT.CLICK;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT1ENTBY'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT1ENTBY.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT1ORDDT'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT1ORDDT.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT1ORDNOTES'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT1ORDNOTES.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT1ORDVAL'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT1ORDVAL.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT2DESC'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT2DESC.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT2NOTES'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT2NOTES.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT2PN'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT2PN.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXT2REV'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXT2REV.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTDUE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTDUE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTITEMDESC'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTITEMDESC.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTORDERQTY'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTORDERQTY.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTQUOTE'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTQUOTE.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTSEQ'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTSEQ.VALIDATE;GUIEVT=0
+                     END CASE
+                  CASE GUICTL='TXTWO'
+                     BEGIN CASE
+                        CASE GUIEVT=GEVALIDATE
+                           GOSUB GUI.POE.POE.TXTWO.VALIDATE;GUIEVT=0
+                     END CASE
+               END CASE
+         END CASE
+   END CASE
+   IF GUIEVT THEN
+      * Unhandled event - may be dynamic
+      GOSUB GUI.DYNAMIC.EVENTS
+   END
+END ELSE
+   GOSUB GUI.CUSTOM.EVENTS
+END
+RETURN
+*-->END EVENT DECODER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNDISPLAY.CLICK: *
+* "EXECUTE" THE REF LINK IN TXTQUOTE
+CALL SHARE.FILE.PATH.CALC(OC_REC<PC_QUOTE>,NETWORK_PATH_REC,SHARE.FILE.PATH,"EXPAND")
+IF SHARE.FILE.PATH #  '' THEN   ;* SHARE LINK?
+   *
+   CMD = SHARE.FILE.PATH
+   PRINT ESC:STX:'<':CMD:CR:
+   *
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNNSP.CLICK: *
+
+*
+* new item, do we need to save old item first?
+*
+IF OP.EDIT.MODE = "VIEW" THEN
+   PRMPT = "Add item not allowed in view mode"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   GOSUB SAVE.CHILD.CHECK
+   IF SAVE.CHILD.CHECK.OK THEN
+      *
+      SAVE_OC_REC = '' ;* ORDER_CHILD ORIGINAL COPY SAVE
+      OC_REC      = '' ;* ORDER_CHILD RECORD
+      PARTS_REC   = ''
+      RECVR.DETAIL.LIST = ''
+      GOSUB ASSIGN.NEXT.CHILD
+      GOSUB LOAD.ID.CTRLS   ;* CLEAR OUT FORM
+      *
+      CALL ENABLE.POE.ID.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      *
+      CTRLIDS = "TXT2PN"
+      PROPS   = GPVALUE
+      VALUES  = "Non Standard Item"
+      CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+      *
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM,"TXT2DESC",GUIERRORS,GUISTATE)
+      *
+   END
+END
+
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB2PRICE.CLICK: *
+PRICE.EA = GUIARGS<1>          ;* VALUE USER CLICKED ON
+*
+* locate this value in the PRICE.LIST list US IT TO SET REF DOC / NOTES
+* rem 1,i,1 = qty
+*     1,i,2 = price
+*     1,i,3 = notes
+REF.DOC = ''
+*IF OC_REC<PC_QUOTE> = '' THEN    ;* ONLY CHANGE IF EMPTY
+PRICE.CNT = DCOUNT(PRICE.LIST,@VM)
+FOR PCI = 1 TO PRICE.CNT
+   IF PRICE.EA = PRICE.LIST<1,PCI,2> THEN   ;* MATCH?
+      REF.DOC = PRICE.LIST<1,PCI,3>
+      EXIT
+   END
+NEXT PCI
+*
+IF REF.DOC # '' THEN
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"TXTQUOTE",GPVALUE,0,0,REF.DOC,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   OC_REC<PC_QUOTE> = REF.DOC
+END
+*END
+*
+GOSUB PRICE.VALIDATE
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB2PRICE.VALIDATE: *
+PRICE.EA = GUIARGS<2>          ;* VALUE USER ENTERED
+GOSUB PRICE.VALIDATE
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CHKLOT.CLICK: *
+OC_REC<PC_LOT_FLAG> = GUIARGS<1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN CLOSE EVENT HANDLER<--*
+GUI.POE.POE.CLOSE: *
+GOSUB SAVE.CHECK
+IF SAVE.CHECK.OK THEN
+   *
+   RELEASE C.FILE.VAR(C.ORDER_PARENT)
+   RELEASE C.FILE.VAR(C.ORDER_CHILD)
+   * Default form close event handler
+   CALL ATGUIHIDE(GUIAPP,GUIFRM,'','',GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+   CALL ATGUIGETPROP(GUIAPP,'','',GPSTATUS,0,0,NUM.FORMS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= 2 THEN GOTO GUI.ERROR
+   IF NUM.FORMS = 0 THEN
+      GOSUB GUI.DIALOG.RETURN
+      CALL ATGUIDELETE(GUIAPP,'','',GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= 3 THEN GOTO GUI.ERROR
+      GUI.DLG.EXIT = 1
+   END
+END
+RETURN
+*-->END CLOSE EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN1EDITBILL.CLICK: *
+IF NOT(USER_REC<USER_VENDOR_MAINT>) THEN    ;* IS THIS RESTRICTED FOR USER?
+   PRMPT = "User Access to this function restricted"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   IF VN_ID # '' THEN
+      EVN_ID = VN_ID
+      NSHIPTO_ID = ''
+      ERROR_STATUS = ''
+      CALL VEN.DIALOG(VEN_EDIT,EVN_ID,NSHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+      GOSUB VN.RELOAD  ;* DISPLAY UPDATES TO CM / SHIPTO RECORD (IF ANY)
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN1EDITSHIP.CLICK: *
+IF NOT(USER_REC<USER_VENDOR_MAINT>) THEN    ;* IS THIS RESTRICTED FOR USER?
+   PRMPT = "User Access to this function restricted"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   IF VN_ID # '' AND SHIPTO_ID # '' THEN
+      EVN_ID = VN_ID
+      ESHIPTO_ID = SHIPTO_ID
+      ERROR_STATUS = ''
+      CALL VEN.DIALOG(VEN_SHIP_EDIT,EVN_ID,ESHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+      GOSUB VN.RELOAD  ;* DISPLAY UPDATES TO CM / SHIPTO RECORD (IF ANY)
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN1FIND.CLICK: *
+*
+CALL PO.SEARCH(SEARCH_ID,GUIERRORS,GUISTATE)
+IF SEARCH_ID # '' THEN
+   *
+   * FAKE AN ORDER NUMBER ENTRY
+   TEMP_ID = FIELD(SEARCH_ID,'*',1) ;* CONVERT TO ORDER ID (IF NECESSARY)
+   GUIARGS<2> = TEMP_ID
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"TXT1ORDVAL",GPVALUE,0,0,TEMP_ID,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   GOSUB  GUI.POE.POE.TXT1ORDVAL.VALIDATE
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN1NEWBILL.CLICK: *
+IF NOT(USER_REC<USER_VENDOR_MAINT>) THEN    ;* IS THIS RESTRICTED FOR USER?
+   PRMPT = "User Access to this function restricted"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   NVN_ID = ''
+   NSHIPTO_ID = ''
+   ERROR_STATUS = ''
+   CALL VEN.DIALOG(VEN_NEW,NVN_ID,NSHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   GOSUB LOAD.VN.NAME.LIST         ;* ADD VENDOR NAMES TO LST1VENNAME
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN1NEWSHIP.CLICK: *
+IF NOT(USER_REC<USER_VENDOR_MAINT>)THEN    ;* IS THIS RESTRICTED FOR USER?
+   PRMPT = "User Access to this function restricted"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   EVN_ID = VN_ID
+   NSHIPTO_ID = ''
+   ERROR_STATUS = ''
+   CALL VEN.DIALOG(VEN_SHIP_NEW,EVN_ID,NSHIPTO_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   CALL LOAD.VEN.SHIPTO.LIST(VN_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD NEW SHIPTO TO DROPDOWN LIST
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN2CANCEL.CLICK: *
+*
+* CANCEL ORDER CHILD CHANGES?
+*
+IF OC_ID # '' THEN
+   GOSUB SAVE.CHILD.CHECK
+   IF SAVE.CHILD.CHECK.OK THEN
+      *
+      * DID WE GET HERE WITH THE CHILD RECORD LOCKED?
+      *
+      IF RECORDLOCKED(C.FILE.VAR(C.PO_CHILD),OC_ID) THEN
+         RELEASE C.FILE.VAR(C.PO_CHILD), OC_ID
+      END
+      *
+      SAVE_OC_REC = '' ;* ORDER_CHILD ORIGINAL COPY SAVE
+      OC_REC      = '' ;* ORDER_CHILD RECORD
+      OC_ID       = '' ;*
+      GOSUB LOAD.ID.CTRLS   ;* CLEAR OUT FORM
+      CALL ENABLE.POE.ID.CONTROLS("RESET",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      *
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN2FILE.CLICK: *
+* THIS ROUTINE IS THE ITEM SAVE PROCESS, HOWEVER WE ALSO SAVE THE PARENT
+*
+* does order_parent need saving?
+GOSUB OE.VALIDATE
+IF ORDER.VALID THEN
+   *
+   * ORDER_CHILD NEEDS UPDATING?
+   IF SAVE_OC_REC # OC_REC THEN
+      *      GOSUB OC.VALIDATE   THIS WAS CALLED BY OE.VALIDATE
+      IF CHILD.VALID THEN
+         GOSUB ORDER.WRITE
+         *
+         * SETUP FOR POSSIBLE NEW CHILD ENTRY
+         *
+         SAVE_OC_REC = '' ;* INIT ORDER_CHILD SAVE COPY
+         OC_REC      = '' ;* INIT ORDER_CHILD RECORD
+         OC_ID       = '' ;* CHILD ID
+         GOSUB LOAD.CHILD.LIST
+         GOSUB LOAD.ID.CTRLS   ;* CLEAR OUT FORM
+         CALL ENABLE.POE.ID.CONTROLS("RESET",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+
+      END
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTN2NEW.CLICK: *
+*
+* new item, do we need to save old item first?
+*
+IF OP.EDIT.MODE = "VIEW" THEN
+   PRMPT = "Add item not allowed in view mode"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   GOSUB SAVE.CHILD.CHECK
+   IF SAVE.CHILD.CHECK.OK THEN
+      *
+      SAVE_OC_REC = '' ;* ORDER_CHILD ORIGINAL COPY SAVE
+      OC_REC      = '' ;* ORDER_CHILD RECORD
+      PARTS_REC   = ''
+      RECVR.DETAIL.LIST = ''
+      GOSUB ASSIGN.NEXT.CHILD
+      GOSUB LOAD.ID.CTRLS   ;* CLEAR OUT FORM
+      *
+      CALL ENABLE.POE.ID.CONTROLS("NEW",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      CALL ATGUIACTIVATE(GUIAPP,GUIFRM,"TXT2PN",GUIERRORS,GUISTATE)
+      *
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNACT.CLICK: *
+IF PN_ID # '' AND PARTS_REC # '' THEN
+   ACT.OPTS = ''
+   CALL ACT.DIALOG(PN_ID,PARTS_REC,ACT.OPTS,RTN.DATA,GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNCANCEL.CLICK: *
+GOSUB SAVE.CHECK
+IF SAVE.CHECK.OK THEN
+   IF OP_ID # '' THEN
+      RELEASE C.FILE.VAR(C.PO_PARENT), OP_ID
+      IF OC_ID # '' THEN
+         RELEASE C.FILE.VAR(C.PO_CHILD), OC_ID
+      END
+   END
+   *
+   * RESET FOR NEXT ORDER ACTION
+   *
+   GOSUB OE.RESET
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNDELETEORDER.CLICK: *
+IF OP_REC<PO_CHILD> = '' THEN
+   PRMPT = "Do You Really Want to Delete Order ":OP_ID:"?"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 4  ;* YES / ON
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   IF RESPONSE = 6 THEN   ;* YES, USER SAID DELETE
+      DELETE C.FILE.VAR(C.ORDER_PARENT), OP_ID
+      *
+      * RESET FOR NEXT ORDER ACTION
+      *
+      GOSUB OE.RESET
+   END
+END ELSE
+   PRMPT = "Deleting an Order With Items is NOT Allowed":@SVM:"Mark Items Manually Closed to Remove From Open Order Reports"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNFILEORDER.CLICK: *
+*
+* IF VN RECORD LOOKS GOOD SAVE IT
+* IF SHIP TO RECORD IS PRESENT, SAVE IT ALSO
+*
+GOSUB OE.VALIDATE
+IF ORDER.VALID THEN
+   *
+   * ORDER_PARENT NEEDS UPDATING?
+   GOSUB ORDER.WRITE
+   *
+   *  TEST FOR CHILD RECORDS ON THIS ORDER, IF NONE ASK USER IF THEY REALLY WANT TO QUIT ENTRY OF THIS ORDER
+   *
+   IF OP_REC<PO_CHILD> = '' THEN   ;* NO CHILD RECORDS
+      PRMPT = "Filing Order With No Detail Items, Do You Want to Continue Entering Information For This Order?"
+      CAPTION = "Purchase Order Entry"
+      STYLE   = 2  ;* !
+      BUTTONS = 4  ;* YES / ON
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      IF RESPONSE = 6 THEN   ;* YES, USER SAID THEY WANT TO CONTINUE ADDING DETAIL ITEM(S),
+         GOTO BTNFILEORDER.CLICK.999
+      END
+   END
+   *
+   RELEASE C.FILE.VAR(C.PO_PARENT), OP_ID
+   *
+   * RESET FOR NEXT ORDER ACTION
+   *
+   GOSUB OE.RESET
+   *
+BTNFILEORDER.CLICK.999: *
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNLABEL2.CLICK: *
+SL.OPTS = 'PS'
+CALL SHIPPING.LABEL(SHIPTO_REC,SL.OPTS,LABEL.PRINTER,GUIERRORS,GUISTATE)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNNEWORDER.CLICK: *
+*
+* CHECK FOR EXISTING ORDER (PARENT AND CHILD), NEED TO BE SAVED? IF SO SAVE IT
+*
+GOSUB SAVE.CHECK
+IF SAVE.CHECK.OK THEN
+   CALL ATGUIRESET(GUIAPP,GUIFRM,GUIERRORS,GUISTATE)  ;* RESET FORM TO INITAL STATE
+   *
+   * RESET ALL
+   *
+   GOSUB CLEAR.BUFFERS
+   CALL NXT.NEXTNBR("PO_PARENT",OP_ID,ERROR_STATUS,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   OP_ID = "P":OP_ID  ;* FOR NOW LETS USE A PREFEX ON PO NUMBERS
+   *
+   CALL NXT.RECORDLOCKU("PO_PARENT",C.PO_PARENT,OP_ID,MSG_LIST,FILE_LOCKED,GUIERRORS,GUISTATE)
+   OP.EDIT.MODE = "EDIT"   ;* set edit mode, always edit on new orders (how could it be busy?)
+   *
+   CTRLIDS = "TXT1ORDVAL"
+   PROPS   = GPVALUE
+   VALUES  = OP_ID
+   *
+   CTRLIDS<-1> = "TXT1ORDVAL"
+   PROPS<-1>   = GPENABLED
+   VALUES<-1>  = 0
+   *
+   CTRLIDS<-1> = "TXT1ORDDT"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = OCONV(DATE(),PO_DATE.CNV)
+   OP_REC<PO_DATE> = DATE()   ;*
+   *
+   CALL ATGUISETPROPS(GUIAPP, GUIFRM, CTRLIDS,PROPS, VALUES, GUIERRORS, GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+   CALL ENABLE.POE.CONTROLS("NEW",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   CALL ENABLE.POE.ID.CONTROLS("RESET",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNPARTMASTER.CLICK: *
+IF OC_REC<PC_PART_NBR> # '' THEN
+   TPN_ID = OC_REC<PC_PART_NBR>
+   TPARTS_REC = ''
+   CALL PN.DIALOG(TPN_ID,TPARTS_REC,@FALSE,GUIERRORS,GUISTATE)
+   *
+   * UPDATE CHILD WITH NEW PART DATA?
+   *
+   IF TPARTS_REC = '' THEN  ;* CANCEL FROM PN.DIALOG
+      NULL
+   END ELSE
+      PARTS_REC = TPARTS_REC
+      PRMPT = "Update Part Information from Part Master for this item?"
+      CAPTION = "Purchse Order Entry"
+      STYLE   = 2  ;* !
+      BUTTONS = 4  ;* yes / no
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      IF RESPONSE = 6 THEN  ;* YES
+         OC_REC<PC_REV>      = PARTS_REC<PT_REV>
+         OC_REC<PC_PART_DESC>= PARTS_REC<PT_DESC>
+         OC_REC<PC_ITEM_NOTES> = PARTS_REC<PT_NOTES>
+         GOSUB LOAD.ID.CTRLS
+      END
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.BTNPRINT.CLICK: *
+OPTS = 0   ;* PRINT ALL ITEMS
+CALL PO.FORM(OP_ID,OP_REC,POFRM,OPTS,GUIERRORS,GUISTATE)
+* GET PRINT PDF FLAG
+*
+CALL ATGUIGETPROP(GUIAPP,GUIFRM, "CHKPDF", GPVALUE, 0, 0,CREATE.PDF, GUIERRORS, GUISTATE)
+IF  (CREATE.PDF) OR (INVOICE.PRINTER < 0) THEN
+   PDF.NAME = 'PO-':OP_ID:'.PDF'
+   DISPLAY.ON.CREATION = @TRUE
+   CALL PCL.TO.PDF(POFRM,PDF.NAME,DISPLAY.ON.CREATION,GUIERRORS,GUISTATE)
+END ELSE
+   PRINT ON INVOICE.PRINTER POFRM
+   PRINTER CLOSE ON INVOICE.PRINTER
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB1BUYER.CLICK: *
+OP_REC<PO_BUYER> = GUIARGS<1>   ;* REM COMBO BOX CLICK RETURNS ACTUAL VALUE CLICK ON
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB1BUYER.VALIDATE: *
+OP_REC<PO_BUYER> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB1SHIPVIA.CLICK: *
+OP_REC<PO_SHIP_VIA> = GUIARGS<1>   ;* REM COMBO BOX CLICK RETURNS ACTUAL VALUE CLICK ON
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.CB1SHIPVIA.VALIDATE: *
+OP_REC<PO_SHIP_VIA> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.GRDLINES.VALIDATEROW: *
+*
+* CLICK ON RECIEPT INFORMATION GRIND
+GRD.ROW = GUIARGS<1,1>
+ROW.DAT = GUIARGS<2>
+*RECVR.DETAIL.LIST<1,I,1> PACKSLIP
+*RECVR.DETAIL.LIST<1,I,2> DATE RCVD
+*RECVR.DETAIL.LIST<1,I,3> QTY.RECVR
+*RECVR.DETAIL.LIST<1,I,4> LOT ID
+*RECVR.DETAIL.LIST<1,I,5> INV DATE
+*RECVR.DETAIL.LIST<1,I,6> INV ID
+*
+*  SO WE NEED TO DECIDE WHAT WE WANT TO DO, DISPLAY THE RECEIVER
+*  DISPLAY THIS INVOICE
+*  DISPLAY LINKED DOCUMENT
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.LST1SHIPTO.CLICK: *
+*
+* user selected new ship to
+*
+IF GUIARGS<1> GT 0 THEN       ;* CLICKED EMPTY LIST TEST
+   SHIPTO_ID  = VN_ID:'*':SHIPTO.LIST<1,GUIARGS<1>,1>
+   IF SHIPTO_ID # '' THEN
+
+      CALL GET.VSHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+      *
+      IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG = VN_ID:'Selection of non-existent vendor ship to ':SHIPTO_ID
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END ELSE
+         GOSUB LOAD.SHIPTO.CTRLS
+         OP_REC<PO_SHIPTO> = SHIPTO_ID
+      END
+
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.LST1TERMS.CLICK: *
+OP_REC<PO_TERMS> =  TERMS.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.LST1VENNAME.CLICK: *
+*
+UPDATE.VN.PO.FLAG = @FALSE
+IF GUIARGS<1> GT 0 THEN       ;* CLICKED EMPTY LIST TEST
+   *
+   VN_ID  = VENDORS.LIST<1,GUIARGS<1>,1>
+   IF  VN_ID # '' THEN
+      BEGIN CASE
+         CASE  VN_ID = "$MORE$"      ;* USER NEEDS TO SEE MORE OF SEARCH LIST
+            *        VENDORS.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+            VENDORS.LIST = ''
+            LST.IDS = ''
+            EMSG = ''
+            CALL GUI.SEARCH2 ("VENDORS","","*","VN_NAME","VN_NAME VN_ADDR VN_CITY",VENDORS.MAX.LIST,VENDOR.START.LIST,VENDORS.LIST,LST.IDS,LIST.CT,EMSG)
+            *
+            CTRLIDS = ''
+            PROPS   = ''
+            VALUES  = ''
+            *
+            CTRLIDS<1> = "LST1VENNAME"
+            PROPS<1>   = GPITEMS
+            VALUES<1>  = VENDORS.LIST
+            *
+            CTRLIDS<2> =  "LST1VENNAME"
+            PROPS<2>   = GPVALUE
+            VALUES<2>  = ""
+            CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+            IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+            *
+         CASE VN_ID = "$TOP$"      ;* USER NEEDS TO SEE TOP OF LIST
+            *         VENDORS.START.LIST = NEXT SELECTED ITEM INDEX TO DISPLAY FROM PRIOR GUI_SEARCH2 CALL
+            VENDORS.LIST = ''
+            LST.IDS = ''
+            EMSG = ''
+            CALL GUI.SEARCH2 ("VENDORS","","*","VN_NAME","VN_NAME VN_ADDR VN_CITY",VENDORS.MAX.LIST,VENDOR.START.LIST,VENDORS.LIST,LST.IDS,LIST.CT,EMSG)
+            *
+            CTRLIDS = ''
+            PROPS   = ''
+            VALUES  = ''
+            *
+            CTRLIDS<1> = "LST1VENNAME"
+            PROPS<1>   = GPITEMS
+            VALUES<1>  = VENDORS.LIST
+            *
+            CTRLIDS<2> = "LST1VENNAME"
+            PROPS<2>   = GPVALUE
+            VALUES<2>  = ""
+            CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+            IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+            *
+         CASE 1                     ;* SHOULD BE A VENDOR ID, GET VENDOR REC
+            IF OP_REC<PO_VEN> # '' THEN  ;* CHANGING VENDOR ON ORDER, WARN
+               UPDATE.VN.PO.FLAG = @TRUE
+               UPDATE.VN.PO.FROM.ID = OP_REC<PO_VEN>
+               PRMPT = "Warning changing Vendor on Purchase Orders with Linked AP Records my cause issues"
+               CAPTION = "Purchase Order Entry"
+               STYLE   = 1  ;* !
+               BUTTONS = 1  ;* ok / cancel
+               HELPID = ""
+               CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+               IF RESPONSE = 2 THEN   ;* CANCEL
+                  UPDATE.VN.PO.FLAG = @FALSE
+                  VN_ID = OP_REC<PO_VEN>
+                  CALL ATGUISETPROP(GUIAPP,GUIFRM,"LST1VENNAME",GPVALUE,0,0,0,GUIERRORS,GUISTATE)
+                  GOTO LST1VENNAME.CLICK.99  ;* BAD BAD CODING FORM
+               END
+            END
+            *
+            CALL GET.VENDOR(VN_ID,VN_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+            *
+            IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH CUST
+               LOG.OPTS = "DISPLAY"
+               ERROR_NBR = ERR_SYS
+               ERROR_MSG = 'Selection of non-existent vendor from list'
+               CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+            END ELSE
+               CALL LOAD.VEN.SHIPTO.LIST(VN_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD SHIP TO LIST BOX
+               IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN
+                  GOSUB GUI.ERROR
+               END ELSE
+                  *
+                  SHIPTO_ID = VN_REC<VN_DEFAULT_SHIPTO>
+                  CALL GET.VSHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+                  *
+                  IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+                     LOG.OPTS = "DISPLAY"
+                     ERROR_NBR = ERR_SYS
+                     ERROR_MSG = VN_ID:' Vendor has non-existent default ship to ':SHIPTO_ID
+                     CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+                  END ELSE
+                     GOSUB LOAD.VN.CTRLS
+                     GOSUB LOAD.SHIPTO.CTRLS
+                     OP_REC<PO_VEN> = VN_ID
+                     OP_REC<PO_SHIPTO> = SHIPTO_ID
+                     OP_REC<PO_TERMS> = VN_REC<VN_TERMS>
+                     IF UPDATE.VN.PO.FLAG THEN
+                        UPDATE.VN.PO.TO.ID = OP_REC<PO_VEN>
+                        *                GOSUB UPDATE.VN.PO - FOR NOW WE ARE LETTING THE VENDOR ID BE CHANGED, JUST ISSUE A WARNING
+
+                     END
+                     CALL ENABLE.POE.CONTROLS("NEW",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+                     IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+                  END
+               END
+            END
+      END CASE
+   END
+END
+LST1VENNAME.CLICK.99: *
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.LSTGLTRANS.CLICK: *
+OC_REC<PC_GL_TRANS_CD> =  GL.CODES.LIST<1,GUIARGS<1>,1>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.LSTITEM.CLICK: *
+*
+* VALID CHILD ID AT THIS CLICK ROW?
+*
+TEST.ID = CHILD.LIST<1,GUIARGS<1>,1>
+IF TEST.ID # '' THEN
+   *
+   * new item, do we need to save old item first?
+   *
+   GOSUB SAVE.CHILD.CHECK
+   IF SAVE.CHILD.CHECK.OK THEN
+      * VALID CHILD ID AT CLICK ROW?
+      *
+      IF OC_ID # '' THEN
+         RELEASE C.FILE.VAR(C.PO_CHILD), OC_ID
+      END
+      OC_ID = TEST.ID
+      *
+      SAVE_OC_REC = '' ;* ORDER_CHILD ORIGINAL COPY SAVE
+      OC_REC      = '' ;* ORDER_CHILD RECORD
+      WO_REC      = '' ;* INIT WO RECORD (USED FOR DISPLAY ONLY!)
+      IF OP.EDIT.MODE = "VIEW" THEN
+         LOCK_CHILD = @FALSE
+      END ELSE
+         LOCK_CHILD = @TRUE
+      END
+      CALL GET.PO.CHILD(OC_ID,OC_REC,LOCK_CHILD,ERROR_STATUS,GUIERRORS,GUISTATE)
+      IF ERROR_STATUS = ERR_BUSY THEN      ;* USER ENTERED ORDER IS LOCKED BY SOMEONE ELSE
+         OP.EDIT.MODE = "VIEW"             ;* ALLOW VIEW OF ORDER ONLY
+      END
+      SAVE_OC_REC = OC_REC
+      PN_ID = OC_REC<PC_PART_NBR>
+      IF PN_ID # '' THEN
+         MSG_LIST = ''
+         CALL GET.RECORD("PARTS",C.PARTS,PN_ID,PARTS_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+      END ELSE
+         PARTS_REC = ''
+      END
+      IF OC_REC<PC_WO_NBR> # '' THEN
+         CALL GET.RECORD("WO",C.WO,OC_REC<PC_WO_NBR>,WO_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      END
+      *
+      GOSUB LOAD.RECVR.DETAIL
+      GOSUB LOAD.ID.CTRLS
+      IF OP.EDIT.MODE = "EDIT" THEN   ;* THIS COULD HAVE CHANGED WITH GET.ORDER.DETAIL
+         CALL ENABLE.POE.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+         CALL ENABLE.POE.ID.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      END
+      *
+
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.MENU.CLOSE: *
+IF OC_REC<PC_ITEM_STAT> = 'C' THEN
+   PRMPT = 'Item is currently manually closed, reopen?'
+   NEW.STAT = 'O'
+   VS.STATE = 0
+END ELSE
+   PRMPT = 'Mark item manually closed?'
+   NEW.STAT = 'C'
+   VS.STATE = 1
+END
+CAPTION = "Purchase Order Entry"
+STYLE   = 2  ;* !
+BUTTONS = 4  ;* yes (RSP = 6) / no (RSP = 7)
+HELPID = ""
+CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RSP, GUIERRORS,GUISTATE)
+IF RSP = 6 THEN ;* YES CLICKED
+   OC_REC<PC_ITEM_STAT> = NEW.STAT
+   CALL ATGUISETPROP(GUIAPP,GUIFRM,"LBLCLOSED",GPVISIBLE,0,0,VS.STATE,GUIERRORS,GUISTATE)
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   *
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.MENU.PRINT: *
+IF OC_ID # '' THEN
+   STMT = 'LIST PO_CHILD WITH @ID = "':OC_ID:'" ORDER VEN_NAME  ORDER_DATE PC_PART_NBR PC_REV  PC_PART_DESC  PC_ORD_QTY PC_DUE_DATE  PC_PRICE_EA PC_DESC_TEXT PC_WO_NBR PC_WO_SEQ LPTR'
+   EXECUTE STMT CAPTURING DMMY
+   PRMPT = "Copy of order: ":OP_ID:" sent to the printer":@SVM:DMMY
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 0  ;* no icon
+   BUTTONS = 0  ;* ok
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TABIT.CLICK: *
+TAB.VALID = @TRUE
+TAB.VALIDATE.MSG = ''
+*
+IF OP_REC # '' THEN
+   BEGIN CASE
+         *
+      CASE  OP_REC<PO_VEN> = ''
+         TAB.VALIDATE.MSG = 'Vendor Number is a required field'
+         *
+      CASE  OP_REC<PO_ENTER_BY> = ''
+         TAB.VALIDATE.MSG = 'Entered By is a required field'
+         *
+      CASE  OP_REC<PO_TERMS> = ''
+         TAB.VALIDATE.MSG = 'Payment terms is a required field'
+         *
+   END CASE
+   *
+   *
+   IF TAB.VALIDATE.MSG # '' THEN
+      TAB.VALID = @FALSE
+      PRMPT = TAB.VALIDATE.MSG:', please correct'
+      CAPTION = "Purchase Order Entry"
+      STYLE   = 2  ;* ?
+      BUTTONS = 0  ;* ok / cancel
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      CALL ATGUISETPROP(GUIAPP,GUIFRM,"TABM",GPVALUE,0,0,1,GUIERRORS,GUISTATE)
+      IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+   END
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT1ENTBY.VALIDATE: *
+OP_REC<PO_ENTER_BY> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT1ORDDT.VALIDATE: *
+OP_REC<PO_DATE> = ICONV(GUIARGS<2>,PO_DATE.CNV)
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT1ORDNOTES.VALIDATE: *
+OP_REC<PO_NOTES> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT1ORDVAL.VALIDATE: *
+* USER ENTERED PO NUMBER
+*
+*  GET THE ORDER RECORD
+*  GET THE VENDOR RECORD
+*  GET THE SHIPTO RECORD
+*  LOAD THE FORM
+IF GUIARGS<2> # '' THEN
+   GOSUB CLEAR.BUFFERS
+   OP_ID = OCONV(GUIARGS<2>,"MCU")
+   *
+   CALL GET.PO.PARENT(OP_ID,OP_REC,@TRUE,ERROR_STATUS,GUIERRORS,GUISTATE)
+   BEGIN CASE
+      CASE ERROR_STATUS = ERR_NOF  ;* USER ENTERED NON - EXISTENT ORDER #
+         *
+         * UNLOCK, REPORT AND EXIT
+         RELEASE C.FILE.VAR(C.ORDER_PARENT), OP_ID
+         PRMPT = "Order number: ":OP_ID:" is not on file"
+         CAPTION = "Order Entry"
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+
+      CASE ERROR_STATUS = ERR_BUSY  ;* USER ENTERED ORDER IS LOCKED BY SOMEONE ELSE
+         OP.EDIT.MODE = "VIEW"       ;* ALLOW VIEW OF ORDER ONLY
+         GOSUB GET.ORDER.DETAIL
+         GOSUB LOAD.VN.CTRLS
+         GOSUB LOAD.SHIPTO.CTRLS
+         GOSUB LOAD.OP.CTRLS
+         GOSUB LOAD.ID.CTRLS
+         CALL ENABLE.POE.CONTROLS("VIEW",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+         CALL ENABLE.POE.ID.CONTROLS("VIEW",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      CASE 1
+         OP.EDIT.MODE = "EDIT"       ;* ALLOW EDIT OF ORDER
+         SAVE_OP_REC = OP_REC        ;* COPY FOR SAVE REQUIRED TEST
+         GOSUB GET.ORDER.DETAIL
+         GOSUB LOAD.VN.CTRLS
+         GOSUB LOAD.SHIPTO.CTRLS
+         GOSUB LOAD.OP.CTRLS
+         GOSUB LOAD.ID.CTRLS
+         IF OP.EDIT.MODE = "EDIT" THEN   ;* THIS COULD HAVE CHANGED WITH GET.ORDER.DETAIL
+            CALL ENABLE.POE.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+            IF OC_ID = '' THEN
+               CALL ENABLE.POE.ID.CONTROLS("RESET",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+            END ELSE
+               CALL ENABLE.POE.ID.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+            END
+         END
+   END CASE
+END
+*
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT2DESC.VALIDATE: *
+OC_REC<PC_PART_DESC> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT2NOTES.VALIDATE: *
+OC_REC<PC_ITEM_NOTES> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT2PN.VALIDATE: *
+*
+* VALIDATE PART NUMBER
+* 1) MUST BE ON FILE
+* 2) MUST BE A PURCHASED PART
+* 3) MUST NOT BE THE MFGD PART OF WORK ORDER ON PO (IF ANY)
+*
+PN_ID = OCONV(GUIARGS<2>,"MCU")
+PGET_MSG = ''
+CALL GET.PARTS(PN_ID,PARTS_REC,LOCK_PN,NEW_PN,ERROR_STATUS,PGET_MSG,GUIERRORS,GUISTATE)
+*
+IF PARTS_REC # '' THEN
+   IF NOT(PARTS_REC<PT_PURCHASED>) THEN
+      *
+      PRMPT = "Part Number: ":PN_ID:" is not a purchased part"
+      CAPTION = "Purchase Order Entry"
+      STYLE   = 2  ;* !
+      BUTTONS = 0  ;* ok / cancel
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+
+   END ELSE
+      *
+      * NOTE THE WAY THE LOGIC WORKS, THE USER ONLY GETS ONE ATTEMPT AT ENTERING THE PART NUMBER
+      *  IT CANNOT BE CHANGED
+      *  IT CANNOT BE ADDED AFTER PO CHILD IS CREATED WITH ONLY A WORK ORDER AND OR SEQ
+      * THEREFORE WE DO NOT NEED TO TEST FOR CONFLICTING PART NUMBER ON WORK ORDER (ITS DONE WITH WORK ORDER VALIDATE)
+      *
+
+      OC_REC<PC_PART_NBR> = PN_ID
+      OC_REC<PC_REV>      = PARTS_REC<PT_REV>
+      OC_REC<PC_PART_DESC>= PARTS_REC<PT_DESC>
+      OC_REC<PC_ITEM_NOTES> = PARTS_REC<PT_NOTES>
+      *
+      *
+      GOSUB ASSIGN.NEXT.CHILD
+      GOSUB LOAD.ID.CTRLS
+      CALL ENABLE.POE.ID.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+
+   END
+END ELSE
+   *
+   * part not found
+   *
+   PRMPT = "Part Number: ":PN_ID:" not on File"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   *
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXT2REV.VALIDATE: *
+OC_REC<PC_REV> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTDUE.VALIDATE: *
+DUE.TEST = ICONV(GUIARGS<2>,"D")
+IF DUE.TEST < DATE() THEN
+   PRMPT = "Cannot Specify a Past Date for  Due Date"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   OC_REC<PC_DUE_DATE> = DUE.TEST
+END
+*
+CTRLIDS = "TXTDUE"
+PROPS   = GPVALUE
+IF OC_REC<PC_DUE_DATE> = '' THEN
+   VALUES  = ''
+END ELSE
+   VALUES  =  OCONV(OC_REC<PC_DUE_DATE>,PC_DUE_DATE.CNV)
+END
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTITEMDESC.VALIDATE: *
+OC_REC<PC_DESC_TEXT> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTORDERQTY.VALIDATE: *
+ORDQTY = GUIARGS<2>
+IF ORDQTY LE 0 THEN
+   PRMPT = "Invalid Order Qty, Please Correct"
+   CAPTION = "Purchse Order Entry"
+   STYLE   = 2  ;* ?
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   OC_REC<PC_ORD_QTY> =  ORDQTY
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTQUOTE.VALIDATE: *
+OC_REC<PC_QUOTE> = GUIARGS<2>
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTSEQ.VALIDATE: *
+SEQNBR = GUIARGS<2>
+*
+* VALIDATE SEQ
+* DO WE HAVE A WO?
+*
+EMSG = ''
+IF OC_REC<PC_WO_NBR> = '' THEN
+   EMSG = 'Cannot Assign Seq Number with no Work Order'
+END ELSE
+   *
+   * Does it exist?
+   *
+   WR.ID = OC_REC<PC_WO_NBR>:'*':SEQNBR
+   CALL GET.RECORD("WR",C.WR,WR.ID,WR_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF WR_REC = '' THEN
+      EMSG = 'Seq Number: ':SEQNBR:' is not found on Work Order'
+   END ELSE
+      *
+      * IS THIS AN OUTPLANT OPERATION?
+      *
+      WC.ID = WR_REC<WRT_WCID>
+      CALL GET.RECORD("WC",C.WC,WC.ID,WC_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      IF WC_REC = '' THEN
+         EMSG = 'Seq Number: ':SEQNBR:' Refences invalid WC: ':WC.ID
+         LOG.OPTS = ""
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG = EMSG
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END ELSE
+         *
+         IF NOT(WC_REC<WC_SUB>) THEN
+            EMSG = 'Work Center for Seq Number: ':SEQNBR:' is not Sub Contract'
+         END
+      END
+      *
+   END
+END
+*
+* DID WE PASS ALL THE TESTS?
+*
+IF EMSG # '' THEN
+   * NOPE
+   PRMPT = EMSG
+   CAPTION = "Purchse Order Entry"
+   STYLE   = 2  ;* ?
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   *
+   CTRLIDS = "TXTSEQ"
+   PROPS   = GPVALUE
+   VALUES  = ''
+   *
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+END ELSE
+   *YES, ASK IF USER WANTS TO OVERWRITE PO ITEM DESC WITH SEQ TEXT
+   OC_REC<PC_WO_SEQ> = SEQNBR
+   IF OC_REC<PC_DESC_TEXT> = '' THEN
+      OC_REC<PC_DESC_TEXT> = WR_REC<WRT_DESC>
+   END ELSE
+      PRMPT = 'Overwrite PO Item Description with Work Order Seq Description?'
+      CAPTION = "Purchse Order Entry"
+      STYLE   = 3  ;* ?
+      BUTTONS = 4  ;* yes/no
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      IF RESPONSE = 6 THEN ;* YES
+         OC_REC<PC_DESC_TEXT> = WR_REC<WRT_DESC>
+      END
+   END
+   CTRLIDS = "TXTITEMDESC"
+   PROPS   = GPVALUE
+   VALUES  = OC_REC<PC_DESC_TEXT>
+   *
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN EVENT HANDLER<--*
+GUI.POE.POE.TXTWO.VALIDATE: *
+WO.ID = GUIARGS<2>
+CALL GET.RECORD("WO",C.WO,WO.ID,WO_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+PRMPT = ''
+IF WO_REC # '' THEN
+   IF OC_REC<PC_PART_NBR> = WO_REC<WO_PARTNBR> THEN
+      PRMPT = "Part Number on PO same as Work Order Part Number, not Allowed"
+   END ELSE
+      *
+      * IS THIS A NEW PO?
+      *
+      IF OC_REC = '' THEN
+         GOSUB ASSIGN.NEXT.CHILD
+         GOSUB LOAD.ID.CTRLS
+         CALL ENABLE.POE.ID.CONTROLS("EDIT",1,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+      END
+
+      OC_REC<PC_WO_NBR> = WO.ID
+      CTRLIDS = "LBLWOPNV"
+      PROPS   = GPVALUE
+      VALUES  = 'Work Order Pn: ':WO_REC<WO_PARTNBR>
+      *
+      CTRLIDS<-1> = "TXTWO"
+      PROPS<-1>   = GPVALUE
+      VALUES<-1>  = OC_REC<PC_WO_NBR>
+      *
+      CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+   END
+END ELSE
+   PRMPT = "Work Order not on File"
+END
+*
+IF PRMPT  # '' THEN
+   CAPTION = "Purchse Order Entry"
+   STYLE   = 2  ;* ?
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   *
+   CTRLIDS = "TXTWO"
+   PROPS   = GPVALUE
+   VALUES  = OC_REC<PC_WO_NBR>
+   *
+   CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+END
+RETURN
+*-->END EVENT HANDLER<--*
+*
+*
+************************************************************
+*
+*
+*-->BEGIN DYNAMIC EVENTS<--*
+GUI.DYNAMIC.EVENTS: *
+* Add any dynamic event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END DYNAMIC EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN CUSTOM EVENTS<--*
+GUI.CUSTOM.EVENTS: *
+* Add any custom event handling code here. The GUIEVT, GUIAPP, GUIFRM,
+* GUICTL and GUIARGS variables are valid and availble for your use.
+RETURN
+*-->END CUSTOM EVENTS<--*
+*
+*
+************************************************************
+*
+**-->BEGIN ERROR HANDLER<--*
+GUI.ERROR: *
+GUI.DLG.EXIT = 1
+LOG.OPTS = "DISPLAY"
+ERROR_NBR = ERR_GUI
+ERROR_MSG =  ERR_MESSAGE(ERR_GUI)
+CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+RETURN
+*-->END ERROR HANDLER<--*
+*
+*
+************************************************************
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.VN.NAME.LIST: *
+*
+* LOADS THE LST1VENNAME LIST
+*
+VENDORS.MAX.LIST = 300
+VENDORS.START.LIST = 1
+CALL GUI.SEARCH2 ("VENDORS","","*","VN_NAME","VN_NAME VN_ADDR VN_CITY",VENDORS.MAX.LIST,VENDORS.START.LIST,VENDORS.LIST,LST.IDS,LIST.CT,EMSG)
+*
+IF EMSG<1> = 'No Items Found' THEN  ;* NO ITEMS FOUND
+   VALUE = ''
+END ELSE
+   VALUE = VENDORS.LIST
+END
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"LST1VENNAME",GPITEMS,0,0,VALUE,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.ORDER.LISTS: *
+*
+* ROUTINE LOADS CONTROLS
+*
+CTRLIDS = ""
+PROPS   = ""
+VALUES  = ""
+*
+CTRLIDS<-1> = "CB1SHIPVIA"
+PROPS<-1>   = GPITEMS
+VALUES<-1>  = VIA.LIST
+*
+CTRLIDS<-1> = "LST1TERMS"
+PROPS<-1>   = GPITEMS
+VALUES<-1>  = TERMS.LIST
+*
+CTRLIDS<-1> = "LSTGLTRANS"
+PROPS<-1>   = GPITEMS
+VALUES<-1>  = GL.CODES.LIST
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+CLEAR.BUFFERS:
+VN_ID       = '' ;* VENDOR ID
+VN_REC      = '' ;* VENDOR RECORD BUFFER
+SHIPTO_ID   = '' ;* SHIP TO ID
+SHIPTO_REC  = '' ;* SHIP TO RECORD BUFFER
+OP_ID       = '' ;* ORDER PARENT ID
+SAVE_OP_REC = '' ;* ORDER_PARENT ORIGINAL COPY SAVE
+OP_REC      = '' ;* ORDER_PARENT RECORD
+OC_ID       = '' ;* ORDER_CHILD ID
+SAVE_OC_REC = '' ;* ORDER_CHILD ORIGINAL COPY SAVE
+OC_REC      = '' ;* ORDER_CHILD RECORD
+PN_ID       = '' ;* PARTS REC ID
+PARTS_REC   = '' ;* PARTS RECORD FOR P/N IN ACTIVE ORDER_CHILD RECORD
+WO_REC      = '' ;* WORK ORDER RECORD FOR PO WITH WO ASSIGNED
+PO.TOT.VAL = 0   ;* TOTAL PO VALUE
+PO.ITEM.VAL= 0   ;* CURRENT ITEM VALUE
+*
+CHILD.LIST  = ''  ;* LIST FOR ORDER CHILD SELECTION ON ITEM DETIAL TAB
+RECVR.DETAIL.LIST = '' ;* LIST OF RECEIPTS FOR GRDLINES
+*
+OP.EDIT.MODE = "EDIT"   ;* ALLOW EDIT OF ORDER (RECORD LOCK SUCCESSFUL)
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+VN.RELOAD:
+*
+* CALLED AFTER EDIT OF VENDOR AND OR SHIPTO RECORD TO REDISPLAY CHANGES
+* ON OE FORM
+* ASSUMES VN_ID AND SHIPTO_ID SET AND VALID !
+*
+CALL GET.VENDOR(VN_ID,VN_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+*
+IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH CUST
+   LOG.OPTS = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG = 'Selection of non-existent vendor from list'
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END ELSE
+   CALL LOAD.VEN.SHIPTO.LIST(VN_ID,SHIPTO.LIST,SHIPTO.IDX,GUIAPP,GUIFRM,"LST1SHIPTO",GUIERRORS,GUISTATE)      ;* LOAD SHIP TO LIST BOX
+   IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN
+      GOSUB GUI.ERROR
+   END ELSE
+      *
+      CALL GET.SHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+      *
+      IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH DEFAULT SHIP TO
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG = VN_ID:' Vendor has non-existent default ship to ':SHIPTO_ID
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END ELSE
+         GOSUB LOAD.VN.CTRLS
+         GOSUB LOAD.SHIPTO.CTRLS
+      END
+   END
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.VN.CTRLS:
+*
+* routine LOADS controls for VENDOR *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<-1> = "LBLVENNAME"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_NAME>
+*
+CTRLIDS<-1> = "LBL1BILLADDR1VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_ADDR>
+*
+CTRLIDS<-1> = "LBL1BILLADDR2VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_ADDR2>
+*
+CTRLIDS<-1> = "LBL1BILLCITYVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_CITY>
+*
+CTRLIDS<-1> = "LBL1BILLZIPVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_ZIP>
+*
+CTRLIDS<-1> = "LBL1BILLSTVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_STATE>
+*
+CTRLIDS<-1> = "LBL1SHIPCOVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = VN_REC<VN_COUNTRY>
+*
+LOCATE VN_REC<VN_TERMS> IN TERMS.IDX<1> SETTING IDX THEN
+   CTRLIDS<-1> = "LST1TERMS"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = IDX
+END
+*
+BUYER.COUNT = DCOUNT(VN_REC<VN_CONTACT>,@VM)
+BUYER.LIST  = ''
+FOR I = 1 TO BUYER.COUNT
+   IF VN_REC<VN_CONTACT,I> # '' THEN
+      BUYER.LIST<1,I,1> = VN_REC<VN_CONTACT,I>
+   END
+NEXT I
+*
+CTRLIDS<-1> = "CB1BUYER"
+PROPS<-1>   = GPITEMS
+VALUES<-1>  = BUYER.LIST
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+**
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.SHIPTO.CTRLS:
+*
+* routine LOADS AND ENABLES controls for SHIPTO *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<-1> = "LBL1SHIPNAMEVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_NAME>
+*
+CTRLIDS<-1> = "LBL1SHIPADDR1VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_ADDR>
+*
+CTRLIDS<-1> = "LBL1SHIPADDR2VAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_ADDR2>
+*
+CTRLIDS<-1> = "LBL1SHIPCITYVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_CITY>
+*
+CTRLIDS<-1> = "LBL1SHIPZIPVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_ZIP>
+*
+CTRLIDS<-1> = "LBL1SHIPSTVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_STATE>
+*
+CTRLIDS<-1> = "LBL1SHIPCOVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = SHIPTO_REC<VS_COUNTRY>
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+**
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.ID.CTRLS:
+*
+* routine LOADS controls for ITEM DETIAL AND EXTRA CHARGE TAB *
+*
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+IF CHILD.LIST # '' THEN
+   CTRLIDS<-1> = "LSTITEM"
+   PROPS<-1>   = GPITEMS
+   VALUES<-1>  = CHILD.LIST
+END ELSE
+   CTRLIDS<-1> = "LSTITEM"
+   PROPS<-1>   = GPITEMS
+   VALUES<-1>  = " "
+END
+*
+CTRLIDS<-1> = "LBLCLOSED"
+PROPS<-1>   = GPVISIBLE
+IF OP_REC<PC_ITEM_STAT> = "C" THEN
+   VALUES<-1> = 1
+END ELSE
+   VALUES<-1> = 0
+END
+*
+CTRLIDS<-1> = "TXT2PN"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_PART_NBR>
+*
+CTRLIDS<-1> = "TXT2REV"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_REV>
+**
+CTRLIDS<-1> = "TXTWO"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_WO_NBR>
+*
+CTRLIDS<-1> = "TXTSEQ"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_WO_SEQ>
+*
+IF WO_REC<WO_PARTNBR> # '' THEN
+   CTRLIDS<-1> = "LBLWOPNV"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = 'Work Order Pn: ':WO_REC<WO_PARTNBR>
+END ELSE
+   CTRLIDS<-1> = "LBLWOPNV"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = ' '
+END
+*
+CTRLIDS<-1> = "TXT2DESC"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_PART_DESC>
+*
+CTRLIDS<-1> = "TXT2NOTES"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_ITEM_NOTES>
+**
+CTRLIDS<-1> = "TXTORDERQTY"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_ORD_QTY>
+*
+CTRLIDS<-1> = "TXTDUE"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  =  OCONV(OC_REC<PC_DUE_DATE>,PC_DUE_DATE.CNV)
+*
+CTRLIDS<-1> = "CB2PRICE"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OCONV(OC_REC<PC_PRICE_EA>,PC_PRICE_EA.CNV)
+*
+CTRLIDS<-1> = "CHKLOT"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_LOT_FLAG>
+*
+CTRLIDS<-1> = "TXTQUOTE"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_QUOTE>
+*
+LOCATE OC_REC<PC_GL_TRANS_CD> IN GL.CODES.IDX<1> SETTING IDX THEN
+   CTRLIDS<-1> = "LSTGLTRANS"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = IDX
+END ELSE
+   CTRLIDS<-1> = "LSTGLTRANS"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = 0
+END
+*
+CTRLIDS<-1> = "TXT2NOTES"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_ITEM_NOTES>
+*
+IF OC_REC<PC_LOT_FLAG> THEN
+   PO.ITEM.VAL = OC_REC<PC_PRICE_EA>
+END ELSE
+   PO.ITEM.VAL = OC_REC<PC_PRICE_EA> *  OC_REC<PC_ORD_QTY>
+END
+CTRLIDS<-1> = "LBLITEMVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OCONV(PO.ITEM.VAL,PC_PRICE_EA.CNV)
+*
+CTRLIDS<-1> = "LBLPOVAL"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OCONV(PO.TOT.VAL,PC_PRICE_EA.CNV)
+*
+*
+CTRLIDS<-1> = "TXTITEMDESC"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OC_REC<PC_DESC_TEXT>
+
+*
+CTRLIDS<-1> = "GRDLINES"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = RECVR.DETAIL.LIST
+
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+* LOAD PRICING DATA
+*
+IF PARTS_REC # '' THEN
+   PRICE.LIST  = ''
+   QUOTE.CNT = DCOUNT(PARTS_REC<PT_STD_QTY>,@VM)
+   FOR I = 1 TO QUOTE.CNT
+      PRICE.VAL = PARTS_REC<PT_STD_PRICE,I>
+      IF NUM(PRICE.VAL) THEN PRICE.VAL = OCONV(PRICE.VAL,PT_STD_PRICE.CNV)
+      PRICE.LIST<1,I,1> = PARTS_REC<PT_STD_QTY,I>
+      PRICE.LIST<1,I,2> = PRICE.VAL
+      PRICE.LIST<1,I,3> = PARTS_REC<PT_STD_NOTES,I>
+   NEXT I
+   *
+END ELSE
+   PRICE.LIST = ''
+END
+*
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"CB2PRICE",GPITEMS,0,0,PRICE.LIST,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+SAVE.CHILD.CHECK: *
+*
+* TEST TO SEE IF WE NEED TO UPDATE FILES:
+* ORDER_PARENT, ORDER_CHILD
+SAVE.CHILD.CHECK.OK = @TRUE
+IF SAVE_OC_REC # OC_REC THEN
+   PRMPT = "Item detail has changed but not saved.":@SVM:"Select Cancel, then File to save changes ":@SVM:"or Ok to proceed without saving changes to item"
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* ?
+   BUTTONS = 1  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   IF RESPONSE = 2 THEN  ;* CANCEL THE CANCEL OR CLOSE REQUEST
+      SAVE.CHILD.CHECK.OK = @FALSE
+   END
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.CHILD.LIST:
+*
+* CREATE ORDER CHILD LIST AND SET ID TO FIRST NON DELETED RECORD
+*
+FIRST.CHILD.ID = ''
+CHILD.LIST = ''
+PO.TOT.VAL = 0
+*
+CHILD.COUNT = DCOUNT(OP_REC<PO_CHILD>,@VM)
+FOR I = 1 TO CHILD.COUNT
+   TEST.CHILD.ID = OP_ID:'*':I
+   *
+   CALL GET.RECORD("PO_CHILD",C.PO_CHILD,TEST.CHILD.ID,TEST.CHILD.REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF ERROR_STATUS = ''  THEN
+      CHILD.PN = TEST.CHILD.REC<PC_PART_NBR>
+      CHILD.DESC = TEST.CHILD.REC<PC_PART_DESC>
+      CHILD.STATUS = TEST.CHILD.REC<PC_ITEM_STAT>
+      CHILD.WO =  TEST.CHILD.REC<PC_WO_NBR>
+      CHILD.DUE = OCONV(TEST.CHILD.REC<PC_DUE_DATE>,PC_DUE_DATE.CNV)
+      BEGIN CASE
+         CASE CHILD.STATUS = "I" OR CHILD.STATUS = ""
+            CHILD.STATUS = OE_CHILD_OPEN
+            IF FIRST.CHILD.ID = '' THEN         ;* SAVE FIRST OPEN CHILD RECORD
+               FIRST.CHILD.ID = TEST.CHILD.ID
+            END
+         CASE CHILD.STATUS = "C"
+            CHILD.STATUS = OE_CHILD_CLSD
+      END CASE
+   END ELSE
+      *
+      * MISSING CHILD RECORD, ASSUME DELETED
+      *
+      CHILD.PN = "Record Misssing!"
+      CHILD.DESC = ""
+      CHILD.STATUS = OE_CHILD_DEL
+      CHILD.WO = ''
+      CHILD.DUE = ''
+   END
+
+   CHILD.LIST<1,I,1> = TEST.CHILD.ID
+   CHILD.LIST<1,I,2> = CHILD.PN
+   CHILD.LIST<1,I,3> = CHILD.DESC
+   CHILD.LIST<1,I,4> = CHILD.WO
+   CHILD.LIST<1,I,5> = CHILD.DUE
+   CHILD.LIST<1,I,6> = CHILD.STATUS
+   *
+   IF TEST.CHILD.REC<PC_LOT_FLAG> THEN
+      QTY.VAL = 1
+   END ELSE
+      QTY.VAL = TEST.CHILD.REC<PC_ORD_QTY>
+   END
+   PO.TOT.VAL += (TEST.CHILD.REC<PC_PRICE_EA> * QTY.VAL)
+NEXT I
+*
+* IF WE DID NOT FIND AN OPEN CHILD RECORD, ASSIGN FIRST.CHILD.ID TO FIRST CHILD
+IF FIRST.CHILD.ID = "" AND CHILD.LIST<1,1,1> # '' THEN
+   FIRST.CHILD.ID = CHILD.LIST<1,1,1>
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+OE.VALIDATE:
+* VALIDATE ORDER_PARENT ORDER_CHILD
+* RETURNS ORDER.VALID T/F
+*
+ORDER.VALID = @TRUE
+ORD.VALIDATE.MSG = ''
+*
+BEGIN CASE
+      *
+   CASE  OP_REC<PO_VEN> = ''
+      ORD.VALIDATE.MSG = 'Vendor Number is a required field'
+      *
+   CASE  OP_REC<PO_ENTER_BY> = ''
+      ORD.VALIDATE.MSG = 'Entered By is a required field'
+      *
+   CASE  OP_REC<PO_TERMS> = ''
+      ORD.VALIDATE.MSG = 'Payment terms is a required field'
+      *
+END CASE
+*
+* SET SOME DEFAULTS
+*DEFAULTS_REC
+IF OP_REC<PO_SHIP_VIA> = '' THEN
+   OP_REC<PO_SHIP_VIA> = DEFAULTS_REC<DFLT_SHIPVIA>
+END
+*
+IF ORD.VALIDATE.MSG # '' THEN
+   ORDER.VALID = @FALSE
+   PRMPT = ORD.VALIDATE.MSG:', please correct'
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* ?
+   BUTTONS = 0  ;* ok / cancel
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+END ELSE
+   GOSUB OC.VALIDATE
+   ORDER.VALID = CHILD.VALID   ;* AT THIS POINT VALID IF CHILD WAS OK
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+OC.VALIDATE:
+CHILD.VALID = @TRUE
+CHILD.VALIDATE.MSG = ''
+IF OC_REC # '' THEN    ;* ONLY PROCESS IF CHILD RECORD HAS BEEN READ IN
+   *
+   * VALIDATE ORDER CHILD RECORD
+   * FIELDS
+   *
+   BEGIN CASE
+         *
+      CASE OC_REC<PC_PRICE_EA> = ""
+         CHILD.VALIDATE.MSG = 'Valid price required'
+      CASE OC_REC<PC_DUE_DATE> = ''
+         CHILD.VALIDATE.MSG = 'delivery date required'
+      CASE OC_REC<PC_ORD_QTY> = ''
+         CHILD.VALIDATE.MSG = "order qty is required"
+      CASE OC_REC<PC_GL_TRANS_CD> = ''
+         GOSUB SET.DEFAULT.GL.TRANS.CD
+         IF OC_REC<PC_GL_TRANS_CD> = '' THEN
+            CHILD.VALIDATE.MSG = "gl transaction code is required"
+         END
+      CASE OC_REC<PC_PART_NBR> # '' AND OC_REC<PC_WO_NBR> # '' AND OC_REC<PC_WO_SEQ> # ''
+         CHILD.VALIDATE.MSG = "Part Number, Work Order Number and Sequence Number All specified.  If PO Part Number is being purchased for Work Order, do not specify Sequence Number. If PO is for a Work Order service, only specify Work Order and Sequence Number"
+   END CASE
+   *
+OCV.99:
+   *
+   IF CHILD.VALIDATE.MSG # '' THEN
+      CHILD.VALID = @FALSE
+      PRMPT = CHILD.VALIDATE.MSG:', please correct'
+      CAPTION = "Purchse Order Entry"
+      STYLE   = 2  ;* ?
+      BUTTONS = 0  ;* ok / cancel
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   END
+
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+ORDER.WRITE:
+*
+* THIS IS THE COMMON ORDER SAVE ROUTINE. FOR BOTH FILE ORDER AND FILE ITEM
+* NOTE! ROUTINE ASSUMES ALL VALIDATION TEST HAVE BEEN SATISFIED BY CALLER
+* ALSO ROUTINE WILL UNLOCK ORDER_CHILD BUT NOT ORDER_PARENT !
+*
+IF OC_ID # '' THEN
+   IF OC_REC # '' THEN   ;* DID WE ACTUALLY CREATE A CHILD RECORD?
+      IF SAVE_OC_REC # OC_REC THEN
+         CHG_TXT = ''
+         IF OC_REC<PC_CHG_DATE> = '' THEN
+            CHG_TXT = 'Initial Release'
+            INIT.RELEASE = @TRUE
+         END ELSE
+            INIT.RELEASE = @FALSE
+            *
+            * WHAT CHANGED?
+            *
+            IF OC_REC<PC_DUE_DATE> # SAVE_OC_REC<PC_DUE_DATE> THEN    ;* DUE DATE
+               CHG_TXT = 'Due Date: ':OCONV(SAVE_OC_REC<PC_DUE_DATE>,PC_DUE_DATE.CNV)
+            END
+            *
+            IF OC_REC<PC_ORD_QTY> # SAVE_OC_REC<PC_ORD_QTY> THEN    ;* ORDER QTY
+               CHG_TXT := ' Qty: ':SAVE_OC_REC<PC_ORD_QTY>
+            END
+            *
+            IF OC_REC<PC_PRICE_EA> # SAVE_OC_REC<PC_PRICE_EA> THEN    ;* PRICE EACH
+               CHG_TXT := ' Price: ':OCONV(SAVE_OC_REC<PC_PRICE_EA>,PC_PRICE_EA.CNV)
+            END
+            *
+         END
+         *
+         *  KEEP TRACK OF ORDER CHANGES
+         *
+         IF CHG_TXT # '' THEN
+            OC_REC<PC_CHG_DATE,-1> = DATE()
+            OC_REC<PC_CHG_USER,-1> = @LOGNAME
+            OC_REC<PC_CHG_TEXT,-1> = CHG_TXT
+         END
+         *
+         CALL WRITE.RECORD(OC_ID,OC_REC,C.PO_CHILD,@FALSE,ERROR_STATUS)
+         *
+         * DO WE NEED TO UPDATE A WORK ORDER?
+         *
+         IF INIT.RELEASE THEN
+            GOSUB WO.UPDATE
+         END
+         SAVE_OC_REC = OC_REC
+         *
+      END ELSE
+         RELEASE C.FILE.VAR(C.PO_CHILD), OC_ID
+      END
+      *
+      * DOES CHILD LIST ON ORDER PARENT NEED UPDATING?
+      *
+      CHILD.COUNT = DCOUNT(OP_REC<PO_CHILD>,@VM)
+      CHILD.NBR = FIELD(OC_ID,'*',2)
+      IF CHILD.NBR > CHILD.COUNT THEN
+         OP_REC<PO_CHILD,-1> = CHILD.NBR
+      END
+   END
+END
+* ORDER_PARENT NEEDS UPDATING, WE SAVE AFTER CHILD UPDATE BECAUSE OF POSSIBLE CHANGE
+* TO OP_REC<OP_CHILD> ABOVE
+IF SAVE_OP_REC # OP_REC THEN
+   IF OP_REC<PO_DATE> = '' THEN OP_REC<PO_DATE> = DATE()    ;* SET ORDER DATE
+   CALL WRITE.RECORD(OP_ID,OP_REC,C.PO_PARENT,@TRUE,ERROR_STATUS)
+   SAVE_OP_REC = OP_REC
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+ASSIGN.NEXT.CHILD:
+CHILD.COUNT = DCOUNT(OP_REC<PO_CHILD>,@VM) ;* SET CHILD ID
+CHILD.COUNT += 1                           ;*  TO NEXT IN LINE
+OC_ID = OP_ID:'*':CHILD.COUNT
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+SAVE.CHECK: *
+*
+* TEST TO SEE IF WE NEED TO UPDATE FILES:
+* ORDER_PARENT, ORDER_CHILD
+SAVE.CHECK.OK = @TRUE
+IF OP.EDIT.MODE # "VIEW" THEN
+   IF SAVE_OP_REC # OP_REC OR SAVE_OC_REC # OC_REC THEN
+      PRMPT = "Order has changed but not saved.":@SVM:"Select Cancel and File to save or ":@SVM:"Ok to exit without saving changes"
+      CAPTION = "Purchase Order Entry"
+      STYLE   = 2  ;* !
+      BUTTONS = 1  ;* ok / cancel
+      HELPID = ""
+      CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+      IF RESPONSE = 2 THEN  ;* CANCEL THE CANCEL OR CLOSE REQUEST
+         SAVE.CHECK.OK = @FALSE
+      END
+   END
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+OE.RESET:
+CALL ATGUIRESET(GUIAPP,GUIFRM,GUIERRORS,GUISTATE)  ;* RESET FORM TO INITAL STATE
+*
+* clear out the select item list on item tab
+*
+CTRLIDS = "LSTITEM"
+PROPS   = GPITEMS
+VALUES  = " "
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+CALL ENABLE.POE.CONTROLS("EDIT",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+CALL ENABLE.POE.ID.CONTROLS("",0,GUIAPP,GUIFRM,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+*
+* RESET ALL
+*
+GOSUB CLEAR.BUFFERS
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+* CREATE LIST TO DUMP INTO GRDLINES GRID
+*
+LOAD.RECVR.DETAIL:
+RECVR.DETAIL.LIST = ''
+
+CALL GET.RECORD("RECEIPTS",C.RECEIPTS,OC_ID,RCVR_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF RCVR_REC # '' THEN
+   *
+   * ACCESS THE INVOIVE (AP_INVOICE RECORD)
+   *
+   SLIST = 'SSELECT AP_INVOICE WITH AP_RECEIPT_ID = "':OC_ID:'" TO 2'
+   EXECUTE SLIST CAPTURING DMMY.OUT
+   *
+   IF @SELECTED GE 1 THEN
+      READLIST IDLIST FROM 2 THEN
+         LIST.CT = DCOUNT(IDLIST,@AM)
+      END
+   END ELSE
+      LIST.CT = 0
+   END
+   *
+   RECVR.COUNT = DCOUNT(RCVR_REC<RC_PACKSLIPS>,@VM)
+   FOR I = 1 TO RECVR.COUNT
+      *
+      RECVR.DETAIL.LIST<1,I,1> = RCVR_REC<RC_PACKSLIPS,I>
+      RECVR.DETAIL.LIST<1,I,2> = OCONV(RCVR_REC<RC_DATE,I>,RC_DATE.CNV)
+      QTY.RECVR = RCVR_REC<RC_QTY1,I> + RCVR_REC<RC_QTY2,I> + RCVR_REC<RC_QTY3,I> + RCVR_REC<RC_WO_QTY,I> + 0
+      RECVR.DETAIL.LIST<1,I,3> =  QTY.RECVR
+      RECVR.DETAIL.LIST<1,I,4> = RCVR_REC<RC_LOT_ID,I>
+      *
+      * NOW LOOK FOR AP_INVOICE
+      *
+      FOR AI = 1 TO LIST.CT
+         AP_ID = IDLIST<AI,1>
+         INVOICE_DATE = ''
+         INVOICE_ID = ''
+         CALL GET.RECORD("AP_INVOICE",C.AP_INVOICE,AP_ID,AP_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+         IF AP_REC = '' THEN
+            LOG.OPTS = "DISPLAY"
+            ERROR_NBR = ERR_SYS
+            ERROR_MSG = 'AP_INVOICE record found with select but cannot be read: ':AP_ID
+            CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+
+         END ELSE
+            *
+            * LOOK FOR THIS RECEIPT PACKLIST ON AP RECORD
+            *
+            RC.PCKLST = AP_REC<AP_PACKLIST_ID>
+            LOCATE RCVR_REC<RC_PACKSLIPS,I> IN RC.PCKLST<1,1> SETTING IDX THEN
+               RECVR.DETAIL.LIST<1,I,5> = OCONV(AP_REC<AP_INV_DATE>,AP_INV_DATE.CNV)
+               RECVR.DETAIL.LIST<1,I,6> = FIELD(AP_ID,"*",2)  ;* INVOICE NUMBER
+               EXIT
+            END
+         END
+      NEXT AI
+      *
+   NEXT I
+END
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+GET.ORDER.DETAIL:
+*
+* GET ORDER CHILD AND OP_ID
+* ASSIGN AND ACCESS VN_ID / VN_REC, SHIPTO_ID / SHIPTO_REC, OC_ID / OC_REC
+* FIND FIRST
+GET.ORDER.DETAIL.OK = @TRUE
+GOSUB LOAD.CHILD.LIST
+OC_ID = FIRST.CHILD.ID
+*
+* IF WE HAVE A VAILD ID, GET FIRST OPEN (NOT COMPLETE) CHILD RECORD
+*
+IF OC_ID # '' THEN
+   IF OP.EDIT.MODE = "VIEW" THEN
+      LOCK_CHILD = @FALSE
+   END ELSE
+      LOCK_CHILD = @TRUE
+   END
+   CALL GET.PO.CHILD(OC_ID,OC_REC,LOCK_CHILD,ERROR_STATUS,GUIERRORS,GUISTATE)
+   GOSUB LOAD.RECVR.DETAIL
+   SAVE_OC_REC = OC_REC
+   PN_ID = OC_REC<PC_PART_NBR>
+   IF PN_ID # '' THEN
+      MSG_LIST = ''
+      CALL GET.RECORD("PARTS",C.PARTS,PN_ID,PARTS_REC,@FALSE,ERROR_STATUS,MSG_LIST,GUIERRORS,GUISTATE)
+   END ELSE
+      PARTS_REC = ''
+   END
+
+   *
+   IF ERROR_STATUS = ERR_BUSY THEN ;* USER ENTERED ORDER IS LOCKED BY SOMEONE ELSE
+      OP.EDIT.MODE = "VIEW"             ;* ALLOW VIEW OF ORDER ONLY
+   END
+   *
+END
+*
+* GET VENDOR DATA
+*
+VN_ID  = OP_REC<PO_VEN>
+CALL GET.VENDOR(VN_ID,VN_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+*
+IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH CUST
+   LOG.OPTS = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG = OP_ID:' Order has of non-existent VENDOR ':VN_ID
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GET.ORDER.DETAIL.OK = @FALSE
+END
+*
+SHIPTO_ID = OP_REC<PO_SHIPTO>
+CALL GET.VSHIPTO(SHIPTO_ID,SHIPTO_REC,@FALSE,ERROR_STATUS,GUIERRORS,GUISTATE)
+*
+IF ERROR_STATUS = ERR_NOF  THEN  ;* WE SHOULD NOT BE HERE WITH MISSING SHIP TO
+   LOG.OPTS = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG = OP_ID:' Order has of non-existent vendor ship to ':SHIPTO_ID
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GET.ORDER.DETAIL.OK = @FALSE
+END
+*
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+LOAD.OP.CTRLS:
+*
+* routine LOADS controls for ORDER_PARENT *
+CTRLIDS = ''
+PROPS   = ''
+VALUES  = ''
+*
+CTRLIDS<-1> = "TXT1ENTBY"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OP_REC<PO_ENTER_BY>
+*
+CTRLIDS<-1> = "TXT1ORDDT"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OCONV(OP_REC<PO_DATE>,PO_DATE.CNV)
+*
+CTRLIDS<-1> = "TXT1ORDNOTES"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OP_REC<PO_NOTES>
+*
+CTRLIDS<-1> = "CB1BUYER"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OP_REC<PO_BUYER>
+*
+CTRLIDS<-1> = "CB1SHIPVIA"
+PROPS<-1>   = GPVALUE
+VALUES<-1>  = OP_REC<PO_SHIP_VIA>
+*
+LOCATE OP_REC<PO_TERMS> IN TERMS.IDX<1> SETTING IDX THEN
+   CTRLIDS<-1> = "LST1TERMS"
+   PROPS<-1>   = GPVALUE
+   VALUES<-1>  = IDX
+END
+*
+CALL ATGUISETPROPS(GUIAPP,GUIFRM,CTRLIDS,PROPS,VALUES,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+**
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+PRICE.VALIDATE:
+*
+* ON ENTRY:
+* PRICE.EA = VALUE PASSED TO BE VALIDATED
+* ON EXIT
+* PRICE.EA 0 OR USER ENTERED VALUE IN INTERNAL FORMAT
+* LOT.FLAG SET
+*
+* VALIDATE PRICE - CAN THE USER CHANGE PRICE DATA ?
+*
+PRICE.OUT = '0.00'
+IF USER.IS.RESTRICTED THEN
+   *
+   PRMPT = "Your user privileges do not allow access to price data."
+   CAPTION = "Purchase Order Entry"
+   STYLE   = 2  ;* !
+   BUTTONS = 0  ;* ok only
+   HELPID = ""
+   CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+   PRICE.OUT = "*****"
+   *
+END ELSE
+   LOT.FLAG = @FALSE
+   BEGIN CASE
+         *
+         * LOT CHARGES ?
+         *
+      CASE NOT(NUM(PRICE.EA))
+         LOT.TYPE = PRICE.EA
+         LOCATE LOT.TYPE IN LOT.CHARGES<1,1> SETTING IDX THEN
+            PRICE.EA  = LOT.CHARGES<3,IDX>
+            PRICE.OUT = OCONV(PRICE.EA,PC_PRICE_EA.CNV)
+            LOT.FLAG  = @TRUE
+         END ELSE
+            *PRMPT = "Lot charge: ":LOT.TYPE:" not found in validation file."
+            *CAPTION = "Order Entry"
+            *STYLE   = 2  ;* !
+            *BUTTONS = 0  ;* ok only
+            *HELPID = ""
+            *CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+            *PRICE.EA = 0
+            *END
+            *CASE NOT(NUM(PRICE.EA))
+            PRMPT = "Price ea: ":PRICE.EA:" not valid."
+            CAPTION = "Order Entry"
+            STYLE   = 2  ;* !
+            BUTTONS = 0  ;* ok only
+            HELPID = ""
+            CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+            PRICE.EA = 0
+         END
+      CASE PRICE.EA < 0
+         PRMPT = "Price ea: ":PRICE.EA" is negative, invalid."
+         CAPTION = "Order Entry"
+         STYLE   = 2  ;* !
+         BUTTONS = 0  ;* ok only
+         HELPID = ""
+         CALL NXT.ERR.MSG(PRMPT, CAPTION, STYLE, BUTTONS, HELPID, RESPONSE, GUIERRORS,GUISTATE)
+         PRICE.EA = 0
+      CASE 1
+         PRICE.EA = ICONV(PRICE.EA, PC_PRICE_EA.CNV)
+         PRICE.OUT = OCONV(PRICE.EA,PC_PRICE_EA.CNV)
+   END CASE
+   OC_REC<PC_PRICE_EA> = PRICE.EA
+   OC_REC<PC_LOT_FLAG> = LOT.FLAG
+END
+CALL ATGUISETPROP(GUIAPP,GUIFRM,"CB2PRICE",GPVALUE,0,0,PRICE.OUT,GUIERRORS,GUISTATE)
+IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
+RETURN
+************************************************************
+* $PAGE$
+************************************************************
+WO.UPDATE: *
+IF OC_REC<PC_WO_NBR> # '' AND OC_REC<PC_WO_SEQ> # '' THEN
+   WR.ID = OC_REC<PC_WO_NBR>:'*':OC_REC<PC_WO_SEQ>
+   CALL GET.RECORD("WR",C.WR,WR.ID,WR_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   IF WR_REC = '' THEN
+      EMSG = 'WR Record reference on PO: ':OC_ID:' Does Not Exist: ':WR.ID
+      LOG.OPTS = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG = EMSG
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   END ELSE
+      WC.ID = WR_REC<WRT_WCID>
+      CALL GET.RECORD("WC",C.WC,WC.ID,WC_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+      IF WC_REC = '' THEN
+         EMSG = 'Seq Number: ':OC_REC<PC_WO_SEQ>:' Refences invalid WC: ':WC.ID
+         LOG.OPTS = "DISPLAY"
+         ERROR_NBR = ERR_SYS
+         ERROR_MSG = EMSG
+         CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      END ELSE
+         *
+         IF WC_REC<WC_SUB> THEN
+            *
+            * UPDATE QTY ON WORK ORDER
+            *
+            CALL NXT.LOCKWAITING("WR",C.WR,WR.ID,GUIERRORS,GUISTATE)
+            CALL GET.RECORD("WR",C.WR,WR.ID,WR_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)  ;* RE READ AFTER LOCK
+
+            IF WR_REC<WR_ACT_START> = '' THEN  ;* IF START DATE NOT PREV SET, SET IT NOW
+               WR_REC<WR_ACT_START> = DATE()
+            END
+            WR_REC<WR_STATUS>    = WORK.ORDER.SEQ.STATUS.LIST<1,WO.RN.IDX,1>   ;* REGARDLESS OF PREVIOUS STATUS WE CUT NEW PO SO NOW ITS RN
+            WR_REC<WR_STAT_DATE> = DATE()
+
+            CALL WRITE.RECORD(WR.ID,WR_REC,C.WR,@FALSE,ERROR_STATUS)
+         END
+      END
+   END
+END
+RETURN
+SET.DEFAULT.GL.TRANS.CD:
+*
+* SET DEFAULT GL TRANS CODE FOR WORK ORDER PO'S
+IF OC_REC<PC_GL_TRANS_CD> = '' THEN   ;* ONLY SET DEFAULT IF CODE NOT SET
+   IF OC_REC<PC_WO_NBR> # '' THEN      ;* IS THERE A WORK ORDER?
+      IF OC_REC<PC_WO_SEQ> # '' THEN    ;* AND A SEQ?
+         OC_REC<PC_GL_TRANS_CD> = DEFAULTS_REC<DFLT_WIP_OP_GL_CD>   ;* WITH BOTH WO# AND SEQ # WE ASSUME OUTPLANT
+      END ELSE
+         OC_REC<PC_GL_TRANS_CD> = DEFAULTS_REC<DFLT_WIP_MTL_GL_CD>  ;* WITH ONLY WO# WE ASSUME MATERIAL
+      END
+   END
+END
+RETURN
+END
+

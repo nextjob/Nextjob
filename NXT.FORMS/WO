@@ -1,0 +1,193 @@
+TEMPLATEı42367.63461ıWOıNXT.BPüWO.DIALOGü3ü0
+0ı1.4ı4
+2ıWOıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııWork Orders
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııWork Order Maintenance
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıWO*WOıı7ıautoıautoı106.25ı34.75ı1
+4ıı22ıııWork Orders
+4ıı48ııı0
+4ıı9ııı0
+2ıWO*WO*frmWOıı26ı0ı.5ı65ı8.5ı0
+4ıı0ıııWork Order Information
+4ıı8ııı0
+4ıı67ııı0
+2ıWO*WO*lblWOıfrmWOı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıWO*WO*lblWoVıfrmWOı15ı9ı1ı25ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO*WO*lblQtyıfrmWOı15ı35ı1ı7ı1.25ı0
+4ıı0ıııQuantity
+4ıı67ııı0
+2ıWO*WO*txtQtyıfrmWOı16ı43ı1ı8ı1.25ı256
+4ıı29ııı8
+2ıWO*WO*lbl2PnıfrmWOı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıWO*WO*lblPnVıfrmWOı15ı9ı2.5ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO*WO*lblDescıfrmWOı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıWO*WO*txtDESCıfrmWOı16ı9ı4ı30ı1.25ı256
+2ıWO*WO*lblDrawıfrmWOı15ı1ı5.5ı8ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıWO*WO*txtDrawıfrmWOı16ı9ı5.5ı30ı1.25ı256
+2ıWO*WO*lblEngIdıfrmWOı15ı40ı2.5ı5.5ı1ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıWO*WO*lblWoEngIdVıfrmWOı15ı45ı2.5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO*WO*lblAssocıfrmWOı15ı1ı7ı16ı1.25ı0
+4ıı0ıııAssociated With (SO/WO)
+4ıı67ııı0
+2ıWO*WO*txtAssocıfrmWOı16ı17ı7ı22ı1.25ı256
+4ıı8ııı0
+2ıWO*WO*txtSeqIncıfrmWOı16ı52ı7ı4.5ı1.25ı256
+4ıı0ııı100
+4ıı29ııı8
+2ıWO*WO*lblSeqIncıfrmWOı15ı41ı7ı10ı1.25ı0
+4ıı0ıııSeq Increment
+4ıı67ııı0
+2ıWO*WO*frmSchdıı26ı0ı9ı65ı8ı0
+4ıı0ıııScheduling
+4ıı67ııı0
+4ıı8ııı0
+2ıWO*WO*lblStartDateıfrmSchdı15ı1ı1ı8ı1.25ı0
+4ıı0ıııStart Date
+4ıı67ııı0
+2ıWO*WO*txtStartDateıfrmSchdı16ı10ı1ı9ı1.25ı256
+4ıı29ııı6
+2ıWO*WO*lblDueDateıfrmSchdı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııDue Date
+4ıı67ııı0
+2ıWO*WO*txtDueDateıfrmSchdı16ı10ı2.5ı9ı1.25ı256
+4ıı29ııı6
+2ıWO*WO*lblActStartıfrmSchdı15ı22ı1ı6.5ı1.25ı0
+4ıı0ıııAct Start
+4ıı67ııı0
+2ıWO*WO*txtActStartıfrmSchdı16ı28ı1ı9ı1.25ı256
+4ıı29ııı6
+2ıWO*WO*lblActEndıfrmSchdı15ı22ı2.5ı6ı1.25ı0
+4ıı0ıııAct End
+4ıı67ııı0
+2ıWO*WO*txtActEndıfrmSchdı16ı28ı2.5ı9ı1.25ı256
+4ıı29ııı6
+2ıWO*WO*chkFreezeıfrmSchdı20ı1ı4ı17ı1.25ı32
+4ıı22ıııFreeze Schedule Dates
+4ıı67ııı0
+2ıWO*WO*lstSchdTypeıfrmSchdı24ı29ı4ı11ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı7.88ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı3
+2ıWO*WO*lstStatusıfrmSchdı24ı7ı6ı6.5ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.75ı12.38
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı3
+2ıWO*WO*txtStatDateıfrmSchdı16ı22ı6ı10.5ı1.25ı0
+4ıı29ııı6
+4ıı8ııı0
+2ıWO*WO*lblSchdTypeıfrmSchdı15ı19ı4ı9ı1.25ı0
+4ıı67ııı0
+4ıı0ıııSchedule Type
+2ıWO*WO*lblRelıfrmSchdı15ı42ı1ı9.5ı1.25ı0
+4ıı0ıııRelease Date
+4ıı67ııı0
+2ıWO*WO*lblRelVıfrmSchdı15ı52ı1ı10.5ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO*WO*lblStatusıfrmSchdı15ı1ı6ı5ı1.25ı0
+4ıı0ıııStatus
+4ıı67ııı0
+2ıWO*WO*lblStatDateıfrmSchdı15ı14ı6ı8ı1.25ı0
+4ıı0ıııStatus Date
+4ıı67ııı0
+2ıWO*WO*btnSchdıfrmSchdı18ı55ı5ı8.5ı2.25ı32
+4ıı22ıııReSchedule
+2ıWO*WO*btnUpdateıı18ı66ı1ı14ı4ı32
+4ıı22ıııSave Updates
+2ıWO*WO*btnRTprtıı18ı67ı9ı13.5ı5ı32
+4ıı22ıııWork Order Routing Print
+2ıWO*WO*optWOPrtıı19ı82ı9ı18ı5ı0
+4ıı22ıııWork Order Traveller Type
+4ıı27ııı0
+4ıı28ııı0
+4ıı67ııı0
+4ıı26ıııDefaultıCSV fileıCustom 1ıCustom 2
+4ıı0ııı1
+2ıWO*WO*TabMainıı30ı0ı17ı106ı18ı0
+4ıı10ııı0
+2ıWO*WO*RoutıTabMainı31ı0ı0ı0ı0ı0
+4ıı22ıııRouting
+2ıWO*WO*frmRTıRoutı26ı0ı0ı104ı16.75ı0
+4ıı0ıııRoutings
+4ıı67ııı0
+4ıı8ııı0
+2ıWO*WO*btnRTmodıfrmRTı18ı95ı3ı7.5ı1.75ı32
+4ıı22ıııModify
+2ıWO*WO*btnRTinsBeforeıfrmRTı18ı95ı5ı7.5ı1.75ı32
+4ıı22ıııInsert Before
+2ıWO*WO*btnRTinsAfterıfrmRTı18ı95ı7ı7.5ı1.75ı32
+4ıı22ıııInsert After
+2ıWO*WO*btnRTDelSeqıfrmRTı18ı95ı9ı7.5ı1.75ı32
+4ıı22ıııDelete
+2ıWO*WO*grdRTıfrmRTı28ı1ı1.5ı93ı14.5ı32
+4ıı27ııı11
+4ıı32ıııSeq NbrıWC IdıWC NameıSeq DescriptionıSchd StartıSchd EndıAct StartıAct EndıStatıQty CmpıScrap
+4ıı38ııı0ı0ı0ı0ı0ı0ı0ı0ı0ı0ı0
+4ıı37ııı6.38ı8.75ı11.62ı40ı7.12ı7.12ı7.12ı7.12ı3.62ı6.25ı5.12
+4ıı34ııı1ı1ı1ı1ı1ı1ı1ı1ı1ı1ı1
+4ıı0ıııüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüüıüüüüüüüüüü
+4ıı33ııı3
+4ıı10ııı1
+4ıı12ııı1ı1ı1ı1ı1ı0ı1ı1ı1ı0ı0
+4ıı51ııı0ı0ı0ı0ı0ı0ı0ı0ı5ı0ı0
+2ıWO*WO*CustomıTabMainı31ı0ı0ı0ı0ı0
+4ıı22ıııCustom Fields
+2ıWO*WO*frmUsersıCustomı26ı0ı0ı104ı13ı0
+4ıı0ıııUser Defined
+4ıı67ııı0
+2ıWO*WO*lblU1ıfrmUsersı15ı1ı1ı6ı1.25ı0
+4ıı0ıııUser 1
+4ıı67ııı0
+2ıWO*WO*txtU1ıfrmUsersı16ı12ı1ı26ı1.25ı256
+2ıWO*WO*lblU2ıfrmUsersı15ı1ı3ı6ı1.25ı0
+4ıı0ıııUser 2
+4ıı67ııı0
+2ıWO*WO*txtU2ıfrmUsersı16ı12ı3ı26ı1.25ı256
+2ıWO*WO*lblU3ıfrmUsersı15ı1ı5ı6ı1.25ı0
+4ıı0ıııUser 3
+4ıı67ııı0
+2ıWO*WO*txtU3ıfrmUsersı16ı12ı5ı26ı1.25ı256
+2ıWO*WO*lblU4ıfrmUsersı15ı64ı1ı5ı1.25ı0
+4ıı0ıııUser 4
+4ıı67ııı0
+2ıWO*WO*lblU5ıfrmUsersı15ı64ı3ı4.5ı1.25ı0
+4ıı0ıııUser 5
+4ıı67ııı0
+2ıWO*WO*lblU6ıfrmUsersı15ı64ı5ı5ı1.25ı0
+4ıı0ıııUser 6
+4ıı67ııı0
+2ıWO*WO*txtU4ıfrmUsersı16ı74ı1ı26ı1.25ı256
+2ıWO*WO*txtU5ıfrmUsersı16ı74ı3ı26ı1.25ı256
+2ıWO*WO*txtU6ıfrmUsersı16ı74ı5ı26ı1.25ı256
+0ı-1

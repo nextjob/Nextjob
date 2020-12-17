@@ -1,0 +1,113 @@
+TEMPLATEı42351.80462ıWO.TREEıNXT.BPüWO.TREE.DIALOGü3ü0
+0ı1.4ı4
+2ıWO.TREEıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııWork Order Tree
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııWork Order Maintenance
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıWO.TREE*WO.TREEıı7ıautoıautoı76ı25.25ı1
+4ıı22ıııWork Order Tree
+4ıı48ııı0
+4ıı9ııı0
+2ıWO.TREE*WO.TREE*frmWOıı26ı0ı.5ı74.5ı9ı0
+4ıı0ıııWork Order Information
+4ıı8ııı0
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblWOıfrmWOı15ı1ı1ı8ı1.25ı0
+4ıı0ıııWork Order
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*txtWOıfrmWOı16ı9ı1ı18.5ı1.25ı0
+4ıı8ııı0
+4ıı14ııı-2147483629
+2ıWO.TREE*WO.TREE*lbl2PnıfrmWOı15ı1ı2.5ı8ı1.25ı0
+4ıı0ıııPart Number
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblDescıfrmWOı15ı1ı4ı8ı1.25ı0
+4ıı0ıııDescription
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblDrawıfrmWOı15ı1ı5.5ı8ı1.25ı0
+4ıı0ıııDrawing
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblQtyıfrmWOı15ı43ı2.5ı6ı1.25ı0
+4ıı0ıııQuantity
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblRtIdıfrmWOı15ı39ı1ı5.5ı1ı0
+4ıı0ıııEng Id
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblAssocıfrmWOı15ı1ı7ı14.5ı1.25ı0
+4ıı0ıııAssociated With Sales
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lblAssocVıfrmWOı15ı15ı7ı27ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO.TREE*WO.TREE*lblDrawVıfrmWOı15ı9ı5.5ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO.TREE*WO.TREE*lblDescVıfrmWOı15ı9ı4ı30ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWO.TREE*WO.TREE*lstRTlistıfrmWOı24ı45ı1ı15ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı6.38ı15
+4ıı39ııı1
+4ıı53ııı8
+4ıı33ııı1
+4ıı32ıııEng IdıRev
+2ıWO.TREE*WO.TREE*txtQtyıfrmWOı16ı50ı2.5ı8ı1.25ı256
+4ıı29ııı8
+2ıWO.TREE*WO.TREE*txtDateıfrmWOı16ı50ı4ı8ı1.25ı256
+4ıı29ııı6
+4ıı54ııı1
+2ıWO.TREE*WO.TREE*lblDateıfrmWOı15ı43ı4ı7ı1.25ı0
+4ıı0ıııDue Date
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*lstSchTypeıfrmWOı24ı50ı5.5ı8ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı8.25ı15
+4ıı53ııı8
+4ıı33ııı3
+4ıı39ııı1
+2ıWO.TREE*WO.TREE*btnRelıfrmWOı18ı63ı1ı9.5ı2.5ı32
+4ıı22ıııRelease
+2ıWO.TREE*WO.TREE*lblSchTypeıfrmWOı15ı40ı5.5ı9ı1.25ı0
+4ıı0ıııSchedule Type
+4ıı67ııı0
+2ıWO.TREE*WO.TREE*txt2PnıfrmWOı16ı9ı2.5ı30ı1.25ı256
+4ıı49ıııEnter Part Number
+4ıı14ııı-2147483634
+2ıWO.TREE*WO.TREE*frmAssociationsıı26ı0ı9.5ı74.5ı13.5ı0
+4ıı0ıııAssociations
+4ıı67ııı0
+4ıı8ııı0
+2ıWO.TREE*WO.TREE*grdWoRelıfrmAssociationsı27ı1ı1ı68ı10.5ı32
+4ıı27ııı5
+4ıı32ııı Work OrderıPart NumberıQtyıDue DateıStatus
+4ıı38ııı0ı0ı0ı0ı0
+4ıı37ııı12.38ı25ı5.5ı10.25ı5.38
+4ıı34ııı0ı0ı0ı0ı0
+4ıı33ııı3
+4ıı0ıııüüüü
+2ıWO.TREE*WO.TREE*btnAddıfrmAssociationsı18ı1ı12ı7.5ı1.25ı32
+4ıı22ıııAdd
+2ıWO.TREE*WO.TREE*btnModifyıfrmAssociationsı18ı10ı12ı7.5ı1.25ı32
+4ıı22ıııModify
+2ıWO.TREE*WO.TREE*btnBOMıfrmAssociationsı18ı20ı12ı7.5ı1.25ı32
+4ıı22ıııAdd BOM
+2ıWO.TREE*WO.TREE*btnStatusıfrmAssociationsı18ı38ı12ı7.5ı1.25ı32
+4ıı22ıııStatus
+2ıWO.TREE*WO.TREE*btnLaborıfrmAssociationsı18ı47ı12ı7.5ı1.25ı32
+4ıı22ıııLabor
+2ıWO.TREE*WO.TREE*btnCostingıfrmAssociationsı18ı57ı12ı7.5ı1.25ı32
+4ıı22ıııCosting
+2ıWO.TREE*WO.TREE*BTNCANCELıı18ı65ı23.5ı9.5ı1.5ı32
+4ıı22ıııRetry
+0ı-1

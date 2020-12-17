@@ -1,0 +1,161 @@
+TEMPLATEı42064.70365ıEMPLOYEEıNXT.BPüEMP.DIALOGü3ü0
+0ı1.4ı4
+2ıEMPLOYEEıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııEMPLOYEE MAINTENANCE
+4ıı59ııı0
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+4ıı41ıııMaintain Employee Record
+4ıı43ıııCopyright Nextjob Solutions, llc All rights reserved.
+4ıı42ıııMAB
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+2ıEMPLOYEE*EMPLOYEEıı7ıautoıautoı51.5ı17ı1
+4ıı22ıııEMPLOYEE MAINTENANCE
+4ıı48ııı0
+4ıı9ııı0
+2ıEMPLOYEE*EMPLOYEE*frmEMPıı26ı0ı0ı50.5ı7ı0
+4ıı0ıııEmployee Data
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lstEmpIdıfrmEMPı24ı1ı1ı9ı1.25ı32
+4ıı27ııı4
+4ıı32ıııEmp Idı Last NameıFrist NameıMiddle Name
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı5ı10.62ı15ı15
+4ıı33ııı3
+4ıı39ııı1
+4ıı53ııı8
+2ıEMPLOYEE*EMPLOYEE*txtNewEmpIdıfrmEMPı16ı1ı1ı8ı1.25ı256
+4ıı9ııı0
+4ıı29ııı8
+2ıEMPLOYEE*EMPLOYEE*lblLastNameıfrmEMPı15ı11ı2.1ı8ı1.25ı0
+4ıı0ıııLast Name
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*txtLastNameıfrmEMPı16ı11ı1ı13.5ı1.25ı256
+4ıı29ııı1
+2ıEMPLOYEE*EMPLOYEE*lblFirstNameıfrmEMPı15ı26ı2.1ı8ı1.25ı0
+4ıı0ıııFirst Name
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*txtFirstNameıfrmEMPı16ı26ı1ı10.5ı1.25ı256
+4ıı29ııı1
+2ıEMPLOYEE*EMPLOYEE*lblMiddleNameıfrmEMPı15ı37ı2.1ı8ı1.25ı0
+4ıı0ıııMiddle
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*txtMiddleNameıfrmEMPı16ı37ı1ı8ı1.25ı256
+4ıı29ııı1
+2ıEMPLOYEE*EMPLOYEE*lstDeptıfrmEMPı24ı1ı4ı12ı1.25ı32
+4ıı27ııı2
+4ıı32ıııDept IdıDepartment
+4ıı38ııı0ı0
+4ıı37ııı5.75ı15
+4ıı33ııı3
+4ıı39ııı1
+4ıı53ııı8
+2ıEMPLOYEE*EMPLOYEE*chkInactiveıfrmEMPı20ı19ı4ı8ı1.25ı32
+4ıı22ıııInactive
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*txtHireıfrmEMPı16ı29ı4ı8ı1.25ı256
+4ıı29ııı6
+2ıEMPLOYEE*EMPLOYEE*lblHireıfrmEMPı15ı29ı5.5ı8ı1.25ı0
+4ıı0ıııHire Date
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblTermıfrmEMPı15ı38ı5.5ı8ı1.25ı0
+4ıı0ıııTermination
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*txtTermıfrmEMPı16ı38ı4ı8ı1.25ı256
+4ıı29ııı6
+2ıEMPLOYEE*EMPLOYEE*lblEmpIdıfrmEMPı15ı1ı2.1ı8ı1.25ı0
+4ıı67ııı0
+4ıı0ıııEmp Id
+2ıEMPLOYEE*EMPLOYEE*lblDeptıfrmEMPı15ı1ı5.1ı8ı1.25ı0
+4ıı0ıııDepartment
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*frmShiftıı26ı0ı7.5ı50ı6ı0
+4ıı0ıııShift
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblMonıfrmShiftı15ı1ı1ı6ı1.25ı0
+4ıı0ıııMon
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblTueıfrmShiftı15ı7ı1ı6ı1.25ı0
+4ıı0ıııTue
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblWedıfrmShiftı15ı13ı1ı6ı1.25ı0
+4ıı0ıııWed
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblThurıfrmShiftı15ı19ı1ı6ı1.25ı0
+4ıı0ıııThur
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblFriıfrmShiftı15ı25ı1ı6ı1.25ı0
+4ıı0ıııFri
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblSatıfrmShiftı15ı31ı1ı6ı1.25ı0
+4ıı0ıııSat
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lblSunıfrmShiftı15ı37ı1ı6ı1.25ı0
+4ıı0ıııSun
+4ıı67ııı0
+2ıEMPLOYEE*EMPLOYEE*lstMonıfrmShiftı24ı1ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı11.25
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/ End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstTueıfrmShiftı24ı7ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstWedıfrmShiftı24ı13ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstThurıfrmShiftı24ı19ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstFriıfrmShiftı24ı25ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstSatıfrmShiftı24ı31ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*lstSunıfrmShiftı24ı37ı2.5ı6ı1.25ı32
+4ıı27ııı2
+4ıı38ııı0ı0
+4ıı37ııı5ı10
+4ıı39ııı1
+4ıı53ııı8
+4ıı32ıııShift IdıStart/End Time
+4ıı33ııı3
+2ıEMPLOYEE*EMPLOYEE*btnFileıı18ı2ı14.5ı8ı2ı32
+4ıı22ıııFile
+2ıEMPLOYEE*EMPLOYEE*btnCancelıı18ı39ı14.5ı8ı2ı32
+4ıı22ıııCancel
+2ıEMPLOYEE*EMPLOYEE*btnNewıı18ı20ı14.5ı7.5ı2ı32
+4ıı22ıııNew
+0ı-1

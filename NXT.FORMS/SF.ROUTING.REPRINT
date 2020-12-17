@@ -1,0 +1,52 @@
+TEMPLATEı41253.69465ıSF_RT_PRTıNXT.BPüSF.ROUTING.REPRINTü3ü0
+0ı1.4ı4
+2ıSF_RT_PRTıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııROUTER PRINT
+4ıı59ııı0
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı41ıııRouter Reprint 
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ıııMAB
+2ıSF_RT_PRT*SF_RT_PRTıı7ıautoıautoı91ı11ı1
+4ıı22ıııRouting Reprint
+4ıı48ııı0
+4ıı9ııı0
+2ıSF_RT_PRT*SF_RT_PRT*TXT1ORDVALıı16ı7ı1ı13.5ı1.25ı256
+2ıSF_RT_PRT*SF_RT_PRT*LblOrdValıı15ı1ı1ı6ı1.25ı0
+4ıı0ıııOrder #
+4ıı67ııı0
+2ıSF_RT_PRT*SF_RT_PRT*lstItemıı21ı1ı4.5ı88.5ı3.75ı32
+4ıı27ııı4
+4ıı32ıııItemıPart NumberıPart DescriptionıStatus
+4ıı38ııı0ı0ı0ı0
+4ıı37ııı4.75ı26ı36ı6
+4ıı33ııı3
+4ıı49ıııScrowl to desired item and Click to make active
+4ıı26ıııüüüıüüüıüüüıüüüıüüü
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı68ııı0
+2ıSF_RT_PRT*SF_RT_PRT*btnRouterıı18ı36ı9ı9ı1.75ı32
+4ıı22ıııPrint Router Sheet
+2ıSF_RT_PRT*SF_RT_PRT*btn1Findıı18ı22ı1ı7.5ı1.25ı32
+4ıı22ıııFind
+4ıı49ıııFind Order Number 
+2ıSF_RT_PRT*SF_RT_PRT*LBLCUSTıı15ı36ı1ı51ı1.25ı0
+4ıı0ıııSold To: 
+4ıı67ııı0
+2ıSF_RT_PRT*SF_RT_PRT*LBLSHIPTOıı15ı36ı2ı51ı1.25ı0
+4ıı0ıııShip To:
+4ıı67ııı0
+2ıSF_RT_PRT*SF_RT_PRT*LBLITEMıı15ı2ı8.5ı10.5ı1.25ı0
+4ıı0ıııItem:
+4ıı67ııı0
+2ıSF_RT_PRT*SF_RT_PRT*LBLPARTıı15ı2ı9.5ı30ı1.25ı0
+4ıı0ıııPart:
+4ıı67ııı0
+0ı-1

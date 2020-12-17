@@ -1,0 +1,117 @@
+TEMPLATEı41793.92758ıWORıNXT.BPüWOR.DIALOGü3ü0
+0ı1.4ı4
+2ıWORıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııWork Order Receipts
+4ıı59ııı0
+4ıı41ıııReceive product from work order
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıWOR*WORıı7ıautoıautoı82.75ı30.25ı1
+4ıı22ıııWork Order Receipt
+4ıı48ııı0
+4ıı9ııı0
+2ıWOR*WOR*lblWoOrderıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııWO Number
+4ıı67ııı0
+2ıWOR*WOR*txtWorkOrderıı16ı10ı1ı16.5ı1.25ı256
+4ıı49ıııEnter order number to ship
+2ıWOR*WOR*lblPnıı15ı33ı1ı9.5ı1.25ı0
+4ıı0ıııPart Number
+2ıWOR*WOR*lblPnValıı15ı45ı1ı35ı1.25ı0
+4ıı11ııı2
+2ıWOR*WOR*lblDescıı15ı33ı3ı9.5ı1.25ı0
+4ıı0ıııDescription
+2ıWOR*WOR*lblDescValıı15ı45ı3ı35ı1.25ı0
+4ıı11ııı2
+2ıWOR*WOR*btnCancelıı18ı70ı24ı9.5ı2.5ı32
+4ıı22ıııCancel
+2ıWOR*WOR*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıWOR*WOR*frmProcessıı26ı1ı5ı79.5ı16.5ı0
+4ıı0ıııReceiver Information
+4ıı67ııı0
+4ıı8ııı0
+2ıWOR*WOR*txtRcvQty1ıfrmProcessı16ı38ı1ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı68ııı0
+2ıWOR*WOR*txtRcvQty2ıfrmProcessı16ı38ı2.5ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı68ııı0
+2ıWOR*WOR*txtRcvQty3ıfrmProcessı16ı38ı4ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı68ııı0
+2ıWOR*WOR*txtRcvDateıfrmProcessı16ı55ı1ı8ı1.25ı256
+4ıı29ııı6
+2ıWOR*WOR*txtEmpIdıfrmProcessı16ı55ı2.5ı5ı1.25ı256
+2ıWOR*WOR*txtLotıfrmProcessı16ı55ı4ı17ı1.25ı256
+2ıWOR*WOR*txtItemDescıfrmProcessı17ı1ı7.5ı77.5ı3ı256
+4ıı10ııı1
+2ıWOR*WOR*btnRcvıfrmProcessı18ı34ı12ı9ı2.5ı32
+4ıı22ıııRecieve  Item
+2ıWOR*WOR*lblRcvQty1ıfrmProcessı15ı26ı1ı11ı1.25ı0
+4ıı0ıııQty To Rcv Loc 1
+4ıı67ııı0
+2ıWOR*WOR*lblPrevRcvdQtyıfrmProcessı15ı14ı1ı8ı1.25ı0
+4ıı11ııı2
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı1
+4ıı19ııı0
+4ıı67ııı0
+4ıı68ııı0
+2ıWOR*WOR*lblPrevRecvdıfrmProcessı15ı1ı1ı12ı1.25ı0
+4ıı0ıııPrevious Received
+4ıı67ııı0
+2ıWOR*WOR*blbLotıfrmProcessı15ı48ı4ı5ı1.25ı0
+4ıı0ıııLot Id
+4ıı67ııı0
+2ıWOR*WOR*lblCommentıfrmProcessı15ı1ı6ı8ı1.25ı0
+4ıı0ıııComment
+4ıı67ııı0
+2ıWOR*WOR*lblEmpIdıfrmProcessı15ı48ı2.5ı5.5ı1.25ı0
+4ıı0ıııEmp Id
+4ıı67ııı0
+2ıWOR*WOR*lblEmpNameıfrmProcessı15ı61ı2.5ı18ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWOR*WOR*lblRcvQty2ıfrmProcessı15ı26ı2.5ı11ı1.25ı0
+4ıı0ıııQty To Rcv Loc 2
+4ıı67ııı0
+2ıWOR*WOR*lblRcvQty3ıfrmProcessı15ı26ı4ı11ı1.25ı0
+4ıı0ıııQty To Rcv Loc 3
+4ıı67ııı0
+2ıWOR*WOR*lblTRcvQtyıfrmProcessı15ı33ı5.5ı4ı1.25ı0
+4ıı0ıııTotal
+4ıı67ııı0
+2ıWOR*WOR*lblTrcvQtyVıfrmProcessı15ı38ı5.5ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıWOR*WOR*lblRcvDateıfrmProcessı15ı48ı1ı7ı1.25ı0
+4ıı0ıııDate Rcvd
+4ıı67ııı0
+0ı-1

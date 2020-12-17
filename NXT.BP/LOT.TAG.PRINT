@@ -1,0 +1,129 @@
+SUBROUTINE LOT.TAG.PRINT(OP_REC,OC_REC,RC_REC,RC.IDX,PARTS_QTY,OC_ID,VEN_NAME,PRINTER_NBR,GUIERRORS,GUISTATE)
+
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: LOT.TAG.PRINT
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 00/00/2014
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+* RETURNS:
+* OP_REC - PO PARETN RECORD
+* OC_REC - PO CHILD REC FOR ORDER TO PRINT PROCESS LABEL
+* RC_REC - RECIEPT RECORD
+* OC_ID  - PO CHILD ID
+* VEN_NAME - VENDORR NAME
+* PRINTER_NBR - PRINTER UNIT NUMBER TO PRINT LABEL ON
+* GUIERRORS, GUISTATE - ACCUTERM GUI VARIABLES, PASSED FOR ERROR REPORTING
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* OUTPUT PROCESS LABEL
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES PO_CHILD.H
+$INCLUDE NXT.INCLUDES PO_PARENT.H
+$INCLUDE NXT.INCLUDES RECEIPTS.H
+$INCLUDE NXT.INCLUDES PARTS_QTY.H
+*
+YINC = 65
+YPOS = 0
+*
+FD = ''
+FD = FD:CG12:HPHPOS:'60x0Y'
+FD = FD: 'Lot Tag'
+YPOS += YINC
+FD = FD: HPHPOS:'60x':YPOS:'Y'
+FD := 'Lot #: ':RC_REC<RC_LOT_ID,RC.IDX>
+*
+YPOS += YINC
+FD = FD: HPHPOS:'60x':YPOS:'Y'
+FD := 'Receipt Date: ':OCONV(RC_REC<RC_DATE,RC.IDX>,RC_DATE.CNV)
+*
+YPOS += YINC
+FD = FD: HPHPOS:'60x':YPOS:'Y'
+FD := 'Part #: ':RC_REC<RC_PART_NBR>
+*
+YPOS += YINC
+FD = FD: HPHPOS:'60x':YPOS:'Y'
+FD := 'Desc: ':OC_REC<PC_PART_DESC>
+*
+IF OC_REC<PC_PART_NBR> = '' THEN  ;* IF NO PART NUMBER NO STORES LOCATIONS
+  *
+  IF OC_REC<PC_WO_NBR> = '' THEN    ;* IF NO WO NUMBER THIS IS A NON STD PART
+    YPOS += YINC
+    FD = FD: HPHPOS:'60x':YPOS:'Y'
+    FD := 'Rcv Non Std Part ':RC_REC<RC_WO_QTY,RC.IDX>
+  END ELSE
+    YPOS += YINC
+    FD = FD: HPHPOS:'60x':YPOS:'Y'
+    FD := 'Rcv To Work Order ':OC_REC<PC_WO_NBR>:': ':RC_REC<RC_WO_QTY,RC.IDX>
+  END
+
+END ELSE
+  IF OC_REC<PC_WO_NBR> #  '' THEN    ;* IF WO NUMBER INCLUDE QTY ON TAG
+    YPOS += YINC
+    FD = FD: HPHPOS:'60x':YPOS:'Y'
+     FD := 'Rcv To Work Order ':OC_REC<PC_WO_NBR>:': ':RC_REC<RC_WO_QTY,RC.IDX>
+  END
+  *
+  YPOS += YINC
+  FD = FD: HPHPOS:'60x':YPOS:'Y'
+  FD := 'Qty 1: / ':PARTS_QTY<PT_LOC1>:': ':RC_REC<RC_QTY1,RC.IDX>
+  *
+  YPOS += YINC
+  FD = FD: HPHPOS:'60x':YPOS:'Y'
+  FD := 'Qty 2: / ':PARTS_QTY<PT_LOC2>:': ':RC_REC<RC_QTY2,RC.IDX>
+  *
+  YPOS += YINC
+  FD = FD: HPHPOS:'60x':YPOS:'Y'
+  FD := 'Qty 3: / ':PARTS_QTY<PT_LOC3>:': ':RC_REC<RC_QTY3,RC.IDX>
+END
+*
+PRINT ON PRINTER_NBR FD
+PRINTER CLOSE ON PRINTER_NBR
+*
+9999: *
+RETURN
+END
+

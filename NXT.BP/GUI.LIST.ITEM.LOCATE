@@ -1,0 +1,77 @@
+SUBROUTINE GUI.LIST.ITEM.LOCATE(CALLER_GUI_LIST,CALLER_LOOKUP_VALUE,LIST_IDX)
+!
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: GUI.LIST.ITEM.LOCATE
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 10/28/2013GU
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* ROUTINE IS TO LOCATE CALLER_LOOKUP_VALUE IN CALLER_GUI_LIST (A LIST SUPPLIED TO ACCUTERM GUI DROP DOWN LIST)
+* REM FORMATE IS:
+* LIST<1,1,1>  = ROW 1, COLUMN 1 VALUE
+* LIST<1,1,2>  = ROW 1, COLUMN 2 VALUE
+* LIST<1,1,3>  = ROW 1, COLUMN 3 VALUE
+*   .
+*   . AND SO ON
+*   .
+* LIST<1,2,1>  = ROW 2, COLUMN 1 VALUE
+* LIST<1,2,2>  = ROW 2, COLUMN 2 VALUE
+* LIST<1,2,3>  = ROW 2, COLUMN 3 VALUE
+*
+*  AND SO ON
+!
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+*
+LIST_IDX = 0   ;* IF WE DO NOT FIND IT RETURN 0
+ROW.COUNT = DCOUNT(CALLER_GUI_LIST,@VM)
+*
+FOR I = 1 TO ROW.COUNT
+  IF CALLER_GUI_LIST<1,I,1> = CALLER_LOOKUP_VALUE THEN
+    LIST_IDX = I
+    EXIT
+  END
+NEXT I
+*
+RETURN
+END

@@ -1,0 +1,206 @@
+TEMPLATEı42047.86207ıPORıNXT.BPüPOR.DIALOGü3ü0
+0ı1.4ı4
+2ıPORıı1ıautoıautoı60ı20ı1073741825
+4ıı7ııı4
+4ıı22ıııShipping
+4ıı59ııı0
+4ıı41ıııReceiving Dialog
+4ıı44ııı1.0
+4ıı24ııı0
+4ıı61ıııProcessing... please wait
+4ıı60ııı2
+4ıı43ıııCopyright Nextjob Solutions, LLC All rights reserved.
+4ıı42ııımab
+4ıı20ıııC:\Nextjob\Nextjob_help\NextJob_help.chm
+2ıPOR*PORıı7ıautoıautoı96.25ı39.5ı1
+4ıı22ıııReceiving
+4ıı48ııı0
+4ıı9ııı0
+2ıPOR*POR*lblOrderıı15ı1ı1ı9ı1.25ı0
+4ıı0ıııPO Number
+4ıı67ııı0
+2ıPOR*POR*Menuıı75ı0ı0ı0ı0ı32
+4ıı25ııı-1
+4ıı26ııı*Printü1üPrintüü1ü1üü0ı*Helpü1üHelpüü1ü1üü0ı*Aboutü1üAboutüü1ü1üü0
+2ıPOR*POR*txt1OrdValıı16ı10ı1ı16.5ı1.25ı256
+4ıı49ıııEnter order number to ship
+2ıPOR*POR*lstItemıı21ı0ı3ı93ı4.75ı32
+4ıı27ııı6
+4ıı32ıııItemıPart NumberıDescriptionıWork Orderı DueıStatus
+4ıı38ııı0ı0ı0ı0ı0ı0
+4ıı37ııı8.75ı16.5ı36ı9ı8ı6
+4ıı33ııı3
+4ıı49ıııScrowl to desired item and Click to make active
+4ıı26ıııüüüüüıüüüüüıüüüüüıüüüüüıüüüüü
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı68ııı0
+4ıı8ııı0
+2ıPOR*POR*TXTPODESCıı17ı2ı13ı91.5ı3ı0
+4ıı10ııı1
+4ıı8ııı0
+2ıPOR*POR*lblVendıı15ı46ı1ı6.5ı1.25ı0
+4ıı0ıııVendor
+4ıı67ııı0
+2ıPOR*POR*lblVendorValıı15ı51ı1ı25ı1.25ı0
+4ıı11ııı2
+4ıı67ııı0
+2ıPOR*POR*lblPnıı15ı2ı8.5ı9.5ı1.25ı0
+4ıı0ıııPart Number
+2ıPOR*POR*lblPnValıı15ı12ı8.5ı35ı1.25ı0
+4ıı11ııı2
+2ıPOR*POR*lblDescıı15ı2ı10ı9.5ı1.25ı0
+4ıı0ıııDescription
+2ıPOR*POR*lblDescValıı15ı12ı10ı35ı1.25ı0
+4ıı11ııı2
+2ıPOR*POR*frmProcessıı26ı2ı22ı92ı13.25ı0
+4ıı0ıııReceiver Information
+4ıı67ııı0
+4ıı8ııı0
+2ıPOR*POR*txtPackIdıfrmProcessı16ı8.5ı1ı16ı1.25ı256
+2ıPOR*POR*txtWoQtyıfrmProcessı16ı43ı1ı8ı1.25ı256
+4ıı29ııı8
+4ıı8ııı0
+4ıı25ııı2
+2ıPOR*POR*txtRcvQty1ıfrmProcessı16ı43ı2.5ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı8ııı0
+4ıı68ııı0
+2ıPOR*POR*txtRcvQty2ıfrmProcessı16ı43ı4ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı8ııı0
+4ıı68ııı0
+2ıPOR*POR*txtRcvQty3ıfrmProcessı16ı43ı5.5ı8ı1.25ı256
+4ıı29ııı8
+4ıı0ııı0
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı0
+4ıı19ııı0
+4ıı25ııı2
+4ıı8ııı0
+4ıı68ııı0
+2ıPOR*POR*txtRcvDateıfrmProcessı16ı64ı1ı8ı1.25ı256
+4ıı29ııı6
+2ıPOR*POR*txtItemDescıfrmProcessı17ı1ı9ı50.5ı3ı256
+4ıı10ııı1
+2ıPOR*POR*BTNBROWSEıfrmProcessı18ı53ı6ı8ı2ı32
+4ıı22ıııBrowse for Document
+2ıPOR*POR*btnRcvıfrmProcessı18ı55ı9.5ı9ı2.5ı32
+4ıı22ıııRecieve  Item
+2ıPOR*POR*btnPrintLotıfrmProcessı18ı75ı9.5ı9ı2.5ı32
+4ıı22ıııPrint Lot Tag
+4ıı8ııı0
+2ıPOR*POR*lblRcvQty1ıfrmProcessı15ı26ı2.5ı16ı1.25ı0
+4ıı0ıııQty To Rcv Loc 1
+4ıı67ııı0
+2ıPOR*POR*lblPrevRcvdQtyıfrmProcessı15ı14ı4.5ı8ı1.25ı0
+4ıı11ııı2
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı1
+4ıı19ııı0
+4ıı67ııı0
+4ıı68ııı0
+4ıı25ııı2
+2ıPOR*POR*lblPrevRecvdıfrmProcessı15ı1ı4.5ı12ı1.25ı0
+4ıı0ıııPrevious Received
+4ıı67ııı0
+2ıPOR*POR*blbLotıfrmProcessı15ı58ı4ı5ı1.25ı0
+4ıı0ıııLot Id
+4ıı67ııı0
+2ıPOR*POR*lblCommentıfrmProcessı15ı1ı7.5ı8ı1.25ı0
+4ıı0ıııComment
+4ıı67ııı0
+2ıPOR*POR*lblRcvQty2ıfrmProcessı15ı26ı4ı16ı1.25ı0
+4ıı0ıııQty To Rcv Loc 2
+4ıı67ııı0
+2ıPOR*POR*lblRcvQty3ıfrmProcessı15ı26ı5.5ı17ı1.25ı0
+4ıı0ıııQty To Rcv Loc 3
+4ıı67ııı0
+2ıPOR*POR*lblTRcvQtyıfrmProcessı15ı38ı7ı4ı1.25ı0
+4ıı0ıııTotal
+4ıı67ııı0
+2ıPOR*POR*lblTrcvQtyVıfrmProcessı15ı43ı7ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı2
+2ıPOR*POR*lblRcvDateıfrmProcessı15ı56ı1ı7ı1.25ı0
+4ıı0ıııDate Rcvd
+4ıı67ııı0
+2ıPOR*POR*lblPackIdıfrmProcessı15ı1ı1ı7.5ı1.25ı0
+4ıı0ıııPack List Id
+4ıı67ııı0
+2ıPOR*POR*lblOrdQtyıfrmProcessı15ı7ı3ı5ı1.25ı0
+4ıı0ıııPO Qty
+4ıı67ııı0
+2ıPOR*POR*lblordqtyvıfrmProcessı15ı14ı3ı8ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+4ıı25ııı2
+2ıPOR*POR*lblLotVıfrmProcessı15ı64ı4ı19ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOR*POR*lblWoRevıfrmProcessı15ı29ı1ı14ı1.25ı0
+4ıı0ıııRcv To Work Order
+4ıı67ııı0
+2ıPOR*POR*lblUserIdıfrmProcessı15ı58ı2.5ı5.5ı1.25ı0
+4ıı0ıııUser Id
+4ıı67ııı0
+2ıPOR*POR*lblUserIdVıfrmProcessı15ı64ı2.5ı15ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOR*POR*lblDocRefVıfrmProcessı15ı62ı6.5ı28ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOR*POR*lblWOıı15ı51ı8.5ı12ı1.25ı0
+4ıı0ıııWork Order / Seq
+4ıı67ııı0
+2ıPOR*POR*lblWoValıı15ı67ı8.5ı24ı1.25ı0
+4ıı67ııı0
+4ıı11ııı2
+2ıPOR*POR*lblClosedıı15ı19ı11.5ı21.5ı1.25ı0
+4ıı0ııı* Item Manually Closed *
+4ıı16ıııMS Sans Serif
+4ıı17ııı9.75
+4ıı18ııı1
+4ıı19ııı0
+4ıı11ııı1
+4ıı9ııı0
+2ıPOR*POR*btnNextıı18ı2ı35.5ı9.5ı2.5ı32
+4ıı22ıııNext PO
+4ıı8ııı0
+2ıPOR*POR*btnCancelıı18ı41ı35.5ı9.5ı2.5ı32
+4ıı22ıııCancel
+2ıPOR*POR*LBLPODESCıı15ı2ı11.5ı10.5ı1.25ı0
+4ıı0ıııPO Item Desc
+4ıı67ııı0
+2ıPOR*POR*grdLinesıı28ı2ı16.5ı81ı5.25ı8192
+4ıı27ııı7
+4ıı32ıııReceiver IdıDate RecvdıQty RecvdıLot IdıInv DateıInv NbrıRemove
+4ıı38ııı0ı0ı0ı0ı0ı0ı2
+4ıı37ııı15ı8ı8ı15ı8ı13.62ı10
+4ıı34ııı1ı1ı0ı0ı0ı0ı7
+4ıı35ııı0ı0ı0ı0ı6ı0ı0
+4ıı10ııı1
+4ıı33ııı3
+4ıı0ıııüüüüüüıüüüüüüıüüüüüü
+4ıı12ııı1ı1ı0ı0ı0ı0ı0
+2ıPOR*POR*btnNxtItemıı18ı14ı35.5ı9.5ı2.5ı32
+4ıı22ıııNext Item
+4ıı8ııı0
+0ı-1

@@ -1,0 +1,608 @@
+SUBROUTINE WRT.DFLT.ROUTING.PRINT(REPORT.SOURCE,REC_ID,GUIERRORS,GUISTATE)
+**************************************************************************
+* This is free and unencumbered software released into the public domain.
+*
+* Anyone is free to copy, modify, publish, use, compile, sell, or
+* distribute this software, either in source code form or as a compiled
+* binary, for any purpose, commercial or non-commercial, and by any
+* means.
+*
+* In jurisdictions that recognize copyright laws, the author or authors
+* of this software dedicate any and all copyright interest in the
+* software to the public domain. We make this dedication for the benefit
+* of the public at large and to the detriment of our heirs and
+* successors. We intend this dedication to be an overt act of
+* relinquishment in perpetuity of all present and future rights to this
+* software under copyright law.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*
+* For more information, please refer to <https://unlicense.org>
+**************************************************************************
+*
+* MODULE: WRT.DFLT.ROUTING.PRINT
+* AUTHOR: MAB
+* VERSION: 1.0.0
+* CREATED: 02/18/2015
+* UPDATED:
+*
+* MAINTENANCE RECORD:
+* 05/2016 - ADDED BAR CODES TO LAYOUT (CALL PCL.3OF9())
+*
+* EQUATE:
+*
+*
+* VARIABLES:
+
+* REPORT.SOURCE - (WR)ORK ORDER OR (RT)OUTING
+* REC_ID - WO ID OR PART ID*ENG_ID
+*
+*
+* FILES:
+*
+*
+* DESIGN DESCRIPTION:
+* OUTPUT PCL WORK ORDER OR ROUTING
+** INCLUDE STANDARD VARIABLE, EQUATES
+*
+$INCLUDE NXT.INCLUDES NXT.COMMON
+$INCLUDE NXT.INCLUDES NXT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.PRT.EQUATES
+$INCLUDE NXT.INCLUDES NXT.ERR.MSGS
+$INCLUDE NXT.INCLUDES SYSTEM_FILE.EQU
+$INCLUDE NXT.INCLUDES PARTS.H
+$INCLUDE NXT.INCLUDES WO.H
+$INCLUDE NXT.INCLUDES WRT.H
+$INCLUDE NXT.INCLUDES RTREV.H
+*
+PROG_ID   = "WRT.DFLT.ROUTING.PRINT"
+!
+GET_REC_MSG_LIST = ''
+*
+
+*
+* GET THE USER RECORD
+*
+GET_REC_MSG_LIST = ''
+USER_RECORD_ID = "USER*":@LOGNAME
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,USER_RECORD_ID,USER_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF USER_REC # '' THEN
+   *
+   IF USER_REC<USER_REPORTS_PRINTER> = '' THEN
+      REPORT.PRINTER = 0  ;* SET TO DEFAULT PRINTER
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Missing REPORTS_PRINTER from USER record in, SYSTEM_FILE"
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   END ELSE
+      REPORT.PRINTER = USER_REC<USER_REPORTS_PRINTER>
+   END
+END ELSE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Unknow User: ":@LOGNAME
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOTO 9999
+END
+*
+*
+* COMPANY RECORD
+*
+GET_REC_MSG_LIST = ''
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"COMPANY_RECORD",COMPANY_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF COMPANY_REC = '' THEN
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing COMPANY_RECORD from SYSTEM_FILE"
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+   GOTO 9999
+   RETURN
+END
+
+SEQ.LIST = ''
+
+*
+BEGIN CASE
+   CASE REPORT.SOURCE = C.RT      ;* PART ROUTING TO PRINT?
+      SEQ.GET.FN = 'RT'
+      PN_ID = FIELD(REC_ID,"*",1)
+      ENG_ID = FIELD(REC_ID,"*",2)
+      RP_ID = 'RT-':PN_ID:'_':ENG_ID
+      GOSUB GET.PART.DATA
+      CALL WRT.WRT.GET.SEQ.LIST(C.RT,REC_ID,SEQ.LIST,SEQ.COUNT,GUIERRORS,GUISTATE)
+      *    REPORT.NAME = 'ROUTING_':PN_ID:'_':ENG_ID:'_':@USERNO
+      *    SORT.CLAUSE = 'SORT RT BY PARTNBR BY ENGID BY SEQNBR WITH PARTNBR = "':PN_ID:'" AND WITH ENGID = "':ENG_ID:'"'
+      *    DISPLAY.CLAUSE = "SEQNBR WRT_WCID WRT_DESC WRT_SUEMP WRT_EMPHPP WRT_SUMACH WRT_MACHHPP"
+   CASE REPORT.SOURCE = C.WR  ;* WORK ORDER ROUTING TO PRINT?
+      SEQ.GET.FN = 'WR'
+      WO_ID = REC_ID
+      CALL PCL.3OF9(WO_ID,91,3,WO.ID.3OF9)
+      RP_ID = 'WO-':WO_ID
+      GOSUB GET.WO.DATA
+      IF WO_REC = '' THEN GOTO 9999
+      CALL WRT.WRT.GET.SEQ.LIST(C.WR,REC_ID,SEQ.LIST,SEQ.COUNT,GUIERRORS,GUISTATE)
+      *    REPORT.NAME =  'ROUTING_':REC_ID:'_':@USERNO
+      *    SORT.CLAUSE = 'SORT WR BY WR_WONBR BY WR_SEQNBR WITH WR_WONBR = "':REC_ID:'"'
+      *    DISPLAY.CLAUSE = "WR_SEQNBR WRT_WCID WRT_DESC WRT_SUEMP WRT_EMPHPP WRT_SUMACH WRT_MACHHPP WR_SCHD_START WR_SCHD_END"
+   CASE 1
+      LOG.OPTS  = "DISPLAY"
+      ERROR_NBR = ERR_SYS
+      ERROR_MSG =  "Invalid Report  Source Passed: ": REPORT.SOURCE
+      CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+      GOTO 9999
+END CASE
+*
+*
+* INIT SOME STUFF
+*
+PAGE.CNT = 0 ;* PAGE COUNTER
+YMAX = 2068  ;* MAX DOT POSITION FOR BOTTOM DESCRIPTION TEXT
+TOP_OF_DESC = 590 ;* Y POS FOR FIRST DESC (PROCESS STEP)
+YINC = 68          ;* y INC FOR EACH SEQ DETAIL LINE
+FD = ''
+INCLUDE.REV = @FALSE    ;*  FLAGS REV DETAIL LINES, SKIP
+GOSUB CREATE.TEMPLATE   ;*  RETURNS FD WITH TEMPLATE
+*
+GOSUB FILL.HEADER       ;* FILLE TEMPLATE (FD) WITH STATIC HEADER DATA
+CLEAN.TEMPLATE = FD
+*
+* RUN THRU THE SEQS AND CREATE A PAGE FOR EACH
+* NOTE, DOES NOT HANDLE HOW
+*
+MULT.PAGE = ''
+FOR I = 1 TO SEQ.COUNT
+   WRT_ID = SEQ.LIST<I>
+   *
+   IF REPORT.SOURCE = C.WR THEN   ;* WORK ORDER ROUTING?
+      SEQ_ID = FIELD(WRT_ID,"*",2)
+      *
+   END ELSE ;* PART ROUTING REPRINT
+      SEQ_ID = FIELD(WRT_ID,"*",3)
+   END
+   *
+   FD = CLEAN.TEMPLATE
+   GOSUB SEQ.DETAIL
+   IF I > 1 THEN MULT.PAGE := FF   ;* IF MORE THAN A PAGE ADD A FORM FEED
+   MULT.PAGE := FD                 ;* THEN ADD ONE A NEW PAGE
+NEXT I
+*
+PDF.NAME = RP_ID:'.PDF'
+DISPLAY.ON.CREATION = @TRUE
+CALL PCL.TO.PDF(MULT.PAGE,PDF.NAME,DISPLAY.ON.CREATION,GUIERRORS,GUISTATE)
+9999: *
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+GET.WO.DATA:
+
+CALL GET.RECORD("WO",C.WO,WO_ID,WO_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF WO_REC = ""  THEN ;* TEST FOR WORK ORDER ON FILE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing Work Order ":WO_ID
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END ELSE
+   PT.NBR = WO_REC<WO_PARTNBR>
+   PT.DESC = WO_REC<WO_PT_DESC>
+   PT.DRAW = WO_REC<WO_PT_DRAWING>
+   PT.REV  = WO_REC<WO_PN_REV>
+   ENG.ID  = WO_REC<WO_ENG_ID>
+   ENG.REV = WO_REC<WO_ENG_ID_REV>
+   ORD.REF =  WO_REC<WO_OC_REF>
+   IF ORD.REF = '' THEN ORD.REF = 'NONE'
+   WO.NBR  = WO_ID
+   REL.DT  = OCONV(WO_REC<WO_REL_DATE>,WO_REL_DATE.CNV)
+END
+
+
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+GET.PART.DATA:
+CALL GET.RECORD("PART",C.PART,PN_ID,PN_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF WO_REC = ""  THEN ;* TEST FOR WORK ORDER ON FILE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing Part Record ":PN_ID
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END ELSE
+   PT.NBR = PN_ID
+   PT.DESC = PN_REC<PT_DESC>
+   PT.DRAW = PN_REC<PT_DRAWING>
+   PT.REV  = PN_REC<PT_REV>
+   RTREV_ID = PN_ID:'*':ENG_ID
+   CALL GET.RECORD("RTREV",C.RTREV,RTREV_ID,RTREV_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+   ENG.ID  = ENG_ID
+   ENG.REV = RTREV_REC<RTR_REVNBR>
+   ORD.REF = 'N/A'
+   WO.NBR  = 'N/A'
+   REL.DT  = ''
+END
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+FILL.HEADER:
+FD = FD:UB15:ESC:'*p2415x129Y':ENG.ID:' rev ':ENG.REV
+IF REL.DT # '' THEN
+   FD = FD:ESC:'*p2790x129Y':REL.DT
+END
+*
+FD = FD:ESC:'*p570x280Y':PT.NBR"L#25"
+FD = FD:ESC:'*p1425x280Y':PT.REV"L#4"
+FD = FD:ESC:'*p1620x280Y':PT.DESC"L#25"
+*FD = FD:ESC:'*p2415x280Y':ORD.REF"L#15"
+FD = FD:ESC:'*p2415x190Y':WO.ID.3OF9
+*
+FD = FD:ESC:'*p30x420Y':WO_ID
+FD = FD:ESC:'*p570x420Y':PT.DRAW"L#24"
+*
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+SEQ.DETAIL:
+*
+* FILL THE TEMPLATE WITH SEQ DATA
+* SEQ_ID - WR / RT RECORD ID
+CALL GET.RECORD(SEQ.GET.FN,REPORT.SOURCE,WRT_ID,WRT_REC,@FALSE,ERROR.STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF WRT_REC = ""  THEN ;* TEST FOR RECORD ON FILE
+   LOG.OPTS  = "DISPLAY"
+   ERROR_NBR = ERR_SYS
+   ERROR_MSG =  "Missing WR / RT RECORD ":WRT_ID
+   CALL LOG.ERROR(LOG.OPTS,PROG_ID, ERROR_NBR, ERROR_MSG, GUIERRORS, GUISTATE)
+END ELSE
+   IF REPORT.SOURCE = C.WR THEN   ;* WORK ORDER ROUTING?
+      RATE = OCONV(WRT_REC<WRT_EMPHPP>,WRT_EMPHPP.CNV)   ;* HOURS PER PART RATE
+      IF RATE > 0 THEN
+         RATE = (1/RATE)"R1"
+      END ELSE
+         RATE = 0
+      END
+      *
+   END ELSE ;* PART ROUTING REPRINT, NO QTY
+      QTY = ''
+   END
+
+   QTY = WRT_REC<WR_QTY_TO_MFG>
+   WC_ID = WRT_REC<WRT_WCID>
+
+   *
+   * ADD IN THE STATIC INFO FOR THE SEQ
+   * SAVE STATIC SEQ COPY
+   *
+   * ADD IN DESC LINES
+   * ADD IN QA LINES
+   *   IF WE GO OVER CREATE ADDITONAL PAGE FROM STATIC COPY SAVE ON ENTRY
+   * RETURN FD WITH ALL PAGES FOR THE SEQ
+   *
+   FD = FD:ESC:'*p400x420Y':SEQ_ID
+   CALL PCL.3OF9(SEQ_ID,91,3,SEQ.3OF9)
+   FD = FD:ESC:'*p1386x420Y':WC_ID
+   FD = FD:ESC:'*p2136x420Y':RATE
+   FD = FD:ESC:'*p2416x340Y':SEQ.3OF9
+   FD = FD:ESC:'*p2790x420Y':QTY
+   SEQ.STATIC = FD
+   LINES.TO.PRINT = DCOUNT(WRT_REC<WRT_DESC>,@VM)
+   YOFF = 0  ;* START OFFSET FOR TOP_OF_DESC AT ZERO, THEN PRINT DATA
+   YPOS = TOP_OF_DESC
+   FD = FD:CPI.16
+   *
+   * FIRST PRINT THE SEQ DESCRIPTION
+   *
+   FOR DESC.LNS = 1 TO LINES.TO.PRINT
+      *
+      DATA.LN = WRT_REC<WRT_DESC,DESC.LNS>           ;* PULL OFF SEQ DESCRIPTION
+      GOSUB LN.PRINT
+   NEXT DESC.LNS
+   *
+   * NOW THE QA CHARACTERISTICS
+   *
+   LINES.TO.PRINT = DCOUNT(WRT_REC<WRT_QA_CHAR_ID>,@VM)
+   IF LINES.TO.PRINT > 0 THEN
+      DATA.LN = "   *****  QA Characteristics *****"
+      GOSUB LN.PRINT
+      *
+
+      FOR DESC.LNS = 1 TO LINES.TO.PRINT
+         *
+         IF WRT_REC<WRT_QA_ACTIVE,DESC.LNS> THEN
+            DATA.LN = WRT_REC<WRT_QA_CHAR_ID,DESC.LNS>:" - ":WRT_REC<WRT_QA_CHAR,DESC.LNS>
+            LOC.METHOD = WRT_REC<WRT_QA_LOC,DESC.LNS>:" / ":WRT_REC<WRT_QA_METHOD,DESC.LNS>
+            GOSUB PAGE.TEST
+            FD = FD:ESC:'*p30x':YPOS:'Y':DATA.LN"L#60":ESC:'*p1190x':YPOS:'Y':LOC.METHOD"L#35"
+            YOFF += YINC
+            YPOS = TOP_OF_DESC + YOFF
+         END
+      NEXT DESC.LNS
+   END
+END
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+* LN.PRINT
+* MUST BREAK UP TEXT LINE TO FIT ON FORM (60 CHARACTERS MAX)
+* SHOULD REALLY MAKE THIS BREAK AT SPACE CHARACTER, MAYBE IN RELEASE 1.0
+*
+LN.PRINT: *
+DESC.MX = 60     ;* MAX 46 CHARACTERS PER LINE
+DESC.TXT = DATA.LN
+LN.NEXT.LINE: *
+LN.LEN = LEN(DESC.TXT)
+GOSUB PAGE.TEST
+IF LN.LEN > DESC.MX THEN
+   *
+   SPLIT.MX =DESC.MX
+   SPLIT.TXT = DESC.TXT
+   GOSUB SPLIT.LINE
+   DESC.LN = SPLIT.LN
+   DESC.TXT =  SPLIT.TXT
+   *
+   FD = FD:ESC:'*p30x':YPOS:'Y':DESC.LN"L#60"
+   YOFF += YINC
+   YPOS = TOP_OF_DESC + YOFF
+   IF LEN(TRIM(DESC.TXT)) > 0 THEN GOTO LN.NEXT.LINE
+END ELSE
+   FD = FD:ESC:'*p30x':YPOS:'Y':DESC.TXT"L#60"
+   YOFF += YINC
+   YPOS = TOP_OF_DESC + YOFF
+END
+RETURN
+*
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+* SPLIT.LINE
+* ROUTINE SPLITS LINE ON WORD BOUNDARIES
+* SPLIT.MX = MAX LINE LINE LENGHT
+* SPLIT.TXT = LINE TO SPLIT AT WORD WITH LINE LE SPLIT.MX LENGTH
+* SPLIT.LN = RETURNED SPLIT LINE
+* SPLIT.TXT = RETURNED REMAINING LINE
+!
+SPLIT.LINE:
+SPLIT.LEN = LEN(SPLIT.TXT)
+*
+* WILL ALL OF TXT FIT IN SPLIT.MX WIDTH ?
+IF SPLIT.LEN LE SPLIT.MX THEN
+   SPLIT.LN = SPLIT.TXT
+   SPLIT.TXT = ''
+END ELSE
+   *
+   * ARE WE LUCKING ENOUGH TO HAVE SPACE AT MAX CHARACTER?
+   IF SPLIT.TXT[SPLIT.MX,1] = ' ' THEN  ;* YES, SPLIT AND RETURN
+      SPLIT.LN = SPLIT.TXT[1,SPLIT.MX]
+      SPLIT.TXT = SPLIT.TXT[SPLIT.MX+1,SPLIT.LEN]
+   END ELSE
+      *
+      * SPLIT LINE AT SPLIT.MX THEN SCAN FROM SPLIT.MX TO BEGINNING LOOKING FOR A SPACE
+      * SPLIT AT THAT POINT
+      *
+      DONE = @FALSE
+      SPLIT.LN = SPLIT.TXT[1,SPLIT.MX]
+      SPACE.TEST.POS = LEN(SPLIT.LN)
+      FOR SP = SPACE.TEST.POS TO 1 STEP -1 UNTIL DONE
+         IF SPLIT.LN[SP,1] = ' ' THEN
+            SPLIT.LN = SPLIT.LN[1,SP]
+            SPLIT.TXT = SPLIT.TXT[SP+1, SPLIT.LEN]
+            DONE = @TRUE
+         END
+      NEXT SP
+      *
+      * DID WE FIND A SPACE ?
+      *
+      IF NOT(DONE) THEN
+         * NO, SPLIT AT SPLIT.MX
+         SPLIT.LN = SPLIT.TXT[1,SPLIT.MX]
+         SPLIT.TXT = SPLIT.TXT[SPLIT.MX+1,SPLIT.LEN]
+      END
+   END
+END
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+*
+PAGE.TEST: *
+IF YPOS > YMAX THEN
+   *
+   * ADD IN COMPLETED PAGE
+   *
+   PAGE.CNT += 1
+   FD := ESC:'*p20x2400Y':SEQ_ID:' Continued on next page ':FF
+
+   *
+   * START OVER
+
+   FD :=  SEQ.STATIC
+   FD :=  CPI.16
+   YPOS = TOP_OF_DESC
+   YOFF = 0
+END
+RETURN
+**********************************************************************************************
+* $PAGE$
+**********************************************************************************************
+*
+* CREATE.TEMPLATE
+*
+CREATE.TEMPLATE: *
+*
+
+* note assume 300 dot per inch
+* *p___x___y   move to x,y dot coordinates
+* *c___a___b   make a box a wide dots and b high dots
+*  OP          solid black fill (we are actually creating lines)
+*
+FD = FD:ESC:'&l1O'               ;* LANDSCAPE
+FD = FD:ESC:'&l1E'               ;* TOP MARGIN AT LINE 1
+FD = FD:ESC:'&l6D'               ;* 6 LINES / INCH
+FD = FD:ESC:'&l47F'              ;* 47 LINES MAX PRINT AREA
+*                                  THIS IS CALCUATED BY TAKE MINIMUM TOP AND BOTTOM OF 1/6 LESS PAPER WIDTH 8.5
+*                                  8.5 - 2*(.3333333) = 7.83333333 * 6 LINES PER INCH = 47
+FD = FD:CPI.9                   ;* CHARACTER FONT*
+*
+*
+FD = FD:ESC:'*p0x0Y':ESC:'*c3160a10b0P'     ;* top
+FD = FD:ESC:'*p0x0Y':ESC:'*c10a2430b0P'     ;* lf BORDER
+FD = FD:ESC:'*p3160x0Y':ESC:'*c10a2430b0P'  ;* rt BORDER
+FD = FD:ESC:'*p0x2425Y':ESC:'*c3165a10b0P'  ;* BOTTOM
+*
+FD = FD:ESC:'*p0x300Y':ESC:'*c3160a8b0P'     ;* hz
+FD = FD:ESC:'*p0x450Y':ESC:'*c3160a15b0P'     ;* HEADING BOTTOM hz
+*
+CM_NAME = TRIM(COMPANY_REC<COMP_NAME>)
+FD = FD:UB15:ESC:'*p55x90Y':FIELD(CM_NAME,' ',1)
+FD = FD:UB15:ESC:'*p55x180Y':FIELD(CM_NAME,' ',2)
+FD = FD:UB15:ESC:'*p55x270Y':FIELD(CM_NAME,' ',3)
+FD = FD:ESC:'*p543x162Y':ESC:'*c10a288b0P'
+*
+FD = FD:UB25:ESC:'*p690x120Y':'Work Order Layout'
+FD = FD:ESC:'*p543x0Y':ESC:'*c15a150b0P'     ;*
+FD = FD:ESC:'*p2070x0Y':ESC:'*c15a152b0P'     ;*
+FD = FD:ESC:'*p543x150Y':ESC:'*c1540a15b0P'     ;* hz
+*
+FD = FD:UB10:ESC:'*p2115x69Y':'Form Rev 1.0'
+*FD = FD:UB10:ESC:'*p2166x120Y':'Rev. A'
+FD = FD:ESC:'*p2400x0Y':ESC:'*c10a450b0P'
+FD = FD:ESC:'*p2080x155Y':ESC:'*c1080a10b0P'     ;* hz under Form Rev
+*
+FD = FD:UB9:ESC:'*p2415x59Y':'Eng Id & Rev'
+FD = FD:ESC:'*p2775x0Y':ESC:'*c10a152b0P'
+FD = FD:ESC:'*p2790x59Y':'Release Dt.'
+*
+FD = FD:ESC:'*p570x210Y':'Part Number'
+*
+FD = FD:ESC:'*p1428x210Y':'Revision'
+FD = FD:ESC:'*p1396x162Y':ESC:'*c10a140b0P'     ;*
+*
+FD = FD:ESC:'*p1620x210Y':'Part Description'
+*
+* FD = FD:ESC:'*p2415x210Y':'Sales Ref'
+*
+FD = FD:ESC:'*p1590x162Y':ESC:'*c10a140b0P'     ;*
+*
+FD = FD:ESC:'*p30x350Y':'Work Order / Seq'
+FD = FD:ESC:'*p570x350Y':'Part Drawing'
+FD = FD:ESC:'*p1386x350Y':'Work Center'
+FD = FD:ESC:'*p1359x300Y':ESC:'*c10a150b0P'     ;*
+*
+FD = FD:ESC:'*p2136x350Y':'Rate (PPH)'
+FD = FD:ESC:'*p2116x300Y':ESC:'*c10a150b0P'     ;*
+*
+* MAB REMOVE START DATE * FD = FD:ESC:'*p2415x350Y':'Start Dt.'
+FD = FD:ESC:'*p2775x300Y':ESC:'*c10a150b0P'     ;*
+FD = FD:ESC:'*p2790x350Y':'Qty.'
+*
+* INCLUDE REV BLOCK?
+*
+IF INCLUDE.REV THEN
+   *
+   * LAYOUT  INCLUDES REV HISTORY
+   *
+   FD = FD:UB9:ESC:'*p30x525Y':'rev'                ;* routing rev heading
+   FD = FD:ESC:'*p120x525Y':'date'               ;* routing rev heading
+   FD = FD:ESC:'*p300x525Y':'submit'        ;* routing rev heading
+   FD = FD:ESC:'*p450x525Y':'review'         ;* routing rev heading
+   FD = FD:ESC:'*p600x525Y':'entered'          ;* routing rev heading
+   FD = FD:ESC:'*p900x525Y':'revision history description'
+   *
+   SEQ.LN.HDR = 3
+   SEQY1 = '740Y'
+   SEQY2 = '795Y'
+   SEQ.LN = '*c3a1290b0P'
+   *
+END ELSE
+   *
+   * NO REV LAYOUT
+   *
+   SEQY1 = '465Y'
+   SEQY2 = '525Y'
+   SEQ.LN = '*c3a1560b0P'
+   SEQ.LN.HDR = 99
+   *
+END
+*
+FD = FD:ESC:'*p0x530Y':ESC:'*c3160a8b0P'     ;* COLMN TITLE LINE hz
+*
+* ADD IN HORIZONTAL LOG LINES
+*
+FOR I = 1 TO 27
+   YPOS = YINC * I + 530
+   BEGIN CASE
+      CASE I = SEQ.LN.HDR     ;* TOP OF SEQ DESC HEADER
+         FD = FD:ESC:'*p0x':YPOS:'Y':ESC:'*c3160a15b0P'
+      CASE I = SEQ.LN.HDR + 1  ;* BOTTOM OF SEQ DESC HEADER
+         FD = FD:ESC:'*p0x':YPOS:'Y':ESC :'*c3160a8b0P'
+      CASE 1
+         FD = FD:ESC:'*p0x':YPOS:'Y':ESC:'*c3160a3b0P'
+   END CASE
+NEXT I
+*
+* SIGN OFF DATA
+*
+FD = FD:ESC:'*p0x2026Y':ESC:'*c3160a10b0P'     ;* hz
+FD = FD:UB9:ESC:'*p10x2090Y':'qty cmp'
+FD = FD:UB9:ESC:'*p10x2158Y':'qty scrap'
+FD = FD:UB9:ESC:'*p10x2191Y':'emp# &'
+FD = FD:UB9:ESC:'*p90x2226Y':'shft'
+FD = FD:UB9:ESC:'*p10x2294Y':'date'
+FD = FD:ESC:'*p0x2298':ESC:'*c3160a10b0P'     ;* hz
+FD = FD:UB9:ESC:'*p10x2360Y':'Notes'
+*
+* vt lines for above
+*
+FOR I = 1 TO 13
+   XPOS = 180 * I
+   FD = FD:ESC:'*p':XPOS:'x2025Y':ESC:'*c3a270b0P'
+NEXT I
+*
+FOR I = 0 TO 11
+   XPOS = 300 + (180 * I)
+   FD = FD:ESC:'*p':XPOS:'x2163Y':ESC:'*c3a68b0P'
+NEXT I
+*
+* SIGN OF BLOCK
+*
+FD = FD:UB9:ESC:'*p2350x2090Y':'total complete:'
+FD = FD:UB9:ESC:'*p2350x2158Y':'total     scrap:'
+FD = FD:UB9:ESC:'*p2350x2226Y':'Signature:'
+FD = FD:UB9:ESC:'*p2350x2294Y':'emp # & date:'
+*
+* ADD IN VERTICAL LOG LINES
+*
+FD = FD:UB10
+FD = FD:ESC:'*p100x':SEQY2:'seq. / qa char. description'
+*FD = FD:ESC:'*p1000x':SEQY2:'loc.(opt)'
+FD = FD:ESC:'*p1170x':SEQY1:ESC:SEQ.LN
+FD = FD:ESC:'*p1280x':SEQY2:'loc / insp method'
+*FD = FD:ESC:'*p1680x':SEQY1:ESC:SEQ.LN
+*FD = FD:ESC:'*p1710x':SEQY2:'M/I'
+FD = FD:ESC:'*p1800x':SEQY1:ESC:SEQ.LN
+FD = FD:ESC:'*p1910x':SEQY2:'FAI value'
+FD = FD:ESC:'*p2130x':SEQY1:ESC:SEQ.LN
+FD = FD:ESC:'*p2165x':SEQY2:'emp#'
+FD = FD:ESC:'*p2310x':SEQY1:ESC:SEQ.LN
+FD = FD:ESC:'*p2365x':SEQY2:'initials'
+FD = FD:ESC:'*p2490x':SEQY1:ESC:SEQ.LN
+*
+FD = FD:ESC:'*p2615x':SEQY2:'date'
+FD = FD:ESC:'*p2820x':SEQY1:ESC:SEQ.LN
+FD = FD:ESC:'*p2885x':SEQY2:'comments'
+*FD = FD:ESC:'*p2990x':SEQY1:ESC:SEQ.LN
+*FD = FD:ESC:'*p3045x':SEQY2:'date'
+*
+*
+FD = FD:ESC:'*p0x0Y'
+*
+RETURN
+END
+
