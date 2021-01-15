@@ -5,14 +5,10 @@ History:
 
 This project grew out of an application written for a small plating shop.  The main emphases for the original package:
 
-Customers
-
-Parts and Processes
-
-Order Entry
-
-Shipping
-
+Customers,
+Parts and Processes,
+Order Entry,
+Shipping,
 Sales History
 
 
@@ -29,13 +25,13 @@ http://www.zumasys.com/products/accuterm
 
 Modules Include:
 
-Order Processing
-Engineering
-Production
-Purchasing
-Accounting
-Customer Maintenance
-Vendor Maintenance
+Order Processing,
+Engineering,
+Production,
+Purchasing,
+Accounting,
+Customer Maintenance,
+Vendor Maintenance,
 System Maintenance
 
 Note Not all modules are complete, view Module Status in the documentation.
