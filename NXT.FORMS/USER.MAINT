@@ -1,4 +1,4 @@
-TEMPLATEı42486.52343ıUSERıNXT.BPüUSER.MAINTü3ü0
+TEMPLATEı44208.422ıUSERıNXT.BPüUSER.MAINTü3ü0
 0ı1.4ı4
 2ıUSERıı1ıautoıautoı60ı20ı1073741825
 4ıı7ııı4
@@ -12,7 +12,7 @@ TEMPLATEı42486.52343ıUSERıNXT.BPüUSER.MAINTü3ü0
 4ıı43ıııMaintains User Records
 4ıı41ıııCopyright Nextjob Solutions, LLC All rights reserved
 4ıı42ıııMAB
-2ıUSER*USERıı7ıautoıautoı76ı41.62ı1
+2ıUSER*USERıı7ıautoıautoı77.25ı37.75ı1
 4ıı22ıııUser Maintenance
 4ıı48ııı0
 4ıı9ııı0
@@ -134,22 +134,13 @@ TEMPLATEı42486.52343ıUSERıNXT.BPüUSER.MAINTü3ü0
 2ıUSER*USER*lblOECustAddıfrmRestrictionsı15ı56ı1.5ı11.5ı1.25ı0
 4ıı0ıııOE Customer Add
 2ıUSER*USER*chkOeCmAddıfrmRestrictionsı20ı69ı1.5ı3.5ı1.25ı32
-2ıUSER*USER*btnSaveıı18ı1ı39.5ı10ı1.25ı32
+2ıUSER*USER*btnSaveıı18ı1ı35ı10ı1.25ı32
 4ıı22ıııSave
 4ıı8ııı0
-2ıUSER*USER*btnCancelıı18ı20ı39.5ı10ı1.25ı32
+2ıUSER*USER*btnCancelıı18ı19ı35ı10ı1.25ı32
 4ıı22ıııClose
-2ıUSER*USER*btnDeleteıı18ı40ı39.5ı9.5ı1.25ı32
+2ıUSER*USER*btnDeleteıı18ı39ı35ı9.5ı1.25ı32
 4ıı22ıııDelete
-4ıı8ııı0
-2ıUSER*USER*frmPathsıı26ı0ı34ı73.5ı5ı0
-4ıı0ıııPaths
-4ıı8ııı0
-2ıUSER*USER*btnSSpathıfrmPathsı18ı1ı1ı10.5ı1.25ı32
-4ıı22ıııReport Folder
-4ıı8ııı0
-2ıUSER*USER*txtSSpathıfrmPathsı16ı12ı1ı60.5ı1.25ı0
-4ıı12ııı1
 4ıı8ııı0
 2ıUSER*USER*frmPrinterıı26ı0ı18ı74ı15.75ı0
 4ıı0ıııPrinter Assignments

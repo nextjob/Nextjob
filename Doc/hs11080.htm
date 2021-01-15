@@ -1,0 +1,106 @@
+<HTML><HEAD>
+	
+	<TITLE>PYMAIL</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>PYMAIL</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PYMAIL is a Python script that runs on the QM server to send e-mail notifications to customers of orders ready for shipment.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The customer e-mail address used is the first "Customer Contacts" entry on the Customer Maintenance Dialog</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">This feature requires Python to be installed on the server.&nbsp; You can get Python from https://www.python.org/</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The location of the Python script is defined in SYSTEM_FILE, record UTILITY_APPS_PATH field UTL_PYMAIL</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">This script is as follows:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#!/usr/bin/python</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">######################################################</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># Module e-mails order ready to specific contact</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># usage:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># pymail.py to_address subject body</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#&nbsp; where to_address is the email address to send the email to</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; subject - subject line for email</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; body - body of e-mail</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># example</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># pymail.py "email@someplace.com"&nbsp; "subject text" "email body text"</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># mods</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#----------------------------------------------------</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># 02/01/15 new script</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">######################################################</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># Import smtplib for the actual sending function</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">import smtplib, sys, time&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">debug = 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # debug flag, set = 1 for debug messages</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">smtpserver = smtp server url here&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # url of your smtp server&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">mailuser =&nbsp; email user name here&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # user name to used to send email via smtp server</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">mailpswd = email user password here&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # password for user name&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">fromid =&nbsp; 'shipping@nextjobsolutions.com'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # displayed from address for e-mail sent</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">def sendmesage(servername, user, mail_user, mail_passwd, subject_text, body_text):</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; # prepend standard headers</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; date = time.ctime(time.time())</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; To = user</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; From = fromid</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; Subj = subject_text</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; text = ('From: %s\nTo: %s\nDate: %s\nSubject: %s\n'&nbsp; % (From, To, date, Subj))</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; msg = ""</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; for line in body_text.split('&amp;nl'):</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp; msg = msg + line + '\n'</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; text = text + msg</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; if debug:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print 'Sending Shipment Report to', user</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print msg</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; server&nbsp; = smtplib.SMTP(servername,587)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # connect, no login step</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; server.login(mail_user,mail_passwd)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; estatus = server.sendmail(From, To, text)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; server.quit()&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;#&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># main routine</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">if __name__ == '__main__':</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; body_text = sys.argv[3]</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; subject_text = sys.argv[2]</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; to_address = sys.argv[1]</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"># email passed email address</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; if debug:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print 'sending email to: '</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print to_address</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; try:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sendmesage(smtpserver, to_address, mailuser, mailpswd, subject_text, body_text)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; except:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#&nbsp;&nbsp; if email of fails, add to log file</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msg = "Unexpected error:" + str(sys.exc_info()[0]) + ' ' + str(sys.exc_info()[1])&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print msg</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; if debug:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print 'Bye.'</FONT><BR>
+
+</BODY></HTML>

@@ -1,0 +1,36 @@
+<HTML><HEAD>
+	
+	<TITLE>QM Login Script</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>QM Login Script</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The VOC QM system file contains a record called LOGIN.&nbsp; The record contains a list of statements (script) that run automatically when the user enters the QM system via the login process.&nbsp; Typically the system administrator would use this record to define the terminal type,&nbsp; define printers and set other QM system characteristics.&nbsp;&nbsp; See the QM Reference Manual for further information.&nbsp;&nbsp;</FONT><BR>
+<BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PA</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">TERM VT100-AT</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">pterm case noinvert</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @TTY = 'vbsrvr' THEN STOP</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SETPTR 0,128,66,3,3,1,AT "HP1518", PCL, CPI 16, PAPER.SIZE LETTER, BRIEF</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @SYSTEM.RETURN.CODE &lt; 0 THEN NXT.MSG.BOX /NextJob/Print Unit 0 Not Assigned "HP LaserJet 5N"/0</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SETPTR 1,128,66,3,3,1,AT "HP1518", PCL, CPI 16, PAPER.SIZE LETTER, BRIEF</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @SYSTEM.RETURN.CODE &lt; 0 THEN NXT.MSG.BOX /NextJob/Print Unit 1 Not Assigned "HP LaserJet 5N"/0</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SETPTR 3,128,66,3,3,1,AT "HP1518", PCL, CPI 16, PAPER.SIZE LETTER, BRIEF</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @SYSTEM.RETURN.CODE&nbsp; &lt; 0 THEN NXT.MSG.BOX /NextJob/Print Unit 3 Not Assigned "HP LaserJet 5N"/0</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SETPTR 4,128,66,3,3,1,AT "DATAMAX", NFMT, BRIEF</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @SYSTEM.RETURN.CODE&nbsp; &lt; 0 THEN NXT.MSG.BOX /NextJob/Print Unit 4 Not Assigned "DATAMAX"/0</FONT><BR>
+<BR>
+
+</BODY></HTML>

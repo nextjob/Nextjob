@@ -1,0 +1,72 @@
+<HTML><HEAD>
+	
+	<TITLE>Installation</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Installation</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Installation sets&nbsp; (to do list - automate this process)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">User Downloads Appliction Files From Github To Temp Directory</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Creates Qmaccounts Directory Via Windows Os&nbsp; Ie) C:\QMACCOUNTS</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Installs Qm</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; From Qm Console Program, QMSYS account::</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User Creates Accuterm Account Eq) CREATE-ACCOUNT ACCUTERM C:\QMACCOUNTS\ACCUTERM</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User Creates Nextjob Account&nbsp; Eq) CREATE-ACCOUNT NEXTJOB C:\QMACCOUNTS\NEXTJOB</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Installs&nbsp; And Sets Up Accuterm Software. Logto the ACCUTERM account.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; Log into the QM system via the Accuterm Terminal Emulator ( Accuterm TE )</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Installs Accuterm Host Programs On Server Into Accuterm Account (Accuterm TE:&nbsp; Menu -&gt; Multivalue -&gt; Host Programs -&gt; Install)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Updates Nextjob Account With Accuterm Host Programs (Accuterm TE: Menu -&gt; Multivalue -&gt; Host Programs -&gt; Account Setup)</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; User Logs Into Nextjob Account (Accuterm TE)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; At Command Prompt:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; pterm case noinvert&nbsp;&nbsp;&nbsp; &lt;-- This command is really important at setup, if you forget QM will invert the case of the file names entries in the VOC file and you will wonder why the system cannot find your files!</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; CREATE-FILE NXT.BP DIRECTORY</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; CREATE-FILE NXT.INCLUDES DIRECTORY</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; CREATE-FILE NXT.FORMS&nbsp; DIRECTORY</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; CREATE-FILE SETUP_PROGS DIRECTORY</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; CREATE-FILE SETUP_DATA DIRECTORY&nbsp;&nbsp;&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;User creates the following VOC file entry: Consult the QM manual for each line's meaning.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;The SETPTR command shown here is an example, user will need to provide the correct printer settings for their environment.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">-----------------------------------------------------------------------------------------------------------------------------------</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PA</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">TERM VT100-AT</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">pterm case noinvert</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @TTY = 'vbsrvr' THEN STOP</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SETPTR 0,128,66,3,3,1,AT "HP_Printer", PCL, CPI 16, PAPER.SIZE LETTER, BRIEF</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">IF @SYSTEM.RETURN.CODE &lt; 0 THEN NXT.MSG.BOX /NextJob/Print Unit 0 Not Assigned "HP1518 "/0</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">--------------------------------------------------------------------------------------------------------------------------------------</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; From The Install Download Temp Directory Copy the Following Via&nbsp; The Windows OS:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COPY SETUP_PROGS TO C:\QMACCOUNTS\NEXTJOB\SETUP_PROGS</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COPY SETUP_DATA TO&nbsp; C:\QMACCOUNTS\NEXTJOB\SETUP_DATA</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COPY NXT.BP TO C:\QMACCOUNTS\NEXTJOB\NXT.BP</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COPY NXT.FORMS TO C:\QMACCOUNTS\NEXTJOB\NXT.FORMS&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp; From QM Command Prompt:&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BASIC SETUP_PROGS *</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CATALOGUE SETUP_PROGS *&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RUN SETUP_PROGS CREATE_DB_FROM_TEMPLATE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BASIC NXT.BP *</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CATALOGUE NXT.BP *</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Create </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs11048.htm">Alternate Key Indices</A></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEXTJOB.MENU&nbsp; &lt;-- This Should Start The Nextjob Menu Bar And Away We Go!</FONT><BR>
+<BR>
+<BR>
+<BR>
+
+</BODY></HTML>

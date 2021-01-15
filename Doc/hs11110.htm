@@ -1,0 +1,35 @@
+<HTML><HEAD>
+	
+	<TITLE>Custom Field Control Record</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Custom Field Control Record</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">These records control the customization of&nbsp; "Custom User Fields"</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Custom Field Control Records are found in the SYSTEM_FILE and are prefixed by "CFLD*"</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The following example shows the customization of the custom user fields on the Order Entry Screen</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#800000" SIZE="2"><B><IMG SRC="nxt_custom_fields.png" BORDER="0"></B></FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Note the default caption displayed for control lblOpUser1 is defined as "User 1"&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#800000" SIZE="2"><IMG SRC="nxt_custom_fields_record_layout.png" BORDER="0"></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">In the Custom Field Control Record for Form OE - Order Tab (CFLD*ORDER_PARENT) we see field CFLD_LABEL_CTRL_ID has a value set to LBLOPUSER1, the corresponding CFLD_LABEL_CAPTION is set to My Date Field1.&nbsp; This is the caption that is ultimately displayed when the Order Entry Screen is displayed.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Furthermore, corresponding field&nbsp; CFLD_TXTBOX_CNTRL_ID has a value of TXTOPUSER1 and the corresponding CFLD_TXTBOX_DATA_TYPE has a value of GDDATE specifing that this control's data must be a date. The CFLD_TXTBOX_CONV_CODE field has a value of D2/ specifing the input / output conversion that takes place on data entered into this control.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Consult the Accuterm 7 GUI manual for valid control data types.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Consult the QM reference manual for conversion codes.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Calibri" COLOR="#800000" SIZE="3"><IMG SRC="nxt_oe.png" BORDER="0">
+</FONT>
+</BODY></HTML>

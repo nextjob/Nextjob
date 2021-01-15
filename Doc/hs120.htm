@@ -1,0 +1,116 @@
+<HTML><HEAD>
+	
+	<TITLE>Item Detail</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Item Detail</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#800000" SIZE="2"><IMG SRC="nxt_oe_id.png" BORDER="0"></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">This tab's function is for order item detail entry and review. It includes customer part number, description, delivery schedule, pricing, and process description.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Selection Frame:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Field Descriptions:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Selection List (Grid) - Used to select the line item to make active..&nbsp; User clicks the up or down scroll arrows until the desired item number is displayed. Clicking on the displayed item makes it active.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Add Item - User selects to add a new item to the order.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Detail Frame:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Field Descriptions:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Part Number - Displays the part number for the active line item, and used to enter the part number for new line items (See Add Item Button).&nbsp; For part numbers already defined in the system database, saved data will be used to populate rev, description, drawing, material and process steps (if defined). For new part numbers, the </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs700.htm">Part Maintenance Dialog</A></FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"> will open allowing the user to create a new part number record.&nbsp;&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Rev - Used to display or enter part number revision.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Description -&nbsp; Used to display or enter the part description.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Drawing - Used to display or enter part drawing number.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Material - Used to display or enter the material type for the part.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Price Ea.&nbsp; - Price customer is charged for each item shipped, or a lot charge if so specified. A price value must be entered but may be zero.&nbsp; If zerom, the system will prompt for a price at the time of invoicing.&nbsp; Also price information will not be visible to users with insufficient privileges.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SPC - Sales Product Code - Drop down list to select Sales Product Code for sales order item.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Order Priority - User enters the optional numeric priority (0 - 100) for the line item.&nbsp; This number is used to place this line item on the priority scheduling report.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Ship Hold - User checks the ship hold box to prevent the item from being shipped.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Notes -&nbsp; User enters any internal item notes in this box (these notes are not printed on shipping documents).</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Schedule Detail Grid:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Line #&nbsp; - Numeric schedule detail line number, maintained by the system.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Date Due - Customer specified due date for the line #.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Order Qty - Quantity customer requires for date due.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Date Shipped - Date this Line # was shipped, populated by the system via Shipping.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Qty Shipped - Quantity Shipped to the customer, entered from the Shipping tab.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Packslip - Packslip id created by system via Shipping.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Inv Date - Invoice Date populated by the system via Invoicing.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Inv Nbr - Invoice Number populated by the system via Invoicing.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Line Notes - Notes entered to be printed on shipping documents.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Buttons:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">View - Displays image of Part Number (if defined via Par Master).</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Part Master - Selecting this button results in the </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs700.htm">Part Maintenance Dialog box</A></FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"> being displayed for the Part Number of the currently active order item.&nbsp; Changes made to the Part Master record for the Part Number can be copied to the order item record after completion of the maintenance function.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Part Activity - Selecting the Activity button results in the </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs710.htm">Activity Dialog box</A></FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"> being displayed for the Part Number of the currently active order item.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Print Order Label&nbsp; - Generate and Print Order Label on defined label printer.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Print Receiving Label - Generate and Print Receiving Label on defined label printer.&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;&nbsp; * Note -&nbsp; Routines used to Print Order Label (ORDER.LBL)&nbsp; and Print Receiving Label (RECEIVING.LBL) assume a label printer than understands&nbsp; Datamax-O'Neil Programming Language (DPL).</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item File - User selects to save the currently active order item record, this will also result in saving changes made to fields on the&nbsp; Order Tab.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Close - User selects to cancel edits made to active order item record.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Release Wo. - Release work order for the current sales order item. See </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs4000.htm">Work Orders</A></FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Process Description Frame:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Field Descriptions:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Item Certification / Process - Used to define Certifications or Process Steps followed in creating or processing the Part Number.&nbsp; User selects from a drop down list of </FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><A HREF="hs1020.htm">standard certification / process steps</A></FONT><FONT FACE="Arial, helvetica, sans-serif" SIZE="2"> or enters a custom one.&nbsp; Note: Certification / Process steps are originally created with the Part Maintenance Dialog, and saved in the part record.&nbsp; At order entry the Certification / Process steps are copied to the order record. Changing the Certification / Process step of an order will NOT change the Certification / Process step on the part record!</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Certs - Used to indicate that the Certification / Process Description is included on any certification created when shipping the line item.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Buttons:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Print - User selects to print a hardcopy of the Certification / Process Sheet.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Modify - User selects to modify the currently highlighted Certification / Process.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Delete - User selects to delete the currently highlighted Certification / Process.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Insert Before - User selects to insert a process step before the currently highlighted Certification / Process.</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Insert After - User selects to insert a process step after the currently highlighted Certification / Process.</FONT><BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2"><B>Note: changes to the fields: Rev, Drawing, Description, and Certification / Process Description results in the changes being saved in the system database. But changes made to these fields affect the current line item of the current order only.</B>&nbsp;&nbsp;
+</FONT>
+</BODY></HTML>

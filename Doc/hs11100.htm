@@ -1,0 +1,26 @@
+<HTML><HEAD>
+	
+	<TITLE>Network Shares</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Network Shares</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Nextjob utilizes shares for transfering reports (CSV and PDF files) to client pc's (via Accuterm Scripts).&nbsp; In order for these transfers to work correctly both the share name and local path must be known to the Nextjob Software.&nbsp; The information is saved in the NETWORK_PATH record of the SYSTEM_FILE.&nbsp;&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">NETWORK_PATH_REC&lt;SYS_SERVER_REPORT_PATH &gt; defines the local path of the share.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">NETWORK_PATH_REC&lt;SYS_SHARE_REPORT_PATH &gt;&nbsp;&nbsp;&nbsp; defines the share name less the Server Name.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Example:</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">NETWORK_PATH_REC&lt;SYS_SERVER_REPORT_PATH &gt; = "C:\QMACCOUNTS\NXT_TEMP"</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">NETWORK_PATH_REC&lt;SYS_SHARE_REPORT_PATH &gt; = "\NXT_TEMP"</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The Share used for file transfer is \\servername\NXT_TEMP which is a share defined for local server file C:\QMACCOUNTS\NXT_TEMP.</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The proper permissions must be set on share \\servername\NXT_TEMP to allow access to all client pc.&nbsp; This may require removal of password control on shares assigned to "EVERYONE" unless the client pc's will operate with user names known to the Windows Server hosting QM.
+</FONT>
+</BODY></HTML>

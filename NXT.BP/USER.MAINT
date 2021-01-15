@@ -36,6 +36,7 @@ SUBROUTINE USER.MAINT(GUIERRORS,GUISTATE)
 * MAINTENANCE RECORD:
 * 06/02/09 disable "BTNSSPATH" until we decide how we what this to work system vs client report folder
 * 06/09/13 ADDED USER_WORKCENTERS, USER_WORKORDERS, USER_LABOR, USER_VENDOR_MAINT AUTHORIZATIONS
+* 01/11/21 REMOVE SPREADSHEET REPORT PATH AND BTNSSPATH. SPREADSHEET REPORTS ARE SENT TO USERS DOCUMENTS FOLDER
 *
 * EQUATE:
 *
@@ -168,212 +169,185 @@ RETURN
 *-->BEGIN EVENT DECODER<--*
 GUI.DECODE.EVENT: *
 IF NUM(GUIEVT) THEN
+ BEGIN CASE
+ CASE GUIAPP='USER'
+ BEGIN CASE
+  CASE GUIFRM='USER'
+  BEGIN CASE
+   CASE GUICTL=''
    BEGIN CASE
-      CASE GUIAPP='USER'
-         BEGIN CASE
-            CASE GUIFRM='USER'
-               BEGIN CASE
-                  CASE GUICTL=''
-                     BEGIN CASE
-                        CASE GUIEVT=GECLOSE
-                           GOSUB GUI.USER.USER.CLOSE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='BTNCANCEL'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.BTNCANCEL.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='BTNDELETE'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.BTNDELETE.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='BTNSAVE'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.BTNSAVE.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='BTNSSPATH'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.BTNSSPATH.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CBUSER'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CBUSER.CLICK;GUIEVT=0
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.CBUSER.VALIDATE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKAP'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKAP.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKAR'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKAR.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKCM'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKCM.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKINVOICE'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKINVOICE.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKLAB'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKLAB.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKLOGOUT'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKLOGOUT.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKOE'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKOE.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKOECMADD'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKOECMADD.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKOEPS'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKOEPS.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKPM'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKPM.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKPOR'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKPOR.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKPRICE'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKPRICE.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKPUR'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKPUR.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKREPORTS'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKREPORTS.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKSHIP'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKSHIP.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKSM'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKSM.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKSSCHD'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKSSCHD.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKVEN'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKVEN.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKWC'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKWC.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKWO'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKWO.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKWOI'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKWOI.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='CHKWOR'
-                     BEGIN CASE
-                        CASE GUIEVT=GECLICK
-                           GOSUB GUI.USER.USER.CHKWOR.CLICK;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='TXTINVOICE'
-                     BEGIN CASE
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.TXTINVOICE.VALIDATE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='TXTLABEL'
-                     BEGIN CASE
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.TXTLABEL.VALIDATE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='TXTPACK'
-                     BEGIN CASE
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.TXTPACK.VALIDATE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='TXTPROCESS'
-                     BEGIN CASE
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.TXTPROCESS.VALIDATE;GUIEVT=0
-                     END CASE
-                  CASE GUICTL='TXTREPORT'
-                     BEGIN CASE
-                        CASE GUIEVT=GEVALIDATE
-                           GOSUB GUI.USER.USER.TXTREPORT.VALIDATE;GUIEVT=0
-                     END CASE
-               END CASE
-         END CASE
+    CASE GUIEVT=GECLOSE
+    GOSUB GUI.USER.USER.CLOSE;GUIEVT=0
+    END CASE
+   CASE GUICTL='BTNCANCEL'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.BTNCANCEL.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='BTNDELETE'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.BTNDELETE.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='BTNSAVE'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.BTNSAVE.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CBUSER'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CBUSER.CLICK;GUIEVT=0
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.CBUSER.VALIDATE;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKAP'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKAP.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKAR'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKAR.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKCM'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKCM.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKINVOICE'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKINVOICE.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKLAB'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKLAB.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKLOGOUT'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKLOGOUT.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKOE'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKOE.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKOECMADD'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKOECMADD.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKOEPS'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKOEPS.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKPM'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKPM.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKPOR'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKPOR.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKPRICE'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKPRICE.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKPUR'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKPUR.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKREPORTS'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKREPORTS.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKSHIP'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKSHIP.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKSM'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKSM.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKSSCHD'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKSSCHD.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKVEN'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKVEN.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKWC'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKWC.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKWO'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKWO.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKWOI'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKWOI.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='CHKWOR'
+   BEGIN CASE
+    CASE GUIEVT=GECLICK
+    GOSUB GUI.USER.USER.CHKWOR.CLICK;GUIEVT=0
+    END CASE
+   CASE GUICTL='TXTINVOICE'
+   BEGIN CASE
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.TXTINVOICE.VALIDATE;GUIEVT=0
+    END CASE
+   CASE GUICTL='TXTLABEL'
+   BEGIN CASE
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.TXTLABEL.VALIDATE;GUIEVT=0
+    END CASE
+   CASE GUICTL='TXTPACK'
+   BEGIN CASE
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.TXTPACK.VALIDATE;GUIEVT=0
+    END CASE
+   CASE GUICTL='TXTPROCESS'
+   BEGIN CASE
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.TXTPROCESS.VALIDATE;GUIEVT=0
+    END CASE
+   CASE GUICTL='TXTREPORT'
+   BEGIN CASE
+    CASE GUIEVT=GEVALIDATE
+    GOSUB GUI.USER.USER.TXTREPORT.VALIDATE;GUIEVT=0
+    END CASE
    END CASE
-   IF GUIEVT THEN
-      * Unhandled event - may be dynamic
-      GOSUB GUI.DYNAMIC.EVENTS
-   END
+  END CASE
+ END CASE
+ IF GUIEVT THEN
+  * Unhandled event - may be dynamic
+  GOSUB GUI.DYNAMIC.EVENTS
+ END
 END ELSE
-   GOSUB GUI.CUSTOM.EVENTS
+ GOSUB GUI.CUSTOM.EVENTS
 END
 RETURN
 *-->END EVENT DECODER<--*
-*
-*
-************************************************************
-*
-*
-*-->BEGIN EVENT HANDLER<--*
-GUI.USER.USER.BTNSSPATH.CLICK: *
-*CAPTION = "Select Directory for Spreadsheet Reports"
-*DEFAULT = ""
-*FILTER  = ""
-*STYLE   = 3 ;* browse for folder
-*CALL ATGUIFILEDIALOG(CAPTION,DEFAULT,FILTER,STYLE,SS.PATH,GUIERRORS,GUISTATE)
-*IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
-*
-*IF SS.PATH # '' THEN
-*  SS.PATH = OCONV(SS.PATH,"MCU")
-*  USER_REC<USER_SS_DIR_PATH> = SS.PATH
-*  CALL ATGUISETPROP(GUIAPP,GUIFRM,"TXTSSPATH",GPVALUE,0,0,SS.PATH,GUIERRORS,GUISTATE)
-*  IF GUIERRORS<1> >= NXT.GUI.ERROR.LEVEL THEN GOSUB GUI.ERROR
-*END
-RETURN
-*-->END EVENT HANDLER<--*
 *
 *
 ************************************************************
@@ -857,10 +831,6 @@ IF USER_REC # "" THEN   ;* USER ON FILE, POPULATE FORM
    PROPS<-1>   = GPENABLED
    VALUES<-1>  = 1
    *
-   CTRLIDS<-1> = "FRMPATHS"
-   PROPS<-1>   = GPENABLED
-   VALUES<-1>  = 1
-   *
    CTRLIDS<-1> = "FRMPRINTER"
    PROPS<-1>   = GPENABLED
    VALUES<-1>  = 1
@@ -953,9 +923,6 @@ IF USER_REC # "" THEN   ;* USER ON FILE, POPULATE FORM
    PROPS<-1>   = GPVALUE
    VALUES<-1>  = USER_REC<USER_SHOP_SCHD>
    *
-   CTRLIDS<-1> = "TXTSSPATH"
-   PROPS<-1>   = GPVALUE
-   VALUES<-1>  = USER_REC<USER_SS_DIR_PATH>
    *
    CTRLIDS<-1> = "BTNSAVE"
    PROPS<-1>   = GPENABLED
@@ -1010,15 +977,7 @@ END ELSE
    PROPS<-1>   = GPENABLED
    VALUES<-1>  = 1
    *
-   CTRLIDS<-1> = "FRMPATHS"
-   PROPS<-1>   = GPENABLED
-   VALUES<-1>  = 1
-   *
    CTRLIDS<-1> = "FRMPRINTER"
-   PROPS<-1>   = GPENABLED
-   VALUES<-1>  = 1
-   *
-   CTRLIDS<-1> = "BTNSSPATH"
    PROPS<-1>   = GPENABLED
    VALUES<-1>  = 1
    *
@@ -1060,39 +1019,31 @@ CTRLIDS<1> = "CBUSER"
 PROPS<1>   = GPENABLED
 VALUES<1>  = 1
 *
-CTRLIDS<2> = "TXTSSPATH"
+CTRLIDS<2> = "TXTINVOICE"
 PROPS<2>   = GPVALUE
 VALUES<2>  = ""
 *
-CTRLIDS<3> = "TXTINVOICE"
+CTRLIDS<3> = "TXTPACK"
 PROPS<3>   = GPVALUE
 VALUES<3>  = ""
 *
-CTRLIDS<4> = "TXTPACK"
+CTRLIDS<4> = "TXTREPORT"
 PROPS<4>   = GPVALUE
 VALUES<4>  = ""
 *
-CTRLIDS<5> = "TXTREPORT"
+CTRLIDS<5> = "TXTPROCESS"
 PROPS<5>   = GPVALUE
 VALUES<5>  = ""
 *
-CTRLIDS<6> = "TXTPROCESS"
+CTRLIDS<6> = "TXTLABEL"
 PROPS<6>   = GPVALUE
 VALUES<6>  = ""
-*
-CTRLIDS<7> = "TXTLABEL"
-PROPS<7>   = GPVALUE
-VALUES<7>  = ""
 *
 CTRLIDS<-1> = "FRMMENU"
 PROPS<-1>   = GPENABLED
 VALUES<-1>  = 0
 *
 CTRLIDS<-1> = "FRMRESTRICTIONS"
-PROPS<-1>   = GPENABLED
-VALUES<-1>  = 0
-*
-CTRLIDS<-1> = "FRMPATHS"
 PROPS<-1>   = GPENABLED
 VALUES<-1>  = 0
 *
@@ -1182,10 +1133,6 @@ VALUES<-1>  = 0
 *
 CTRLIDS<-1> = "CHKSSCHD"
 PROPS<-1>   = GPVALUE
-VALUES<-1>  = 0
-*
-CTRLIDS<-1> = "BTNSSPATH"
-PROPS<-1>   = GPENABLED
 VALUES<-1>  = 0
 *
 CTRLIDS<-1> = "BTNSAVE"

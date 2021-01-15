@@ -1,0 +1,190 @@
+<HTML><HEAD>
+	
+	<TITLE>Validation File</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Validation File</B></FONT><BR>
+<BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">The Validation_File is a file of records which define various codes and validation data for Nextjob Modules.&nbsp; The validation file records are maintained by a generic dialog (VF_MAIN) and code (VF.DIALOG). The generic dialog and code is driven by a corresponding record in the file Validation_File_Desc.</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">Validation_File_Desc Dictionary</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">001 VF_VAL_DESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALIDATION DESC</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">002 VF_ID_NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID NAME</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">003 VF_ID_DESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID DESC</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">004 VF_NOTES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOTES</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">005 VF_VAL1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUE 1</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">006 VF_VAL1_DESC&nbsp;&nbsp;&nbsp;&nbsp; VALUE 1 DESC</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">007 VF_VAL1_HELP&nbsp;&nbsp;&nbsp;&nbsp; VALUE 1 HELP</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">008 VF_VAL1_EDITS&nbsp;&nbsp;&nbsp; VALUE 1 EDITS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">009 VF_VAL1_CONV&nbsp;&nbsp;&nbsp;&nbsp; VALUE1 CONVERSION</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">010 VF_VAL2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUE 2</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">011 VF_VAL2_DESC&nbsp;&nbsp;&nbsp;&nbsp; VALUE 2 DESC</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">012 VF_VAL2_HELP&nbsp;&nbsp;&nbsp;&nbsp; VALUE 2 HELP</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">013 VF_VAL2_EDITS&nbsp;&nbsp;&nbsp; VALUE 2 EDITS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">014 VF_VAL2_CONV&nbsp;&nbsp;&nbsp;&nbsp; VALUE 2 CONVERSION</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">VF_MAIN Generic Dialog</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" COLOR="#800000" SIZE="2"><IMG SRC="nxt_vf_maint.png" BORDER="0"></FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">Complete Example:</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" COLOR="#800000" SIZE="2"><IMG SRC="vf_maint_shifts.png" BORDER="0"></FONT><BR>
+<BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">Validation_File_Desc SHIFTS</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">001 SHIFTS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">002 SHIFT ID</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">003 SHIFT DESCRIPTION</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">004 Record defines shift starting and ending times.</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">005 SHIFT START TIME</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">006 TIME (hh:mm)</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">007</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">008 GDTIME</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">009 MT</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">010 SHIFT ENDING TIME</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">011 TIME (hh:mm)</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">012</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">013 GDTIME</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">014 MT</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">VALIDATION_FILE SHIFTS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">1: 1A}2A</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">2: Day Shift 1}Second Shift</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">3: 25200}55800</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">4: 55800}84600</FONT><BR>
+<BR>
+<BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">Validation File&nbsp; - File of various code definitions for modules.</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Layout:</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Id = Code Name&nbsp;</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Field 1 = VM list of code names (CODE ID)</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Field 2 = VM list of code descriptions (DESCRIPTION)</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Field 3 = VM list of code data 1 VALUE 1</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp; Field 4 = VM list of code data 2 VALUE 2</FONT><BR>
+<BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">VALIDATION FILE CODE ID...&nbsp; DESCRIPTION..............&nbsp; VALUE 1...&nbsp; VALUE 2...</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">Record Id</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2"><U>_______________ ______________________________________________________________</U></FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">CM.STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INACTIVE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOLD BOOKINGS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOLD SHIPMENTS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">COUNTRY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AUSTRALIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BAHAMAS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BERMUDA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BOLIVIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CANADA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHINA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COSTA RICA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CYPRUS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DENMARK</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ENGLAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FRANCE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GUATEMALA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOLLAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HONDURAS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ICELAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IRELAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ITALY</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NETHERLANDS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NZ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEW ZEALAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORWAY</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PUERTO RICO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOUTH AFRICA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SWEDEN</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; USA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; USA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VENEZUELA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WEST INDIES</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">EXTRA.CHARGES&nbsp;&nbsp;&nbsp; EXP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXPEDITE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FRT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FREIGHT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">LOT.CHARGES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOT-CHEM&nbsp;&nbsp;&nbsp; CHEM FILM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5500000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOT-TYPE3&nbsp;&nbsp; HARD ANODIZE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6500000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOT-TYPE2&nbsp;&nbsp; ANODIZE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5500000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOT-TYPE3M&nbsp; MASK &amp; HARDANODIZE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10500000</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">MATERIAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7075 ALUMINUM</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6061&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6061 ALUMINUM</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2024 ALUMINUM</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">ORDER.CLASS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default Class</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">ORDER.TYPE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ALL ORDERS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">SALES.CODES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default sales</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NADCAP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NADCAP Order</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">SALES.PERSONS&nbsp;&nbsp;&nbsp; Inside Sal&nbsp; Inside Sales</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Joe Blow&nbsp;&nbsp;&nbsp; Joe Blow</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">SHIP.VIA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Customer P&nbsp; Customer Pick Up</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Our Truck&nbsp;&nbsp; Ship Company Truck</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ship UPS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">STATES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ALABAMA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ALASKA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AZ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ARIZONA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ARKANSAS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CANADA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COLORADO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CONNECTICUT</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DELAWARE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DISTRICT OF COLUMBIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FLORIDA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GEORGIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HAWAII</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IDAHO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ILLINOIS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INDIANA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IOWA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KANSAS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KENTUCKY</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOUISIANA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MAINE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MARYLAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MASSACHUSETTS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MICHIGAN</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MINNESOTA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MISSISSIPPI</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MISSOURI</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MONTANA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEBRASKA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEVADA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEW HAMPSHIRE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEW JERSEY</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEW MEXICO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NEW YORK</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORTH CAROLINA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORTH DAKOTA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OHIO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OKLAHOMA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OREGON</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PENNSYLVANIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PUERTO RICO</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RHODE ISLAND</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOUTH CAROLINA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SOUTH DAKOTA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TENNESSEE</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEXAS</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UTAH</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VERMONT</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VIRGINIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WASHINGTON</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WEST VIRGINIA</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WISCONSIN</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WYOMING</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">TERMS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 15</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 45</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 50</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 60</FONT><BR>
+<FONT FACE="Courier New, courier, typewriter, monospace" SIZE="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NET 90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 90</FONT><BR>
+
+</BODY></HTML>

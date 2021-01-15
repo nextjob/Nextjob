@@ -1,4 +1,4 @@
-SUBROUTINE ROUTER.TEMPLATE(FD)
+SUBROUTINE CUSTOM.PROCESS.TEMPLATE(FD)
 **************************************************************************
 * This is free and unencumbered software released into the public domain.
 *
@@ -26,7 +26,7 @@ SUBROUTINE ROUTER.TEMPLATE(FD)
 * For more information, please refer to <https://unlicense.org>
 **************************************************************************
 *
-* MODULE: PROCESS.TEMPLATE
+* MODULE: CUSTOM.PROCESS.TEMPLATE
 * AUTHOR: MAB
 * VERSION: 1.0.0
 * CREATED: 00/00/2007
@@ -62,6 +62,16 @@ IF COMPANY_REC # '' THEN
   COMPANY.NAME = COMPANY_REC<COMP_NAME>[1,25]  ;* 25 characters max
 END ELSE
   COMPANY.NAME = 'Company Not Found'
+END
+*
+CALL GET.RECORD("SYSTEM_FILE",C.SYSTEM_FILE,"PROCESS_STEP_CHECKS",PROCESS_CHECKS_REC,@FALSE,ERROR_STATUS,GET_REC_MSG_LIST,GUIERRORS,GUISTATE)
+IF PROCESS_CHECKS_REC = '' THEN
+PROCESS_CHECKS_REC<1> = 'NotOnFile'
+PROCESS_CHECKS_REC<2> = 'NotOnFile'
+PROCESS_CHECKS_REC<3> = 'NotOnFile'
+PROCESS_CHECKS_REC<4> = 'NotOnFile'
+PROCESS_CHECKS_REC<5> = 'NotOnFile'
+PROCESS_CHECKS_REC<6> = 'NotOnFile'
 END
 *
 NAME.LEN = LEN(COMPANY.NAME)
@@ -102,11 +112,11 @@ FD = FD:ESC:'*p174x420Y':ESC:'*c5a2590b0P'     ;* seq rt vt
 FD = FD:ESC:'*p456x420Y':ESC:'*c5a2590b0P'     ;* procedure rt vt
 *
 FD = FD:ESC:'*p1345x420Y':ESC:'*c5a2590b0P'     ;* desc rt vt
-FD = FD:ESC:'*p1495x420Y':ESC:'*c5a2590b0P'     ;* time rt vt
-FD = FD:ESC:'*p1645x420Y':ESC:'*c5a2590b0P'     ;* temp rt vt
-FD = FD:ESC:'*p1795x420Y':ESC:'*c5a2590b0P'     ;* volts rt vt
-FD = FD:ESC:'*p1945x420Y':ESC:'*c5a2590b0P'     ;* qty rt vt
-FD = FD:ESC:'*p2182x420Y':ESC:'*c5a2590b0P'     ;* insp rt vt
+FD = FD:ESC:'*p1500x420Y':ESC:'*c5a2590b0P'     ;* CHK1 rt vt
+FD = FD:ESC:'*p1660x420Y':ESC:'*c5a2590b0P'     ;* CHK2 rt vt
+FD = FD:ESC:'*p1820x420Y':ESC:'*c5a2590b0P'     ;* CHK3 rt vt
+FD = FD:ESC:'*p1975x420Y':ESC:'*c5a2590b0P'     ;* CHK4 rt vt
+FD = FD:ESC:'*p2182x420Y':ESC:'*c5a2590b0P'     ;* CHK5 rt vt
 *
 *
 FD = FD:CG10
@@ -138,22 +148,18 @@ FD = FD:ESC:'*p30x480Y':"Seq"
 FD = FD:ESC:'*p205x480Y':"Procedure"
 FD = FD:ESC:'*p486x480Y':"Description"
 *
-FD = FD:ESC:'*p1360x480Y':"Tank"
-FD = FD:ESC:'*p1360x540Y':"Time"
+FD = FD:ESC:'*p1355x480Y':PROCESS_CHECKS_REC<1> 
 *
-FD = FD:ESC:'*p1510x480Y':"Ramp"
-FD = FD:ESC:'*p1510x540Y':"Time"
+FD = FD:ESC:'*p1510x480Y':PROCESS_CHECKS_REC<2> 
 *
-FD = FD:ESC:'*p1660x480Y':"Max"
-FD = FD:ESC:'*p1660x540Y':"Volts"
+FD = FD:ESC:'*p1665x480Y':PROCESS_CHECKS_REC<3> 
 *
-FD = FD:ESC:'*p1810x480Y':"QTY"
-FD = FD:ESC:'*p1810x540Y':"ACC"
-FD = FD:ESC:'*p1999x480Y':"INSP/"
-FD = FD:ESC:'*p1999x540Y':"OPER"
-FD = FD:ESC:'*p2212x480Y':"DATE"
+FD = FD:ESC:'*p1830x480Y':PROCESS_CHECKS_REC<4> 
+
+FD = FD:ESC:'*p1999x480Y':PROCESS_CHECKS_REC<5>
+
+FD = FD:ESC:'*p2212x480Y':PROCESS_CHECKS_REC<6> 
 *
-FD = FD:ESC:'*p1950x3085Y':CG12:'CF700-1 Rev A'
 *
 FD = FD:ESC:'*p0x0Y'                             ;* BACK TO TOP
 RETURN

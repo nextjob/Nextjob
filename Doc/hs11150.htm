@@ -1,0 +1,45 @@
+<HTML><HEAD>
+	
+	<TITLE>Printing</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Printing</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Note about printers:</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; All printed forms are currently coded to assume a printer that understand HP PCL 5</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp; All printed labels are currently coded to assume a label printer than understands Datamax-O'Neil Programming Language (DPL)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;&nbsp;</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">Printing routines (and calling routine):</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">APD.FORM&nbsp;&nbsp; (APDEBIT.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">CREDIT.FORM&nbsp;&nbsp;&nbsp; (AR.REPRINT.DIALOG CREDIT.DIALOG INV.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">CUSTOM.PROCESS.FORM&nbsp; (OE.DIALOG SF.ROUTING.REPRINT)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">CERT.FORM&nbsp;&nbsp;&nbsp; (OE.DIALOG REPRINT.FORMS SHIP.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">INVOICE.FORM&nbsp; (AR.REPRINT.DIALOG INV.DIALOG REPRINT.FORMS)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">LOT.TAG.PRINT&nbsp; (POR.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PACKSLIP.FORM&nbsp;&nbsp; (OE.DIALOG REPRINT.FORMS SHIP.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PO.FORM&nbsp;&nbsp; (POE.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PRINT.AP.CHECK</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PROCESS.FORM&nbsp; (OE.DIALOG PN.DIALOG SF.ROUTING.REPRINT)</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">All assume a printer that understand HP PCL 5</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">The current label printing routines (and calling routine):</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">SHIPPING.LABEL (OE.DIALOG POE.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">ORDER.LBL&nbsp; (OE.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">RECEIVING.LBL (OE.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">PROCESS.LBL&nbsp;&nbsp; (OE.DIALOG)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">All assume connection to a label printer than understands&nbsp; Datamax-O'Neil Programming Language (DPL)</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">For label print testing without label printer, create a file to print to (see QM Reference manual)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;CREATE.FILE LABEL_DUMP DIRECTORY PATHNAME C:\QMACCOUNTS\NXT_TEMP</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">&nbsp;SETPTR 99,80,66,0,0,3,AS FILE LABEL_DUMP,BRIEF</FONT><BR>
+
+</BODY></HTML>

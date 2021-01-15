@@ -1,0 +1,64 @@
+<HTML><HEAD>
+	
+	<TITLE>Equates</TITLE>
+	<META NAME="VIEWPORT" CONTENT="width=device-width">
+	<META NAME="AUTHOR" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="HelpScribble 8.3.0">
+	<STYLE> span { display: inline-block; }</STYLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+<P><FONT FACE="Arial, helvetica, sans-serif" SIZE="2">
+<A HREF="nextjobHelp.html">Contents</A>
+</FONT><HR></P>
+<FONT FACE="Arial, helvetica, sans-serif" COLOR="#0000FF" SIZE="5"><B>Equates</B></FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="3">The following equates define system behavior (found in NXT.INCLUDES NXT.EQUATES)</FONT><BR>
+<BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* AT GUI ERROR LEVEL</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* SEE AT PROGRAMMING GUIDE FOR INFO</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NXT.GUI.ERROR.LEVEL TO 1&nbsp; ;* 1 - WARNINGS, 2 - COMMAND FAILURE, 3 - FATAL ERROR</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* DEFINE IF WE ARE RUNNING PROCESS BASED SYSTEM OR WORK ORDER BASED</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX_PROCESS_BASED TO 0</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX_WORKORDER_BASED TO 1</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX.PROCESS.OR.WORKORDER TO NX_WORKORDER_BASED</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* FLAG TO SIGNAL SENDING OF EMAILS WHEN PACKSLIP CUT (GUISUB.SHIP)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX.EMAIL.SHIP.NOTIFICATION TO @TRUE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* FLAG TO PREVENT PACKSLIP / CERT / INVOICE PRINTING DURING TESTING</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX.PRINT.ENABLE TO @TRUE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp; SHIPPING METHOD TYPE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp; PRESHIP - WE CUT PAPER WORK PRIOR TO ACTUAL SHIPPING, S/R PERSON MANUALLY ENTERS</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; QTY SHIPPED ON PAPER WORK AND OFFICE PERSONNEL UPDATES ORDER INFORMATION</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp; DEMSHIP - DEMAND SHIPPING, WE CUT PAPER WORK AT TIME OF SHIPPING, SYSTEM UPDATES ORDER INFO</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AT TIME OF SHIPPING</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*** NOTE !!! BEFORE SHIPPING METHOD IS CHANGED, ALL PRESHIPPED ORDERS MUST BE UPDATE VIA OFFICE PERSONNEL</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEFORE THE SHIPPING METHOD IS CHANGED (THIS IS WHY ITS AN EQUATE AND NOT A&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SYSTEM_FILE SETTING!</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU PRESHIP TO 1</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU DEMSHIP TO 2</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX_SHIP_METHOD TO DEMSHIP</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* ACCOUNTING EQUATES</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* NX_AR_ACTIVE -&nbsp; DO WE USE THE NEXTJOB AR SYSTEM (TRUE / FALSE)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF SET TO FALSE, SALES RECORD IS WRITEN WITH SA_INVOICE_ID WITH ???</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF SET TO TRUE, WE ACTAUL CREATE AN INVOICE DEPENDING ON HOW NX_QB_ACCOUNTING IS SET</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* NX_QB_ACCOUNTING - WE USE QUICK BOOKS ACCOUNTING (TRUE / FALSE)</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX_AR_ACTIVE TO @FALSE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NX_QB_ACCOUNTING TO @TRUE</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">*</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">* PART PICTURES PCL CONVERTER INSTALLED?&nbsp;</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">** MKDPLC IS FOUND AT http://www.spectracolorservices.com/</FONT><BR>
+<FONT FACE="Arial, helvetica, sans-serif" SIZE="2">EQU NXT_MKDPCL TO @TRUE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;* DO WE HAVE MKDPCL ?</FONT><BR>
+<BR>
+<BR>
+<BR>
+
+</BODY></HTML>

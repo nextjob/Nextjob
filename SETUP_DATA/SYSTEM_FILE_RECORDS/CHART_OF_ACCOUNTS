@@ -1,0 +1,136 @@
+1000ıPetty Cash
+1010ıCash on Hand (e.g. in cash registers)
+1020ıRegular Checking Account
+1030ıPayroll Checking Account
+1040ıSavings Account
+1050ıSpecial Account
+1060ıInvestments - Money Market
+1070ıInvestments - Certificates of Deposit
+1100ıAccounts Receivable
+1140ıOther Receivables
+1150ıAllowance for Doubtful Accounts
+1200ıRaw Materials Inventory
+1205ıSupplies Inventory
+1210ıWork in Progress Labor
+1220ıWork in Progress Material
+1230ıWork in Progress Outplant
+1400ıPrepaid Expenses
+1410ıEmployee Advances
+1420ıNotes Receivable - Current
+1430ıPrepaid Interest
+1470ıOther Current Assets
+1500ıFurniture and Fixtures
+1510ıEquipment
+1520ıVehicles
+1530ıOther Depreciable Property
+1540ıLeasehold Improvements
+1550ıBuildings
+1560ıBuilding Improvements
+1690ıLand
+1700ıAccumulated Depreciation, Furniture and Fixtures
+1710ıAccumulated Depreciation, Equipment
+1720ıAccumulated Depreciation, Vehicles
+1730ıAccumulated Depreciation, Other
+1740ıAccumulated Depreciation, Leasehold
+1750ıAccumulated Depreciation, Buildings
+1760ıAccumulated Depreciation, Building Improvements
+1900ıDeposits
+1910ıOrganization Costs
+1915ıAccumulated Amortization, Organization Costs
+1920ıNotes Receivable, Non-current
+1990ıOther Non-current Assets
+2000ıAccounts Payable
+2300ıAccrued Expenses
+2310ıSales Tax Payable
+2320ıWages Payable
+2330ı401-K Deductions Payable
+2335ıHealth Insurance Payable
+2340ıFederal Payroll Taxes Payable
+2350ıFUTA Tax Payable
+2360ıState Payroll Taxes Payable
+2370ıSUTA Payable
+2380ıLocal Payroll Taxes Payable
+2390ıIncome Taxes Payable
+2400ıOther Taxes Payable
+2410ıEmployee Benefits Payable
+2420ıCurrent Portion of Long-term Debt
+2440ıDeposits from Customers
+2480ıOther Current Liabilities
+2700ıNotes Payable
+2702ıLand Payable
+2704ıEquipment Payable
+2706ıVehicles Payable
+2708ıBank Loans Payable
+2710ıDeferred Revenue
+2740ıOther Long-term Liabilities
+3010ıStated Capital
+3020ıCapital Surplus
+3030ıRetained Earnings
+4000ıSales
+4060ıInterest Income
+4080ıOther Income
+4540ıFinance Charge Income
+4550ıShipping Charges Reimbursed
+4800ıSales Returns and Allowances
+4900ıSales Discounts
+5010ıCOGS Labor
+5020ıCOGS Material
+5030ıCOGS Outplant
+5150ıIndirect Labor Costs
+5200ıHeat and Power
+5250ıCommissions
+5300ıMiscellaneous Factory Costs
+5700ıCost of Goods Sold, Salaries and Wages
+5730ıCost of Goods Sold, Contract Labor
+5750ıCost of Goods Sold, Freight
+5800ıCost of Goods Sold, Other
+5850ıInventory Adjustments
+5900ıPurchase Returns and Allowances
+5950ıPurchase Discounts
+6000ıDefault Purchase Expense
+6010ıAdvertising Expense
+6050ıAmortization Expense
+6100ıAuto Expenses
+6150ıBad Debt Expense
+6200ıBank Fees
+6250ıCash Over and Short
+6300ıCharitable Contributions Expense
+6350ıCommissions and Fees Expense
+6400ıDepreciation Expense
+6450ıDues and Subscriptions Expense
+6500ıEmployee Benefit Expense, Health Insurance
+6510ıEmployee Benefit Expense, Pension Plans
+6520ıEmployee Benefit Expense, Profit Sharing Plan
+6530ıEmployee Benefit Expense, Other
+6550ıFreight Expense
+6600ıGifts Expense
+6650ıIncome Tax Expense, Federal
+6660ıIncome Tax Expense, State
+6670ıIncome Tax Expense, Local
+6700ıInsurance Expense, Product Liability
+6710ıInsurance Expense, Vehicle
+6750ıInterest Expense
+6800ıLaundry and Dry Cleaning Expense
+6850ıLegal and Professional Expense
+6900ıLicenses Expense
+6950ıLoss on NSF Checks
+7000ıMaintenance Expense
+7050ıMeals and Entertainment Expense
+7100ıOffice Expense
+7200ıPayroll Tax Expense
+7250ıPenalties and Fines Expense
+7300ıOther Taxes
+7350ıPostage Expense
+7400ıRent or Lease Expense
+7450ıRepair and Maintenance Expense, Office
+7460ıRepair and Maintenance Expense, Vehicle
+7540ıSupplies Expense, Shop
+7550ıSupplies Expense, Office
+7600ıTelephone Expense
+7620ıTraining Expense
+7650ıTravel Expense
+7700ıSalaries Expense, Officers
+7750ıWages Expense
+7800ıUtilities Expense
+8900ıOther Expense
+9000ıGain/Loss on Sale of Assets
