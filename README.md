@@ -5,11 +5,16 @@ History:
 
 This project grew out of an application written for a small plating shop.  The main emphases for the original package:
 
-Customers 
+Customers
+
 Parts and Processes
+
 Order Entry
+
 Shipping
+
 Sales History
+
 
 Accounting was handled by a separate package and an interface between the two systems was developed but never implemented.
 
